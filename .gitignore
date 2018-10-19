@@ -6,7 +6,6 @@ virtual_networks/*
 !virtual_networks/VPCTransit.yml.example
 !virtual_networks/Spoke1.yml.example
 
-*_main.tf
 *.pyc
 .DS_Store
 **/.DS_Store
@@ -24,7 +23,7 @@ crash.log
 .idea
 **/.tfplan
 **/.tfvars
-main.tf
+/main.tf
 
 # Ansible Specific Files
 *.retry

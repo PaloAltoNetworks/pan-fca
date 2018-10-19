@@ -1,0 +1,99 @@
+---
+
+- name: "FIND NAT RULE"
+  panos_nat_rule:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    rule_name: "{{ item['name']}}"
+    operation: "find"
+  with_items: "{{ cm_nat_rule }}"
+  register: "find_nat"
+  ignore_errors: true
+  when: "cm_nat_rule is defined"
+
+- name: "CREATE POLICY"
+  panos_nat_rule:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    rule_name: "{{ item['item']['name']}}"
+    operation: "add"
+    source_zone: "{{ item['item']['source']['zone'] }}"
+    destination_zone: "{{ item['item']['source']['zone'] }}"
+    source_ip: "{{ item['item']['source']['network'] }}"
+    destination_ip: "{{ item['item']['destination']['network'] }}"
+    service: "{{ item['item']['service'] }}"
+    # snat_type: ""
+    # snat_interface: "{{ item['item']['']['translation']['interface'] | default(omit) }}"
+    dnat_address: ""
+    dnat_port: "22"
+  with_items: "{{ find_nat['results'] | selectattr('failed', 'equalto', true) | list }}"
+  register: "find_srule"
+  # ignore_errors: true
+  when:
+    - "cm_nat_rule is defined"
+
+# cm_nat_rule:
+#    source_translation:
+#      ip: '200.10.10.1'
+#      mask: '24'
+#      interface: 'ethernet1/3'
+
+- name: "FIND POLICY ON THE DEVICE"
+  panos_security_rule:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    rule_name: "{{ item['name'] }}"
+    operation: "find"
+  with_items: "{{ cm_security_rule }}"
+  register: "find_srule"
+  ignore_errors: true
+  when: "cm_security_rule is defined"
+
+- name: "PUSH THE POLICY TO THE DEVICE IF NOT THERE"
+  panos_security_rule:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: "add"
+    rule_name: "{{ item['item']['name'] }}"
+    rule_type: "{{ item['item']['rule_type'] | default('universal') }}"
+    description: "{{ item['item']['description'] | default(omit) }}"
+    source_zone: "{{ item['item']['from_zone'] }}"
+    destination_zone: "{{ item['item']['to_zone'] }}"
+    source_ip: "{{ item['item']['source'] }}"
+    # source_user: ['any']
+    destination_ip: "{{ item['item']['destination'] }}"
+    category: "{{ item['item']['category'] | default(['any']) }}"
+    application: "{{ item['item']['application'] }}"
+    service: "{{ item['item']['service'] }}"
+    hip_profiles: "{{ item['item']['hip_profiles'] | default(['any']) }}"
+    action: 'allow'
+    commit: false
+  with_items: "{{ find_srule['results'] | selectattr('failed', 'equalto', true) | list }}"
+  when: "cm_security_rule is defined"
+
+- name: "PUSH THE POLICY TO THE DEVICE IF ALREADY THERE"
+  panos_security_rule:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: "update"
+    rule_name: "{{ item['item']['name'] }}"
+    rule_type: "{{ item['item']['rule_type'] | default('universal') }}"
+    description: "{{ item['item']['description'] | default(omit) }}"
+    source_zone: "{{ item['item']['from_zone'] }}"
+    destination_zone: "{{ item['item']['to_zone'] }}"
+    source_ip: "{{ item['item']['source'] }}"
+    # source_user: ['any']
+    destination_ip: "{{ item['item']['destination'] }}"
+    category: "{{ item['item']['category'] | default(['any']) }}"
+    application: "{{ item['item']['application'] }}"
+    service: "{{ item['item']['service'] }}"
+    hip_profiles: "{{ item['item']['hip_profiles'] | default(['any']) }}"
+    action: 'allow'
+    commit: false
+  with_items: "{{ find_srule['results'] | selectattr('failed', 'equalto', false) | list }}"
+  when: "cm_security_rule is defined"

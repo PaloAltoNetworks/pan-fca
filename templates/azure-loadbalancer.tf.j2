@@ -1,0 +1,57 @@
+{% for name, vnet in vnets.items() %}
+{% if vnet['load_balancers'] is defined %}
+{% for lb in vnet['load_balancers'] %}
+
+module "{{ name }}-{{ lb.name }}-lb" {
+  source                                 = "{{ module_dir }}/loadbalancer"
+  name                                   = "{{ lb.name }}-LB"
+  location                               = "{{ location }}"
+  resource_group_name                    = "{{ name }}"
+  type                                   = "{{ lb.type }}"
+  {% if lb.type == 'private' %}
+  frontend_name                          = "Trust"
+  frontend_subnet_id                     = "${module.{{ name }}.vnet_subnets[1]}"
+  frontend_private_ip_address_allocation = "Static"
+  frontend_private_ip_address            = "${cidrhost(module.{{ name }}.vnet_subnet_prefixes[1], -3)}"
+  backendpoolname                        = "Trust"
+
+  "remote_port" {
+    ssh = ["Tcp", "22"]
+  }
+
+  "lb_port" {
+    http  = ["0", "All", "0"]
+    #https = ["443", "Tcp", "443"]
+  }
+
+  "lb_probe_port" {
+      http = ["22"]
+  }
+
+  "tags" {
+    cost-center = "12345"
+    source      = "terraform"
+  }
+
+{% else %}
+  frontend_name       = "Untrust"
+  backendpoolname     = "Untrust"
+
+  "remote_port" {
+    ssh = ["Tcp", "22"]
+  }
+
+  "lb_port" {
+    http = ["80", "Tcp", "80"]
+    #https = ["443", "Tcp", "443"]
+  }
+
+  "lb_probe_port" {
+      http = ["22"]
+  }
+
+{% endif %}
+}
+{% endfor %}
+{% endif %}
+{% endfor %}

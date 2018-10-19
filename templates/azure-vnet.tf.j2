@@ -1,0 +1,18 @@
+{% for name, vnet in vnets.items() %}
+module "{{ name }}" {
+source = "{{ module_dir }}/vnet"
+resource_group_name = "{{ name }}"
+location = "{{ location }}"
+vnet_name = "{{ vnet['vnet_network']['name'] }}"
+address_space = "{{ vnet['vnet_network']['network'] }}"
+subnet_prefixes = [{% for prefix in vnet['vnet_network']['subnet'] -%}"{{ prefix.network }}",{% endfor %}]
+subnet_names = [{% for name in vnet['vnet_network']['subnet'] -%}"{{ name.name }}",{% endfor %}]
+{% if vnet['tags'] is defined %}
+tags = {
+{% for tag in vnet['tags'] %}
+{{ tag.name }} = "{{ tag.value }}"
+{% endfor %}
+}
+{% endif %}
+}
+{% endfor %}

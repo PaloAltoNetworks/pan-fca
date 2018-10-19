@@ -1,0 +1,25 @@
+---
+"$schema": http://json-schema.org/draft-04/schema#
+description: The configuration options for PANOS Service Objects.
+title: PANOS Service configuration
+id: cm_object_service
+type: array
+items:
+  type: object
+  properties:
+    name:
+      description: Name of the service object
+      type: string
+      maxLength: 64
+    port:
+      description: TCP or UDP port or port range
+      type: string
+    protocol:
+      description: Whether it is TCP or UDP
+      type: string
+  additionalProperties: false
+  required:
+    - "name"
+    - "port"
+    - "protocol"
+additionalProperties: false

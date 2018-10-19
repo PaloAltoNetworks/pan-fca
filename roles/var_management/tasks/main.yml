@@ -1,0 +1,55 @@
+---
+
+- name: "MERGE LIST OF INCLUDED ELEMENTS AS A DICT"
+  include_role:
+    name: "merge_var_dir"
+  with_items: "{{ virtual_networks }}"
+  loop_control:
+    loop_var: "element"
+  vars:
+    folder: "{{ playbook_dir }}/virtual_networks"
+  tags:
+    - 'always'
+    - 'tf'
+
+- name: "SET FACT FOR VNETS"
+  set_fact:
+    vnets: "{{ merge_var }}"
+  tags:
+    - 'always'
+    - 'tf'
+
+- name: "SET FACT FOR VNETS"
+  set_fact:
+    merge_var: {}
+  tags:
+    - 'always'
+    - 'tf'
+
+- name: "MERGE LIST OF INCLUDED ELEMENTS AS A DICT"
+  include_role:
+    name: "merge_var_dir"
+  with_items: "{{ scope | map(attribute='name') | list }}"
+  loop_control:
+    loop_var: "element"
+  vars:
+    folder: "{{ playbook_dir }}/schema_files"
+  tags:
+    - 'always'
+    - 'tf'
+
+- name: "RESCOPE MERGE_VAR AS SCHEMA"
+  set_fact:
+    schema: "{{ merge_var }}"
+  tags:
+    - 'always'
+    - 'tf'
+
+- name: 'VALIDATE THE SCHEMA'
+  json_schema:
+    schema: '{{ schema }}'
+    data: '{{ hostvars[inventory_hostname] }}'
+    scope: '{{ scope }}'
+  tags:
+    - 'always'
+    - 'tf'

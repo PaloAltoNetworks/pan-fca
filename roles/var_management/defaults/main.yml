@@ -1,0 +1,9 @@
+---
+
+scope:
+  - name: "cm_virtual_router"
+  - name: "cm_interface"
+  - name: "cm_object_address"
+  - name: "cm_object_address_group"
+  - name: "cm_object_service"
+  - name: "cm_object_service_group"

@@ -1,0 +1,14 @@
+---
+## AZURE EXAMPLE
+#cloud_provider: azure
+#cloud_provider_location: "east us"
+#azure_subscription_id: "thisisthebestsubever"
+#azure_tenant_id: "il0v3P@loALTO"
+#azure_client_id: "THISis5053cret"
+#azure_client_secret: "THIS1sMUchM0@rS3cret"
+
+## AWS EXAMPLE
+#cloud_provider: aws
+#cloud_provider_location: "us-east-1
+#aws_access_key: myaccessKey
+#aws_secret_access_key: mySecretsarenotYours

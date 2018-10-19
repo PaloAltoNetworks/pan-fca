@@ -1,0 +1,22 @@
+- name: "DESTROY ALL RESOURCES"
+  hosts: "localhost"
+  gather_facts: "no"
+  connection: "local"
+
+  vars_files:
+    - "{{ playbook_dir }}/provider.yml"
+
+  tasks:
+    - name: "GET CREDS"
+      include_role:
+        name: "env_setup"
+
+    - name: "DESTROY RESOURCES"
+      terraform:
+        project_path: "{{ playbook_dir }}"
+        force_init: "yes"
+        state: "absent"
+      environment:
+        "{{ cloud_env }}"
+
+

@@ -1,0 +1,6 @@
+ansible
+pandevice
+pan-python
+xmltodict
+awscli
+jsonschema

@@ -1,0 +1,15 @@
+---
+
+- name: "DEFAULT MERGE_VAR WHEN NOT DEFINED ALREADY"
+  set_fact:
+    merge_var: {}
+  when: "merge_var is not defined"
+
+- name: "INCLUDE VARS TO GET ELEMENT INFORMATION"
+  include_vars:
+    file: "{{ folder }}/{{ element }}.yml"
+    name: "details"
+
+- name: "SET FACT FOR NEW NAME"
+  set_fact:
+    merge_var: "{{ merge_var | default({}) | combine({ element: details }) }}"

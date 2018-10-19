@@ -1,0 +1,138 @@
+---
+
+- name: "RUN DATA DRIVEN PALO ALTO TERRAFORM AND ANSIBLE SOLUTION"
+  hosts: "localhost"
+  gather_facts: "no"
+  connection: "local"
+
+  vars_files:
+    - "{{ playbook_dir }}/provider.yml"
+
+  vars:
+    provider_dir: "{{ playbook_dir }}"
+    output_file: "{{ provider_dir }}/main.tf"
+    module_dir: "./modules/{{ cloud_provider |lower }}"
+    temp_key_dir: "{{ lookup('env', 'HOME')}}/paloalto/creds"
+    temp_key: "{{ temp_key_dir }}/tempkey"
+
+  tasks:
+
+    - name: "SETUP CREDENTIALS & ENV FOR {{ cloud_provider| upper }}"
+      include_role:
+        name: "env_setup"
+      tags:
+        - 'always'
+        - 'tf'
+
+    - name: "RUN ROLE TO MANAGE VARS AND SCHEMA VALIDATION"
+      include_role:
+        name: "var_management"
+      tags:
+        - 'always'
+        - 'tf'
+
+    - name: "CREATING {{ cloud_provider }} TEMPLATE"
+      template:
+        src: "{{ cloud_provider }}-main.tf.j2"
+        dest: "{{ output_file }}"
+      tags:
+        - 'always'
+        - 'tf'
+
+    - name: "RUN FMT FOR {{ cloud_provider }}"
+      command: 'terraform fmt {{ output_file }}'
+      tags:
+        - 'tf'
+
+    - name: "EXECUTE TERRAFORM PLAN"
+      include_role:
+        name: "terraform"
+      tags:
+        - 'always'
+        - 'tf'
+
+    - name: "GET CREATED FIREWALLS FROM TERRAFORM OUTPUT"
+      command: 'terraform output -json firewalls_created'
+      register: firewalls_created
+
+    - name: "USE TERRAFORM OUTPUT STORE TEMP VALUES"
+      set_fact:
+        firewalls: "{{ firewalls_created.stdout |from_json }}"
+
+    - name: "ADD HOSTS FROM TF OUTPUT TO FIREWALL GROUP"
+      add_host:
+        hostname: "{{ item.key }}"
+        ansible_host: "{{ item.value }}"
+        ansible_ssh_private_key: "{{ temp_key }}"
+        groups: "firewalls"
+      with_dict: "{{ firewalls['value'] }}"
+      tags:
+        - 'tf'
+
+- name: "DEPLOY CONFIGURATIONS AND VALIDATE"
+  hosts: "firewalls"
+  connection: "local"
+  gather_facts: "no"
+
+  vars_files:
+    - "{{ playbook_dir }}/provider.yml"
+
+  vars:
+    temp_key_dir: "{{ lookup('env', 'HOME') }}/paloalto/creds"
+    temp_key: "{{ temp_key_dir }}/tempkey"
+
+  tasks:
+
+    - name: "WAIT FOR HTTPS ACCESS"
+      wait_for:
+        host: "{{ ansible_host }}"
+        port: 443
+        timeout: 300
+    
+    - name: "WAIT FOR MGMT AVAILABILITY"
+      pause:
+        seconds: 60
+    
+    - name: "CONFIGURE MGMT ACCESS"
+      panos_admpwd:
+        ip_address: "{{ ansible_host }}"
+        key_filename: "{{ temp_key }}"
+        username: "{{ username }}"
+        newpassword: "{{ password }}"
+      when: cloud_provider == 'aws'
+
+    - name: "DEPLOY ANY LICENSES OR ADMIN TASKS"
+      include_role:
+        name: "pa_admin"
+      tags:
+        - 'ansible'
+
+    - name: "PUSH ANY ZONE OR NETWORK CONFIGURATIONS"
+      include_role:
+        name: "pa_network"
+      tags:
+        - 'ansible'
+
+    - name: "PUSH ANY OBJECTS"
+      include_role:
+        name: "pa_object"
+      tags:
+        - 'ansible'
+
+    - name: "PUSH SECURITY RULES"
+      include_role:
+        name: "pa_srule"
+      tags:
+        - 'ansible'
+
+    # - name: "PERFORM OPERATIONAL VALIDATION"
+    #  include_role:
+    #    name: "pa_validate"
+
+    - name: "COMMIT THE CHANGES"
+      panos_commit:
+        ip_address: '{{ ansible_host }}'
+        username: '{{ username }}'
+        password: '{{ password }}'
+      tags:
+        - 'ansible'

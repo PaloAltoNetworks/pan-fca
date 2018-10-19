@@ -1,0 +1,18 @@
+---
+- name: "CHECK FOR PREVIOUS STATEFILES"
+  stat:
+    path: "{{ playbook_dir }}/terraform.tfstate"
+  register: statefile
+
+- name: "PROMPT FOR DELETION"
+  pause:
+    prompt: "Detected previous state file, do you wish to backup? (yes/no)"
+  register: state_backup
+  when: statefile.stat.exists
+
+- name: "BACKUP FILES"
+  include_tasks: "backup-state.yml"
+  when: statefile.stat.exists and state_backup.user_input | bool
+
+- name: "SETUP ENV FOR {{ cloud_provider }}"
+  include_tasks: "{{ cloud_provider }}.yml"

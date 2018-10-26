@@ -33,12 +33,10 @@ variable "customer_asns" {
     default = []
 }
 
-variable "aws_region" {
+variable "region" {
     description = "AWS region"
     default = "us-east-1"
 }
 
-variable "count" {
-    description = "count variable"
-    default = ""
+data "aws_availability_zones" "default" {
 }

@@ -1,16 +1,18 @@
 # Firewall Deployment Variables
-variable "availability_zones" {
-    description = "List of Availability zones"
-    default = []
-}
-variable "aws_region" {
-    description = "AWS region"
-    default = "us-east-1"
+data "aws_availability_zones" "available" {}
+
+variable "fw_instance_count" {
+  description = "number of instances to create"
+  default = 1
 }
 
-variable "count" {
-    description = "count variable"
-    default = ""
+#AZ zones
+variable "availability_zones" {
+  default = []
+}
+#AZ zone1
+variable "az1" {
+  default = ""
 }
 
 #Application Stackname
@@ -20,18 +22,29 @@ variable "StackName" {
 
 #Main Stackname
 variable "MainStackName" {
-  default = "Main-Transit"
+  default = ""
+}
+
+#AZ zone2
+variable "az2" {
+
 }
 
 # select the key for auth
 variable "serverkey" {}
 
 # s3 bucket for bootstrapping the firewall1
+variable "MasterS3Bucket" {}
 variable "bootstrap1" {}
 variable "bootstrap2" {}
-#variable "MasterS3Bucket" {}
-#variable "bootstrap3" {}
-#variable "bootstrap4" {}
+variable "bootstrap3" {}
+variable "bootstrap4" {}
+
+# set up this count variable
+variable "count" {}
+
+#Specify region
+variable "aws_region" {}
 
 # specify the region ami map
 #Palo AMI region MAP version8.0.8
@@ -99,7 +112,7 @@ variable "BYOLPANFWRegionMap810" {
     }
 }
 #Palo AMI region MAP version8.0.9 PAYG Bundle 2
-variable "PAYG2PANFWRegionMap80" {
+variable "PAYG2PANFWRegionMap809" {
   type = "map"
   default =
     {

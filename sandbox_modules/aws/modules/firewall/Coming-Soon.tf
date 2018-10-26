@@ -1,1 +1,0 @@
-This will be one module with all Firewall topologies included with flexibility using Booloean logic to do things based on topology triggers.

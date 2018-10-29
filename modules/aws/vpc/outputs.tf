@@ -83,3 +83,85 @@ output "management_elastic_ip_addresses" {
   description = "list of mgmt EIP Addresses"
   value = ["${aws_eip.management_elastic_ip.*.public_ip}"]
 }
+##Variables for autoscaling##
+/*
+output "LambdaSubnetAz1" {
+  value = "${aws_subnet.LambdaSubnetAz1.id}"
+}
+
+output "LambdaSubnetAz2" {
+  value = "${aws_subnet.LambdaSubnetAz2.id}"
+}
+
+output "LambdaSubnetAz3" {
+  value = "${aws_subnet.LambdaSubnetAz3.id}"
+}
+
+output "LambdaSubnetAz4" {
+  value = "${aws_subnet.LambdaSubnetAz4.id}"
+}
+
+output "NATGWSubnetAz1" {
+  value = "${aws_subnet.NATGWSubnetAz1.id}"
+}
+
+output "NATGWSubnetAz2" {
+  value = "${aws_subnet.NATGWSubnetAz2.id}"
+}
+
+output "NATGWSubnetAz3" {
+  value = "${aws_subnet.NATGWSubnetAz3.id}"
+}
+
+output "MGMTSubnetAz1" {
+  value = "${aws_subnet.MGMTSubnetAz1.id}"
+}
+
+output "MGMTSubnetAz2" {
+  value = "${aws_subnet.MGMTSubnetAz2.id}"
+}
+
+output "MGMTSubnetAz3" {
+  value = "${aws_subnet.MGMTSubnetAz3.id}"
+}
+
+output "UNTRUSTSubnet1" {
+  value = "${aws_subnet.UNTRUSTSubnet1.id}"
+}
+
+output "UNTRUSTSubnet2" {
+  value = "${aws_subnet.UNTRUSTSubnet2.id}"
+}
+
+output "UNTRUSTSubnet3" {
+  value = "${aws_subnet.UNTRUSTSubnet3.id}"
+}
+
+output "TRUSTSubnet1" {
+  value = "${aws_subnet.TRUSTSubnet1.id}"
+}
+
+output "TRUSTSubnet2" {
+  value = "${aws_subnet.TRUSTSubnet2.id}"
+}
+
+output "TRUSTSubnet3" {
+  value = "${aws_subnet.TRUSTSubnet3.id}"
+}
+
+output "VPCCIDR" {
+  value = "${var.VPCCIDR}"
+}
+
+output "StackName" {
+  value = "${var.StackName}"
+}
+
+output "PanFwAmiId" {
+  value = "${var.PanFwAmiId}"
+}
+
+output "VPCID" {
+  value = "${aws_vpc.main.id}"
+}
+*/

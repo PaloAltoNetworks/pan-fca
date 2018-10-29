@@ -1,3 +1,4 @@
+*/
 resource "aws_iam_role_policy" "FirewallBootstrapRolePolicy" {
   name = "FirewallBootstrapRolePolicy"
   role = "${aws_iam_role.FirewallBootstrapRole.id}"

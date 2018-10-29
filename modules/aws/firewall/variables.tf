@@ -248,4 +248,38 @@ variable "AWSInstanceType2Arch" {
     "cc2.8xlarge" = "HVM64"
   }
 }
+/*
+##Variables for autoscaling##
+output "PanFwAmiId" {
+  value = "${var.PanFwAmiId}"
+}
+
+output "VPCID" {
+  value = "${aws_vpc.main.id}"
+}
+
+output "KeyName" {
+  value = "${var.KeyName}"
+}
+
+output "KeyPANWPanorama" {
+  value = "${var.KeyPANWPanorama}"
+}
+
+output "KeDeLicense" {
+  value = "${var.KeyDeLicense}"
+}
+
+output "MasterS3Bucket" {
+  value = "${var.MasterS3Bucket}"
+}
+
+output "NATGateway" {
+  value = "${var.NATGateway}"
+}
+
+output "SSHLocation" {
+  value = "${var.SSHLocation}"
+}
+*/
 

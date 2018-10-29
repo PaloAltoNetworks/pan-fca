@@ -1,3 +1,4 @@
+/*
 variable "StackName" {}
 variable "LambdaExecutionRole" {}
 variable "NATGateway" {}
@@ -7,3 +8,5 @@ variable "KeyMap" {
 }
 variable "MasterS3Bucket" {}
 variable "aws_region" {}
+*/
+##Not in use##

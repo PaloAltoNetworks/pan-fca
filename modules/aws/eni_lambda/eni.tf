@@ -1,4 +1,4 @@
-resource "aws_lambda_function" "AddENILambda" {
+/*resource "aws_lambda_function" "AddENILambda" {
   count = "${var.NATGateway == 0 ? 1 : 0}"
   s3_bucket = "${var.PanS3BucketTpl}"
   s3_key = "${var.KeyMap["Key"]}"
@@ -12,3 +12,5 @@ resource "aws_lambda_function" "AddENILambda" {
 output "add_eni_lambda_arn" {
   value = "${aws_lambda_function.AddENILambda.arn}"
 }
+*/
+####Not in Use###

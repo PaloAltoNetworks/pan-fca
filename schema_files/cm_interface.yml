@@ -36,7 +36,7 @@ items:
       description: Whether or not dhcp is enabled on the interface
       type: boolean
       default: false
-    create_default_route: 
+    create_default_route:
       description: Create default route learned via dhcp
       type: boolean
       default: false

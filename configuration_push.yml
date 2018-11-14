@@ -88,11 +88,11 @@
         host: "{{ ansible_host }}"
         port: 443
         timeout: 300
-    
+
     - name: "WAIT FOR MGMT AVAILABILITY"
       pause:
         seconds: 60
-    
+
     - name: "CONFIGURE MGMT ACCESS"
       panos_admpwd:
         ip_address: "{{ ansible_host }}"

@@ -1,3 +1,5 @@
+---
+
 - name: "GET BACKUP TIMESTAMP"
   set_fact:
     backup_dir: "state_backup_{{ lookup('pipe', 'date +%Y-%m-%d-%H-%M-%S') }}"

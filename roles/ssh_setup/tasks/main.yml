@@ -1,7 +1,7 @@
 ---
 
 - name: "CREATE KEY PAIR DIRECTORY FOR AWS"
-  file: 
+  file:
     path: "{{ temp_key_dir }}"
     state: directory
 

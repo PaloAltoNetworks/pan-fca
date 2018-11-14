@@ -10,68 +10,64 @@
 
   tasks:
 
-  # Create ethernet1/1 as DHCP.
-  - name: enable DHCP client on ethernet1/1 in zone external
-    panos_interface:
-      ip_address: '{{ ip_address }}'
-      username: '{{ username }}'
-      password: '{{ password }}'
-      if_name: "ethernet1/1"
-      zone_name: "internal"
-      create_default_route: "no"
-      operation: "add"
-      commit: False
+    - name: enable DHCP client on ethernet1/1 in zone external
+      panos_interface:
+        ip_address: '{{ ip_address }}'
+        username: '{{ username }}'
+        password: '{{ password }}'
+        if_name: "ethernet1/1"
+        zone_name: "internal"
+        create_default_route: "no"
+        operation: "add"
+        commit: false
 
-# Create ethernet1/2 as DHCP.
-  - name: enable DHCP client on ethernet1/2 in zone external
-    panos_interface:
-      ip_address: '{{ ip_address }}'
-      username: '{{ username }}'
-      password: '{{ password }}'
-      if_name: "ethernet1/2"
-      zone_name: "external"
-      create_default_route: "no"
-      operation: "add"
-      commit: False
+    - name: enable DHCP client on ethernet1/2 in zone external
+      panos_interface:
+        ip_address: '{{ ip_address }}'
+        username: '{{ username }}'
+        password: '{{ password }}'
+        if_name: "ethernet1/2"
+        zone_name: "external"
+        create_default_route: "no"
+        operation: "add"
+        commit: false
 
+    - name: Add test rule 1 to the firewall
+      panos_security_rule:
+        ip_address: '{{ ip_address }}'
+        username: '{{ username }}'
+        password: '{{ password }}'
+        operation: 'add'
+        rule_name: 'Ansible test 1'
+        description: 'An Ansible test rule'
+        source_zone: ['internal']
+        destination_zone: ['external']
+        source_ip: ['1.2.3.4']
+        source_user: ['any']
+        destination_ip: ['any']
+        category: ['any']
+        application: ['any']
+        service: ['service-http']
+        hip_profiles: ['any']
+        action: 'allow'
+        commit: 'true'
 
-# Create Test Security Test Rules
-  - name: Add test rule 1 to the firewall
-    panos_security_rule:
-      ip_address: '{{ ip_address }}'
-      username: '{{ username }}'
-      password: '{{ password }}'
-      operation: 'add'
-      rule_name: 'Ansible test 1'
-      description: 'An Ansible test rule'
-      source_zone: ['internal']
-      destination_zone: ['external']
-      source_ip: ['1.2.3.4']
-      source_user: ['any']
-      destination_ip: ['any']
-      category: ['any']
-      application: ['any']
-      service: ['service-http']
-      hip_profiles: ['any']
-      action: 'allow'
-      commit: 'true'
-
-  - name: Add test rule 2 to the firewall
-    panos_security_rule:
-      ip_address: '{{ ip_address }}'
-      username: '{{ username }}'
-      password: '{{ password }}'
-      operation: 'add'
-      rule_name: 'Ansible test 2'
-      description: 'Another Ansible test rule'
-      source_zone: ['internal']
-      source_ip: ['192.168.100.100']
-      source_user: ['any']
-      hip_profiles: ['any']
-      destination_zone: ['external']
-      destination_ip: ['any']
-      category: ['any']
-      application: ['any']
-      service: ['service-https']
-      action: 'allow'
-      commit: 'true'
+    - name: Add test rule 2 to the firewall
+      panos_security_rule:
+        ip_address: '{{ ip_address }}'
+        username: '{{ username }}'
+        password: '{{ password }}'
+        operation: 'add'
+        rule_name: 'Ansible test 2'
+        description: 'Another Ansible test rule'
+        source_zone: ['internal']
+        source_ip: ['192.168.100.100']
+        source_user: ['any']
+        hip_profiles: ['any']
+        destination_zone: ['external']
+        destination_ip: ['any']
+        category: ['any']
+        application: ['any']
+        service: ['service-https']
+        action: 'allow'
+        commit: 'true'

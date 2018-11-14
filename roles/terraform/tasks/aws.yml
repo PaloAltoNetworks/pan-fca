@@ -1,3 +1,5 @@
+---
+
 - name: "EXECUTE TERRAFORM PLAN"
   terraform:
     project_path: "{{ provider_dir }}"
@@ -6,5 +8,5 @@
     variables:
       fw_key_name: "pa_temp"
       fw_key: "{{ lookup('file', temp_key + '.pub') }}"
-  environment: 
+  environment:
     "{{ cloud_env }}"

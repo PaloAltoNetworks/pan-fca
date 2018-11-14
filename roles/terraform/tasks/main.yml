@@ -2,5 +2,3 @@
 
 - name: "EXECUTE PLAN FOR {{ cloud_provider | upper }}"
   include_tasks: "{{ cloud_provider }}.yml"
-
-

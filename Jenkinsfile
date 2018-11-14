@@ -1,6 +1,14 @@
 pipeline {
   agent any
   stages {
+    stage('Checkout SCM') {
+      steps {
+        script {
+          checkout scm
+        }
+        
+      }
+    }
     stage("lint") {
       steps {
         /*

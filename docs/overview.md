@@ -104,8 +104,33 @@ Jenkins was deployed, and relies on an active project to poll, and a Jenkinsfile
 
 Docker is used to ensure there are no external configuration dependencies not met. This additionally ensures a consitent working environment regardless of location.
 
-# Anatomy of the configuration Push playbook
+## Filter Plugins
 
+Jinja has a concept of filter plugins, e.g. `| lower` is a filter. There are several custom filter plugins located in the project within the `filter_plugins`. 
+
+## Custom Modules
+
+Ansible comes built with many modules, but there are often use cases where you would need to extend that functionality. In this project they are located in the `library` folder
+
+## Jinja Files
+
+Ansible uses Jinja in many facets, one of the main ways it is used in this project is within the main.tf creation. The primary files is essentially a simple include to other files.
+
+As an example, `azure-main.tf.j2`:
+```
+// Locking down version to get around lb_port issue
+provider "azurerm" {
+  version = "1.12"
+}
+
+{% include "azure-vnet.tf.j2" %}
+{% include "azure-router.tf.j2" %}
+{% include "azure-loadbalancer.tf.j2" %}
+{% include "azure-firewall.tf.j2" %}
+{% include "azure-peering.tf.j2" %}
+```
+
+# Anatomy of the configuration Push playbook
 
 1. Obtain credentials
 
@@ -275,7 +300,5 @@ Docker is used to ensure there are no external configuration dependencies not me
 | Main TF Templates | ./templates | Here are the Jinja files that create the main.tf vars file |
 | Dockerfile Files | ./Dockerfile* | There are both files for a full and slim instance to create a usable envirnment quickly |
 | Jenkins | Jenkinsfile | Defines the tests that are run during each Jenkins testing suite |
-
-
-
+| Provider | provider.yml | This is the file you will need to fill out with the local credentials, it is in the gitignore and an example file is given |
 

@@ -49,12 +49,13 @@ All data is contained within the `./root` directory
 
 - Start docker container and mount the root folder
 
-`docker run -v ${PWD}/root:/fca -it dirtyonekanobi/ansible-terraform` _for full image_
+`docker run -v ${PWD}:/fca -it dirtyonekanobi/ansible-terraform` _for full image_
 
-`docker run -v ${PWD}/root:/fca -it dirtyonekanobi/ansible-terraform-slim` _for slim image_
+`docker run -v ${PWD}:/fca -it dirtyonekanobi/ansible-terraform-slim` _for slim image_
 
-`docker run -v ${PWD}/root:/fca -it <tag used in build step>` _for built image_
+`docker run -v ${PWD}:/fca -it <tag used in build step>` _for built image_
 
+Adjusted command above since Root directory was removed.
 This mounts the `./root` directory in the `fca` directory, and launches container
 
 - Launch topology from within container image

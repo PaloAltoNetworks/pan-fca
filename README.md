@@ -39,4 +39,5 @@ Docker instructions can be found [here.](./docs/Docker_Instructions_Readme.md)
 The data model is be found [here.](./docs/DATA_MODEL.md)
 
 
- <img src="/docs/overview.md" />
+## Guides
+User and Developer guide can be found [here.](./docs/overview.md)

@@ -1,17 +1,3 @@
-/*
-provider "azurerm" {
-  version = "~> 0.3"
-}
-
-provider "random" {
-  version = "~> 1.0"
-}
-
-module "os" {
-  source       = "./os"
-  vm_os_simple = "${var.vm_os_simple}"
-}
-*/
 
 resource "azurerm_resource_group" "vm" {
   name     = "${var.resource_group_name}"

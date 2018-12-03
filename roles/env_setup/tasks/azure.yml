@@ -3,6 +3,6 @@
   set_fact:
     cloud_env:
       ARM_SUBSCRIPTION_ID: "{{ azure_subscription_id }}"
-      ARM_CLIENT_ID: "{{ azure_client_id }}"
-      ARM_CLIENT_SECRET: "{{ azure_client_secret }}"
-      ARM_TENANT_ID: "{{ azure_tenant_id }}"
+      #ARM_CLIENT_ID: "{{ azure_client_id }}"
+      #ARM_CLIENT_SECRET: "{{ azure_client_secret }}"
+      #ARM_TENANT_ID: "{{ azure_tenant_id }}"

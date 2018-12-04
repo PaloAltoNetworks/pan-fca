@@ -1,11 +1,10 @@
 {# Firewall module template #}
 {% for name, vnet in vnets.items() %}
 {% if vnet['firewalls'] is defined %}
-
 module "{{ name }}-firewall" {
 source = "{{ module_dir }}/firewall"
-fw_instance_count = "${length(module.{{ name }}.availability_zones)}"
-availability_zones = ["${module.{{ name }}.availability_zones }"]
+fw_instance_count = "${length(module.{{ name }}.vpc_availability_zones)}"
+availability_zones = ["${module.{{ name }}.vpc_availability_zones }"]
 untrust_subnets = ["${module.{{ name }}.untrust_subnets}"]
 untrust_security_group = "${module.{{ name }}.untrust_security_group}"
 trust_subnets = ["${module.{{ name }}.trust_subnets}"]

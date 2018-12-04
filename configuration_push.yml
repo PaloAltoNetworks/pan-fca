@@ -91,18 +91,12 @@
 
     - name: "WAIT FOR MGMT AVAILABILITY"
       pause:
-        seconds: 600
-      when: cloud_provider == 'aws'
-
-    - name: "WAIT FOR MGMT AVAILABILITY"
-      pause:
-        seconds: 240
-      when: cloud_provider == 'azure'
+        seconds: 60
 
     - name: "CONFIGURE MGMT ACCESS"
       panos_admpwd:
         ip_address: "{{ ansible_host }}"
-        key_filename: "{{ lookup('env', 'HOME') }}/paloalto/creds/tempkey"
+        key_filename: "{{ temp_key }}"
         username: "{{ username }}"
         newpassword: "{{ password }}"
       when: cloud_provider == 'aws'

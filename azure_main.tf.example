@@ -1,0 +1,140 @@
+// Locking down version to get around lb_port issue
+provider "azurerm" {
+  version = "1.12"
+}
+
+module "VPCTransit" {
+  source              = "./modules/azure/vnet"
+  resource_group_name = "VPCTransit"
+  location            = "east us"
+  vnet_name           = "main_transit"
+  address_space       = "10.227.127.0/24"
+  subnet_prefixes     = ["10.227.127.64/27", "10.227.127.32/27", "10.227.127.0/27", "10.227.127.96/27"]
+  subnet_names        = ["Management", "Trust", "Untrust", "EgressLB"]
+
+  tags = {
+    environment = "dev"
+    costcenter  = "it"
+  }
+}
+
+module "Spoke1" {
+  source              = "./modules/azure/vnet"
+  resource_group_name = "Spoke1"
+  location            = "east us"
+  vnet_name           = "operations"
+  address_space       = "10.217.128.0/24"
+  subnet_prefixes     = ["10.217.128.64/27", "10.217.128.32/27", "10.217.128.0/27", "10.217.128.96/27"]
+  subnet_names        = ["Management", "Trust", "Untrust", "EgressLB"]
+
+  tags = {
+    environment = "dev"
+    costcenter  = "it"
+  }
+}
+
+# Creating routes
+
+module "Spoke1-spoke_rt" {
+  source              = "./modules/azure/router"
+  location            = "east us"
+  resource_group_name = "${module.Spoke1.resource_group_name}"
+  route_table_name    = "spoke_rt"
+
+  routes = [
+    {
+      name    = "spoke_to_transit"
+      cidr    = "10.217.128.0/24"
+      gateway = "10.217.128.29"
+    },
+  ]
+}
+
+module "VPCTransit-public-lb" {
+  source              = "./modules/azure/loadbalancer"
+  name                = "public-LB"
+  location            = "east us"
+  resource_group_name = "VPCTransit"
+  type                = "public"
+  frontend_name       = "Untrust"
+  backendpoolname     = "Untrust"
+
+  "remote_port" {
+    ssh = ["Tcp", "22"]
+  }
+
+  "lb_port" {
+    http = ["80", "Tcp", "80"]
+
+    #https = ["443", "Tcp", "443"]
+  }
+
+  "lb_probe_port" {
+    http = ["22"]
+  }
+}
+
+module "VPCTransit-private-lb" {
+  source                                 = "./modules/azure/loadbalancer"
+  name                                   = "private-LB"
+  location                               = "east us"
+  resource_group_name                    = "VPCTransit"
+  type                                   = "private"
+  frontend_name                          = "Trust"
+  frontend_subnet_id                     = "${module.VPCTransit.vnet_subnets[1]}"
+  frontend_private_ip_address_allocation = "Static"
+  frontend_private_ip_address            = "${cidrhost(module.VPCTransit.vnet_subnet_prefixes[1], -3)}"
+  backendpoolname                        = "Trust"
+
+  "remote_port" {
+    ssh = ["Tcp", "22"]
+  }
+
+  "lb_port" {
+    http = ["0", "All", "0"]
+
+    #https = ["443", "Tcp", "443"]
+  }
+
+  "lb_probe_port" {
+    http = ["22"]
+  }
+
+  "tags" {
+    cost-center = "12345"
+    source      = "terraform"
+  }
+}
+
+# Creating the Palo Alto Firewalls
+
+module "firewall" {
+  source                  = "./modules/azure/firewall"
+  location                = "east us"
+  resource_group_name     = "VPCTransit"
+  vnet_subnet_id_trust    = "${module.VPCTransit.vnet_subnets[1]}"
+  vnet_subnet_id_untrust  = "${module.VPCTransit.vnet_subnets[2]}"
+  vnet_subnet_id_mgmt     = "${module.VPCTransit.vnet_subnets[0]}"
+  lb_backend_pool_trust   = "${module.VPCTransit-private-lb.azurerm_lb_backend_address_pool_id}"
+  lb_backend_pool_untrust = "${module.VPCTransit-public-lb.azurerm_lb_backend_address_pool_id}"
+}
+
+output "firewalls_created" {
+  value = "${module.firewall.firewalls_created}"
+}
+
+module "VPCTransit_peer_1" {
+  source                         = "./modules/azure/peering"
+  peer_name                      = "${module.Spoke1.vnet_name}"
+  peer_resource_group_name       = "${module.VPCTransit.resource_group_name}"
+  peer_virtual_network_name      = "${module.VPCTransit.vnet_name}"
+  peer_remote_virtual_network_id = "${module.Spoke1.vnet_id}"
+}
+
+module "Spoke1_peer_1" {
+  source                         = "./modules/azure/peering"
+  peer_name                      = "${module.VPCTransit.vnet_name}"
+  peer_resource_group_name       = "${module.Spoke1.resource_group_name}"
+  peer_virtual_network_name      = "${module.Spoke1.vnet_name}"
+  peer_remote_virtual_network_id = "${module.VPCTransit.vnet_id}"
+}

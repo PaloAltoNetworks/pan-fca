@@ -15,31 +15,21 @@ variable "vpc_cidr" {
 
 variable "untrust_subnets" {
     description = "List of untrusted subnets to create"
-    type = "list"
-    default = []
-}
-
-variable "mgmt_subnets" {
-    description = "List of mgmt subnets to create"
-    type = "list"
     default = []
 }
 
 variable "trust_subnets" {
     description = "List of Trusted Subnets to Create"
-    type = "list"
     default = []
 }
 
 variable "availability_zones" {
     description = "List of Availability zones"
-    type = "list"
     default = []
 }
 
 variable "customer_asns" {
     description = "List of ASNs Customer has provided"
-    type = "list"
     default = []
 }
 

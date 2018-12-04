@@ -116,7 +116,7 @@ def set_panwfw_password(module, ip_address, key_filename, newpassword, username)
     # a way to retrieve the instance SSH key fingerprint from AWS
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    ssh.connect(ip_address, username=username, key_filename=key_filename)
+    ssh.connect(ip_address, username=username, key_filename='/home/dirtyonekanobi/paloalto/creds/tempkey')
     shell = ssh.invoke_shell()
 
     # wait for the shell to start

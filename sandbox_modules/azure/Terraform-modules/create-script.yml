@@ -5,14 +5,14 @@
   connection: local
 
   vars:
-    output_file: 'main-azure.tf'
+    output_file: 'main.tf'
   vars_files:
     - 'resource_groups.yml'
 
   tasks:
     - name: Create template
       template:
-        src: 'main-azure.tf.j2'
+        src: 'main.tf.j2'
         dest: '{{ output_file }}'
 
     - name: fmt the things

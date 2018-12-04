@@ -4,7 +4,6 @@ source = "{{ module_dir }}/vpc"
 vpc_cidr = "{{ vnet['vnet_network']['network'] }}"
 untrust_subnets = [{% for sub in vnet['vnet_network']['subnet'] if sub.type == 'untrusted' %}"{{ sub.network }}",{% endfor %}]
 trust_subnets = [{% for sub in vnet['vnet_network']['subnet'] if sub.type == 'trusted' %}"{{ sub.network }}",{% endfor %}]
-mgmt_subnets = [{% for sub in vnet['vnet_network']['subnet'] if sub.type == 'mgmt' %}"{{ sub.network }}",{% endfor %}]
 region = "{{ location }}"
 {% if vnet.availability_zones is defined %}
 availability_zones = [{% for zone in vnet.availability_zones %}"{{ zone }}",{% endfor %}]

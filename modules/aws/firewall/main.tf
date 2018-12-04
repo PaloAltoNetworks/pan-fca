@@ -9,6 +9,54 @@
 provider "aws" {
   region = "${var.region}"
 }
+#### Create IAM roles to launch firewall bootstrapping ####
+
+resource "aws_iam_role" "FirewallBootstrapRoleServices" {
+  name = "FirewallBootstrapRoleServices1"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+      "Service": "ec2.amazonaws.com"
+    },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy" "FirewallBootstrapRolePolicyServices" {
+  name = "FirewallBootstrapRolePolicyServices1"
+  role = "${aws_iam_role.FirewallBootstrapRoleServices.id}"
+
+  policy = <<EOF
+{
+  "Version" : "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": ["arn:aws:s3:::boot1","arn:aws:s3:::boot2"]
+    },
+    {
+    "Effect": "Allow",
+    "Action": "s3:GetObject",
+    "Resource": ["arn:aws:s3:::boot1/*","arn:aws:s3:::boot2/*"]
+    }
+  ]
+}
+EOF
+}
+resource "aws_iam_instance_profile" "FirewallBootstrapInstanceProfileServices" {
+  name  = "FirewallBootstrapInstanceProfileServices1"
+  role = "${aws_iam_role.FirewallBootstrapRoleServices.name}"
+  path = "/"
+}
 
 #### Create Network Interfaces ####
 
@@ -77,7 +125,7 @@ resource "aws_key_pair" "generated_key" {
 resource "aws_instance" "FWInstance" {
   count = "${var.fw_instance_count}"
   disable_api_termination = false
-  #iam_instance_profile = "${aws_iam_instance_profile.FirewallBootstrapInstanceProfileServices.name}"
+  iam_instance_profile = "${aws_iam_instance_profile.FirewallBootstrapInstanceProfileServices.name}"
   instance_initiated_shutdown_behavior = "stop"
   availability_zone = "${element(var.availability_zones, count.index)}"
   ebs_optimized = true

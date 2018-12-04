@@ -30,36 +30,23 @@ resource "aws_vpn_gateway" "palo_vpn" {
 #  create Services VPC Subnets  #
 #################################
 resource "aws_subnet" "untrust_subnet" {
-  count = "${length(var.untrust_subnets)}"
+count = "${length(var.untrust_subnets)}"
   vpc_id = "${aws_vpc.palo.id}"
   cidr_block = "${element(var.untrust_subnets, count.index)}"
-  availability_zone = "${var.region}${element(var.availability_zones, count.index)}"
-
-  tags {
-    Name = "${var.region}${element(var.availability_zones, count.index)}-untrust-subnet"
+  availability_zone = "${element(local.aws_zones, count.index)}"
+  tags = {
+      "Name" = "${var.stack_name}"
   }
 }
 
 resource "aws_subnet" "trust_subnet" {
-  count = "${length(var.trust_subnets)}"
+    count = "${length(var.trust_subnets)}"
   vpc_id = "${aws_vpc.palo.id}"
-  availability_zone = "${var.region}${element(var.availability_zones, count.index)}"
-  cidr_block = "${element(var.trust_subnets, count.index)}"
-
-  tags {
-    Name = "${var.region}${element(var.availability_zones, count.index)}-trust-subnet"
-  }
-}
-
-resource "aws_subnet" "mgmt_subnet" {
-  count = "${length(var.mgmt_subnets)}"
-  vpc_id = "${aws_vpc.palo.id}"
-  availability_zone = "${var.region}${element(var.availability_zones, count.index)}"
-  cidr_block = "${element(var.mgmt_subnets, count.index)}"
-
-  tags {
-    Name = "${var.region}${element(var.availability_zones, count.index)}-mgmt-subnet"
-  }
+  availability_zone = "${element(local.aws_zones, count.index)}"
+    cidr_block = "${element(var.trust_subnets, count.index)}"
+    tags = {
+        "Name" = "${var.stack_name}"
+    }
 }
 
 resource "aws_default_route_table" "palo" {
@@ -171,19 +158,11 @@ resource "aws_vpc_endpoint_route_table_association" "rtpalos3" {
 #### Create the Elastic IP Addresses ####
 #########################################
 resource "aws_eip" "untrust_elastic_ip" {
-  count      = "${length(var.availability_zones)}"
+  count      = "${length(local.aws_zones)}"
   vpc        = true
-
-  tags {
-    Name = "${var.region}${element(var.availability_zones, count.index)}-untrust-eip"
-  }
 }
 
 resource "aws_eip" "management_elastic_ip" {
-  count      = "${length(var.availability_zones)}"
+  count      = "${length(local.aws_zones)}"
   vpc        = true
-
-  tags {
-    Name = "${var.region}${element(var.availability_zones, count.index)}-mgmt-eip"
-  }
 }

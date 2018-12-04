@@ -4,19 +4,16 @@ variable "region" {
 }
 variable "trust_subnets" {
   description = "list of trusted subnet ids"
-  type = "list"
   default = []
 }
 
 variable "untrust_subnets" {
   description = "list of untrusted subnet ids"
-  type = "list"
   default = []
 }
 
 variable "management_subnets" {
   description = "list of management subnet ids"
-  type = "list"
   default = []
 }
 
@@ -37,19 +34,16 @@ variable "trust_security_group" {
 
 variable "untrust_elastic_ips" {
   description = "List of untrusted elastic ip ids"
-  type = "list"
   default = []
 }
 
 variable "management_elastic_ips" {
   description = "list of mgmt elastic ip ids"
-  type = "list"
   default = []
 }
 
 variable "management_elastic_ip_addresses" {
   description = "list of mgmt elastic ip addresses"
-  type = "list"
   default = []
 }
 
@@ -70,7 +64,6 @@ variable "fw_key" {
 
 #AZ zones
 variable "availability_zones" {
-  type = "list"
   default = []
 }
 #AZ zone1

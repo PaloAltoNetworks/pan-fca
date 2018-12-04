@@ -1,8 +1,8 @@
 module "VPCTransit" {
-  source             = "./modules/aws/vpc"
-  vpc_cidr           = "10.217.127.0/24"
-  untrust_subnets    = ["10.217.127.0/27", "10.217.127.96/27"]
-  trust_subnets      = ["10.217.127.64/27", "10.217.127.32/27"]
+  source             = "..\/modules\/aws\/vpc"
+  vpc_cidr           = "10.227.127.0/24"
+  untrust_subnets    = ["10.227.127.0/27", "10.227.127.96/27"]
+  trust_subnets      = ["10.227.127.64/27", "10.227.127.32/27"]
   region             = "us-east-1"
   availability_zones = ["a", "b"]
   vpc_name           = "VPCTransit"
@@ -10,21 +10,10 @@ module "VPCTransit" {
   customer_asns      = ["65001"]
 }
 
-module "Spoke1" {
-  source          = "./modules/aws/vpc"
-  vpc_cidr        = "10.217.128.0/24"
-  untrust_subnets = ["10.217.128.0/27", "10.217.128.96/27"]
-  trust_subnets   = ["10.217.128.64/27", "10.217.128.32/27"]
-  region          = "us-east-1"
-  vpc_name        = "Spoke1"
-  stack_name      = "Spoke1"
-  customer_asns   = ["65001"]
-}
-
 module "VPCTransit-firewall" {
-  source                          = "./modules/aws/firewall"
-  fw_instance_count               = "${length(module.VPCTransit.vpc_availability_zones)}"
-  availability_zones              = ["${module.VPCTransit.vpc_availability_zones }"]
+  source                          = "..\/modules\/aws\/firewall"
+  fw_instance_count               = "${length(module.VPCTransit.availability_zones)}"
+  availability_zones              = ["${module.VPCTransit.availability_zones }"]
   untrust_subnets                 = ["${module.VPCTransit.untrust_subnets}"]
   untrust_security_group          = "${module.VPCTransit.untrust_security_group}"
   trust_subnets                   = ["${module.VPCTransit.trust_subnets}"]

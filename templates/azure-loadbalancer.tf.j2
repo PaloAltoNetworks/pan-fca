@@ -8,6 +8,7 @@ module "{{ name }}-{{ lb.name }}-lb" {
   location                               = "{{ location }}"
   resource_group_name                    = "{{ name }}"
   type                                   = "{{ lb.type }}"
+
   {% if lb.type == 'private' %}
   frontend_name                          = "{{ lb.fename }}"
   frontend_subnet_id                     = "${module.{{ name }}.vnet_subnets[1]}"

@@ -44,7 +44,7 @@ output "untrust_route_table_ids" {
     value = ["${aws_route_table.untrust_subnet.*.id}"]
 }
 
-output "vpc_availability_zones" {
+output "availability_zones" {
     description = "List of AZs used with this VPC"
     value = ["${local.aws_zones}"]
 }

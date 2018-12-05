@@ -46,7 +46,7 @@ output "untrust_route_table_ids" {
 
 output "availability_zones" {
     description = "List of AZs used with this VPC"
-    value = ["${local.aws_zones}"]
+    value = ["${var.availability_zones}"]
 }
 
 output "untrust_security_group" {

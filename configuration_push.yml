@@ -69,6 +69,12 @@
       tags:
         - 'tf'
 
+#    - name:  "USE TERRAFORM OUTPUT STORE AZURE TEMP VALUES"
+#      set_fact:
+#        private_address: "{{ private_address.stdout |from_json }}"
+#      when: cloud_provider == 'azure'
+
+
 - name: "DEPLOY CONFIGURATIONS AND VALIDATE"
   hosts: "firewalls"
   connection: "local"

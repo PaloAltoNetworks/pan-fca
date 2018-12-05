@@ -2,13 +2,17 @@
 locals {
   //aws_zones = ["${length(var.availability_zones) > 0 ? var.availability_zones : data.aws_availability_zones.default.names}"]
   // aws_zones = ["${split(",", length(join(",", var.availability_zones)) > 0 ? join(",", var.availablity_zones) : join(",", data.aws_availability_zones.default.names))}"] 
-  aws_zones = ["${var.region}a", "${var.region}b"]
+  #aws_zones = ["${var.region}a", "${var.region}b"]
+  #aws_zones = ["${var.region}${element(var.availability_zones, count.index)}]
 }
+
 
 provider "aws" {
   region = "${var.region}"
 }
 // Create VPC Resource
+
+
 resource "aws_vpc" "palo" {
   cidr_block = "${var.vpc_cidr}"
   tags = {
@@ -33,32 +37,32 @@ resource "aws_subnet" "untrust_subnet" {
   count = "${length(var.untrust_subnets)}"
   vpc_id = "${aws_vpc.palo.id}"
   cidr_block = "${element(var.untrust_subnets, count.index)}"
-  availability_zone = "${var.region}${element(var.availability_zones, count.index)}"
+  availability_zone = "${element(var.availability_zones, count.index)}"
 
   tags {
-    Name = "${var.region}${element(var.availability_zones, count.index)}-untrust-subnet"
+    Name = "${element(var.availability_zones, count.index)}-untrust-subnet"
   }
 }
 
 resource "aws_subnet" "trust_subnet" {
   count = "${length(var.trust_subnets)}"
   vpc_id = "${aws_vpc.palo.id}"
-  availability_zone = "${var.region}${element(var.availability_zones, count.index)}"
+  availability_zone = "${element(var.availability_zones, count.index)}"
   cidr_block = "${element(var.trust_subnets, count.index)}"
 
   tags {
-    Name = "${var.region}${element(var.availability_zones, count.index)}-trust-subnet"
+    Name = "${element(var.availability_zones, count.index)}-trust-subnet"
   }
 }
 
 resource "aws_subnet" "mgmt_subnet" {
   count = "${length(var.mgmt_subnets)}"
   vpc_id = "${aws_vpc.palo.id}"
-  availability_zone = "${var.region}${element(var.availability_zones, count.index)}"
+  availability_zone = "${element(var.availability_zones, count.index)}"
   cidr_block = "${element(var.mgmt_subnets, count.index)}"
 
   tags {
-    Name = "${var.region}${element(var.availability_zones, count.index)}-mgmt-subnet"
+    Name = "${element(var.availability_zones, count.index)}-mgmt-subnet"
   }
 }
 
@@ -175,7 +179,7 @@ resource "aws_eip" "untrust_elastic_ip" {
   vpc        = true
 
   tags {
-    Name = "${var.region}${element(var.availability_zones, count.index)}-untrust-eip"
+    Name = "${element(var.availability_zones, count.index)}-untrust-eip"
   }
 }
 
@@ -184,6 +188,6 @@ resource "aws_eip" "management_elastic_ip" {
   vpc        = true
 
   tags {
-    Name = "${var.region}${element(var.availability_zones, count.index)}-mgmt-eip"
+    Name = "${element(var.availability_zones, count.index)}-mgmt-eip"
   }
 }

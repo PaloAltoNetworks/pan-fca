@@ -148,3 +148,9 @@
         password: '{{ password }}'
       tags:
         - 'ansible'
+
+    - name: "Update PANOS Software"
+      include_role:
+        name: "pa_update"
+      tags:
+        - 'ansible'

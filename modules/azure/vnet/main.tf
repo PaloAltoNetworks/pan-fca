@@ -17,5 +17,5 @@ resource "azurerm_subnet" "subnet" {
   resource_group_name       = "${azurerm_resource_group.vnet.name}"
   address_prefix            = "${var.subnet_prefixes[count.index]}"
   count                     = "${length(var.subnet_names)}"
-  route_table_id            = "${module.router.routetable_id}"
+  #route_table_id            = "${module.router.routetable_id}"
 }

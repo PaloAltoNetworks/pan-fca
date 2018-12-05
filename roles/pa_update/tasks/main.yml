@@ -1,0 +1,15 @@
+---
+
+- name: "SET FACT FOR ADDRESS OBJECTS"
+  set_fact:
+    version: "{{ cm_panos_software | default([]) }}"
+
+- name: Install PAN-OS Software Update
+  panos_software:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    version: "{{ item['version'] }}"
+    restart: true
+  with_items: "{{ cm_panos_software }}"
+  when: "cm_panos_software is defined"

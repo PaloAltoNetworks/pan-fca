@@ -44,7 +44,7 @@ variable "storage_account_type" {
 
 variable "nb_instances" {
   description = "Specify the number of vm instances"
-  default     = "2"
+  default     = ""
 }
 
 variable "vm_hostname" {
@@ -168,6 +168,11 @@ variable "fw_size" {
 }
 
 variable "fw_lb_type" {
-  default = ""
   description = "Public|Private load balance configuration"
+  default = ""
+}
+
+variable "general_int_name" {
+  description = "Generell name for your interfaces"
+  default = "PANFW-"
 }

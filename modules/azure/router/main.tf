@@ -21,24 +21,3 @@ resource "azurerm_route" "route_entry" {
   depends_on = ["azurerm_route_table.route_table"]
 }
 
-
-/*
-#Routing Example to the internal FrontendIP of the Internal LB
-# Spoke Route Tabel
-
-resource "azurerm_route_table" "Spoke" {
-  name                = "RT-${var.spokevnet}"
-  location            = "${azurerm_resource_group.rgspoke.location}"
-  resource_group_name = "${azurerm_resource_group.rgspoke.name}"
-
-disable_bgp_route_propagation = false
-
-  route {
-    name           = "default"
-    address_prefix = "0.0.0.0/0"
-    next_hop_type  = "VirtualAppliance"
-    next_hop_in_ip_address = "${var.frontendip_internallb}"
-  }
-}
-*/
-

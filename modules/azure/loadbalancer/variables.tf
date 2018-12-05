@@ -33,6 +33,11 @@ variable "lb_port" {
   default     = {}
 }
 
+variable "lb_probename" {
+  description = "Name of the Load Balancer Probe"
+  default = ""
+}
+
 variable "lb_probe_port" {
   description = "Protocols to be used for lb health probes and rules. [frontend_port, protocol, backend_port]"
   default     = {}
@@ -85,4 +90,25 @@ variable "frontend_private_ip_address" {
 variable "frontend_private_ip_address_allocation" {
   description = "(Optional) Frontend ip allocation type (Static or Dynamic)"
   default     = "Static"
+}
+
+variable "load_distribution" {
+  description = "Option available SourceIPProtocol / None / SourceIP"
+  default = "SourceIPProtocol"
+}
+
+variable "lb_rulename" {
+  default = ""
+}
+
+variable "lb_ruleprotocol" {
+  default = ""
+}
+
+variable "lb_rulefrontport" {
+  default = ""
+}
+
+variable "lb_rulebackport" {
+  default = ""
 }

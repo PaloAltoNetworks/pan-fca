@@ -7,11 +7,14 @@
     source                      = "{{ module_dir }}/firewall"
     location                    = "{{ location }}"
     resource_group_name         = "{{ name }}"
+    nb_instances                = "{{ fw.vmcount }}"
     vnet_subnet_id_trust        = "${module.{{ name }}.vnet_subnets[1]}"
     vnet_subnet_id_untrust      = "${module.{{ name }}.vnet_subnets[2]}"
     vnet_subnet_id_mgmt         = "${module.{{ name }}.vnet_subnets[0]}"
     lb_backend_pool_trust       = "${module.{{ name }}-private-lb.azurerm_lb_backend_address_pool_id}"
     lb_backend_pool_untrust     = "${module.{{ name }}-public-lb.azurerm_lb_backend_address_pool_id}"
+    general_int_name            = "{{ fw.fwname }}"
+    fw_size                     = "{{ fw.fwvmsize }}"
     
   }
 {% endfor %}

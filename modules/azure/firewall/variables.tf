@@ -172,7 +172,7 @@ variable "fw_lb_type" {
   default = ""
 }
 
-variable "generel_int_name" {
+variable "general_int_name" {
   description = "Generell name for your interfaces"
   default = "PANFW-"
 }

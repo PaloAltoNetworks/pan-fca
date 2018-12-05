@@ -13,7 +13,7 @@
     vnet_subnet_id_mgmt         = "${module.{{ name }}.vnet_subnets[0]}"
     lb_backend_pool_trust       = "${module.{{ name }}-private-lb.azurerm_lb_backend_address_pool_id}"
     lb_backend_pool_untrust     = "${module.{{ name }}-public-lb.azurerm_lb_backend_address_pool_id}"
-    generel_int_name            = "{{ fw.fwname }}"
+    general_int_name            = "{{ fw.fwname }}"
     fw_size                     = "{{ fw.fwvmsize }}"
     
   }

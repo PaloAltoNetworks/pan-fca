@@ -41,3 +41,7 @@ output "azurerm_lb_backend_address_pool_id" {
 output "azurerm.azlb.load_distribution" {
   value = "${azurerm_lb_rule.azlb.*.load_distribution}"
 }
+
+output "lb_frontend_private_ip" {
+  value = "${azurerm_lb.azlb.private_ip_address}"
+}

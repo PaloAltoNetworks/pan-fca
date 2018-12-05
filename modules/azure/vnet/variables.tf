@@ -50,13 +50,3 @@ variable "nsg_ids" {
     #EgressLB = "nsgid1"
   }
 }
-
-variable "tags" {
-  description = "The tags to associate with your network and subnets."
-  type        = "map"
-
-  default = {
-    tag1 = ""
-    tag2 = ""
-  }
-}

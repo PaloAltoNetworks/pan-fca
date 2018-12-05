@@ -73,6 +73,7 @@ RETURN = '''
 '''
 
 from ansible.module_utils.basic import AnsibleModule
+import sys
 
 try:
     from jsonschema import validate, ValidationError, SchemaError, FormatChecker
@@ -107,6 +108,8 @@ def main():
     schema = module.params['schema']
     data = module.params['data']
     scope = module.params['scope']
+
+
 
     for item in scope:
         feature = item.get('name')

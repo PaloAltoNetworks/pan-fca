@@ -8,6 +8,7 @@ variable "location" {
 
 variable "route_table_name" {
   description = "Name of Route Table"
+  default = "Test"
 }
 
 variable "routes" {

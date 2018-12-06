@@ -147,7 +147,8 @@ EXAMPLES = '''
     password: "secret"
     if_name: "ethernet1/1"
     zone_name: "public"
-    create_default_route: "yes"
+    enable_dhcp: true
+    dhcp_default_route: "no"
 
 # Update ethernet1/2 with a static IP address in zone dmz.
 - name: ethernet1/2 as static in zone dmz
@@ -222,7 +223,8 @@ def set_virtual_router(con, eth, vr_name, routers):
     for vr in routers:
         if vr.name == vr_name:
             desired_vr = vr
-        elif eth.name in vr.interface:
+
+        elif vr.interface and eth.name in vr.interface:
             vr.interface.remove(eth.name)
             vr.update('interface')
             changed = True
@@ -270,6 +272,7 @@ def main():
         enable_dhcp=dict(type='bool', default=True),
         create_default_route=dict(type='bool', default=False),
         dhcp_default_route_metric=dict(),
+        dhcp_default_route=dict(type='str', default="no"),
         zone_name=dict(required=True),
         vr_name=dict(default='default'),
         vsys_dg=dict(default='vsys1'),
@@ -310,12 +313,19 @@ def main():
     }
 
     # Get other info.
+    enable_dhcp = module.params['enable_dhcp']
     operation = module.params['operation']
     state = module.params['state']
     zone_name = module.params['zone_name']
     vr_name = module.params['vr_name']
     vsys_dg = module.params['vsys_dg']
     commit = module.params['commit']
+    dhcp_default_route = module.params['dhcp_default_route']
+    if_name = module.params['if_name']
+
+    dhcpe = ('<entry name="%s"><layer3><dhcp-client><enable>yes</enable><create-default-route>%s</create-default-route>'
+             '</dhcp-client></layer3></entry>' % (if_name,dhcp_default_route))
+    dhcpx = ("/config/devices/entry[@name='localhost.localdomain']/network/interface/ethernet/entry[@name='%s']" % (if_name))
 
     # Open the connection to the PANOS device.
     con = PanDevice.create_from_device(*auth)
@@ -384,6 +394,8 @@ def main():
         try:
             changed |= set_zone(con, eth, zone_name, zones)
             changed |= set_virtual_router(con, eth, vr_name, routers)
+            if enable_dhcp is True:
+                con.xapi.edit(xpath=dhcpx,element=dhcpe)
         except PanDeviceError as e:
             module.fail_json(msg='Failed zone/vr assignment: {0}'.format(e))
     elif state == 'absent':

@@ -269,6 +269,7 @@ def main():
         ipv6_mss_adjust=dict(),
         enable_dhcp=dict(type='bool', default=True),
         create_default_route=dict(type='bool', default=False),
+        create_dhcp_default_route =dict(type='bool', default=False),
         dhcp_default_route_metric=dict(),
         zone_name=dict(required=True),
         vr_name=dict(default='default'),
@@ -305,11 +306,12 @@ def main():
         'ipv4_mss_adjust': module.params['ipv4_mss_adjust'],
         'ipv6_mss_adjust': module.params['ipv6_mss_adjust'],
         'enable_dhcp': module.params['enable_dhcp'] or None,
-        'create_dhcp_default_route': module.params['create_default_route'] or None,
+        'create_dhcp_default_route': module.params['create_dhcp_default_route'] or None,
         'dhcp_default_route_metric': module.params['dhcp_default_route_metric'],
     }
 
     # Get other info.
+    create_dhcp_default_route = module.params['create_dhcp_default_route']
     operation = module.params['operation']
     state = module.params['state']
     zone_name = module.params['zone_name']

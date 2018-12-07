@@ -271,6 +271,7 @@ def main():
         ipv6_mss_adjust=dict(),
         enable_dhcp=dict(type='bool', default=True),
         create_default_route=dict(type='bool', default=False),
+        create_dhcp_default_route =dict(type='bool', default=False),
         dhcp_default_route_metric=dict(),
         dhcp_default_route=dict(type='str', default="no"),
         zone_name=dict(required=True),

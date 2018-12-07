@@ -13,14 +13,14 @@ variable "vnet_subnet_id_trust" {
 
 variable "lb_backend_pool_trust" {
   description = "The subnet id of the virtual network where the virtual machines will reside."
-  #type = "list"
-  default = ""
+  type = "list"
+  default = []
 }
 
 variable "lb_backend_pool_untrust" {
   description = "The subnet id of the virtual network where the virtual machines will reside."
-  #type = "list"
-  default = ""
+  type = "list"
+  default = []
 }
 
 variable "vnet_subnet_id_untrust" {
@@ -175,4 +175,8 @@ variable "fw_lb_type" {
 variable "general_int_name" {
   description = "Generell name for your interfaces"
   default = "PANFW-"
+}
+
+variable "lbtype" {
+  default = "public"
 }

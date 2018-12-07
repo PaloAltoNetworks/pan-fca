@@ -29,8 +29,8 @@ module "{{ name }}-{{ lb.name }}-lb" {
   "lb_probe_port" {
       {{ lb.lbprobename }} = ["{{ lb.lbruleprobeport }}"]
 }
-
-{% else %}
+{% endif %}
+{% if lb.type == 'public' %}
   frontend_name       = "{{ lb.fename }}"
   backendpoolname     = "{{ lb.bename }}"
   lb_probename        = "{{ lb.lbprobename }}"

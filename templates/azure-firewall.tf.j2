@@ -3,7 +3,8 @@
 {% for fw in vnet['firewalls'] %}
 # Creating the Palo Alto Firewalls
 
-  module "firewall" {
+
+  module "{{ fw.avsetname }}" {
     source                      = "{{ module_dir }}/firewall"
     location                    = "{{ location }}"
     resource_group_name         = "{{ name }}"
@@ -23,13 +24,14 @@
     {% endif %}
     general_int_name            = "{{ fw.fwname }}"
     fw_size                     = "{{ fw.fwvmsize }}"
-    lbtype                      = "{{ fw.lbtype }}"
-    
+    avsetname                   = "{{ fw.avsetname }}"
   }
-{% endfor %}
+  
 output "firewalls_created" {
-  value = "${module.firewall.firewalls_created}"
+  value = "${module.{{ fw.avsetname }}.firewalls_created}"
 }
+{% endfor %}
+
 
 {% endif %}
 {% endfor %}

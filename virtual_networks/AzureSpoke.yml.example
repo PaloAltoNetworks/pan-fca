@@ -1,0 +1,34 @@
+
+
+vnet_network:
+  name: Web-Azure
+  peers:
+    - Transit-Azure
+  network: "172.16.128.0/24"
+  subnet:
+  - name: Webserver
+    network: "172.16.128.0/26"
+  - name: DB
+    network: "172.16.128.64/26"
+  - name: Test
+    network: "172.16.128.128/26"
+
+route_tables:
+  - name: web-test
+    routes:
+      - cidr: 0.0.0.0/0
+        name: VirtualAppliance
+        gateway: 1.1.1.1
+
+security_groups:
+  - name: Outbound allow
+    priority: 100
+    direction: inbound
+    action: allow
+    src_ip: 0.0.0.0
+    src_port: any
+    dst_port: any
+    dst_network: 0.0.0.0
+    protocol: any
+
+

@@ -59,9 +59,3 @@ output "firewalls_created" {
   value = "${zipmap(
     azurerm_virtual_machine.firewall.*.name, azurerm_public_ip.pip.*.ip_address)}"
 }
-
-output "firewalls_created2" {
-  description = "List of Firewalls created"
-  value = "${zipmap(
-    azurerm_virtual_machine.firewall.*.name, azurerm_public_ip.pip.*.ip_address)}"
-}

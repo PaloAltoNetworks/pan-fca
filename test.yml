@@ -36,9 +36,7 @@
       password: 'Paloalto123'
       if_name: "ethernet1/1"
       zone_name: "untrust"
-      #operation: "add"
       state: present
       vr_name: "untrust"
       create_dhcp_default_route: false
-      #operation: "update"
-      #management_profile: "Azure HealthProbe"
+      management_profile: "Azure HealthProbe"

@@ -26,7 +26,7 @@
     fw_size                     = "{{ fw.fwvmsize }}"
     avsetname                   = "{{ fw.avsetname }}"
   }
-  
+
 output "firewalls_created" {
   value = "${module.{{ fw.avsetname }}.firewalls_created}"
 }

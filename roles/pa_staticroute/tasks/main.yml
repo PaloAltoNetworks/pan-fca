@@ -1,28 +1,15 @@
 ---
 
-- name: Create Static Route with VR as NextHop
+- name: Create Static Route
   panos_static_route:
     ip_address: '{{ ansible_host }}'
     username: '{{ username }}'
     password: '{{ password }}'
     name: "{{ item['name'] }}"
     destination: "{{ item['destination'] }}"
-    nexthop: "{{ item['nexthop'] | default (None) | item_to_list or omit }}"
+    nexthop: "{{ item['nexthop'] }}"
     virtual_router: "{{ item['virtual_router'] }}"
-    nexthop_type: "{{ item['nexthop_type'] | default (ip-address) | item_to_list or omit }}"
-    interface: "{{ item['interface'] | default (None) | item_to_list or omit }}"
-  with_items: "{{ cm_panos_static_route }}"
+    nexthop_type: "{{ item['nexthop_type'] | default ('ip-address') }}"
+    interface: "{{ item['interface'] | default (omit) }}"
+  with_items: "{{ cm_panos_static_route | list }}"
   when: "cm_panos_static_route is defined"
-
-# - name: Create Static Route with Interface as NextHop
-#   panos_static_route:
-#     ip_address: '{{ ansible_host }}'
-#     username: '{{ username }}'
-#     password: '{{ password }}'
-#     name: '{{ item["name"] }}'
-#     destination: "{{ item['destination'] }}"
-#     nexthop: "{{ item['nexthop'] }}"
-#     interface: "{{ item['interface'] }}"
-#     virtual_router: "{{ item['virtual_router'] }}"
-#   with_items: "{{ cm_panos_static_route }}"
-#   when: "cm_panos_static_route is defined"

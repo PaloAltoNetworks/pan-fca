@@ -149,6 +149,12 @@
     #   tags:
     #     - 'ansible'
 
+    - name: "Create Static routes"
+      include_role:
+        name: "pa_staticroute"
+      tags:
+        - 'ansible'
+
 - name: "CONFIGURE Firewall Part 2"
   hosts: "firewalls"
   connection: "local"
@@ -172,25 +178,3 @@
       when: "cm_panos_software is defined"
       tags:
         - 'ansible'
-
-    - name: Create route to Next-VR
-      panos_static_route:
-        ip_address: '{{ ansible_host }}'
-        username: '{{ username }}'
-        password: '{{ password }}'
-        name: '{{ item.value.name }}'
-        destination: '{{ item.value.destination }}'
-        nexthop: '{{ item.value.nexthop }}'
-        virtual_router: '{{ item.value.virtual_router }}'
-        nexthop_type: '{{ item.value.nexthop_type }}'
-        interface: '{{ item.value.interface }}'
-      with_dict: "{{ cm_panos_static_route }}"
-      when: "cm_panos_static_route is defined"
-      tags:
-        - 'ansible'
-
-      # - name: "Create Static routes"
-      # include_role:
-      #   name: "pa_staticroute"
-      # tags:
-      #   - 'ansible'  

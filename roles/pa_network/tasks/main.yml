@@ -24,7 +24,7 @@
     ip_address: '{{ ansible_host }}'
     username: '{{ username }}'
     password: '{{ password }}'
-    operation: "{{ item['operation'] }}"
+    state: "{{ item['state'] }}"
     if_name: "{{ item['name'] }}"
     ip: "{{ item['ip'] | default(None) | item_to_list or omit }}"
     zone_name: "{{ item['zone'] }}"
@@ -42,7 +42,7 @@
     ip_address: '{{ ansible_host }}'
     username: '{{ username }}'
     password: '{{ password }}'
-    operation: "add"
+    state: "present"
     if_name: "{{ item['name'] }}"
     ip: "{{ item['ip'] | default(None) | item_to_list or omit }}"
     zone_name: "{{ item['zone'] }}"

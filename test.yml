@@ -7,16 +7,16 @@
 
   tasks:
 
-  # - name: Create route to Next-VR
-  #   panos_static_route:
-  #     ip_address: '52.142.90.238'
-  #     username: 'fwadmin'
-  #     password: 'Paloalto123'
-  #     name: 'Test-NextVR5'
-  #     destination: '5.5.59.0/24'
-  #     nexthop: 'untrust'
-  #     virtual_router: 'trust'
-  #     nexthop_type: 'next-vr'
+  - name: Create route to Next-VR
+    panos_static_route:
+      ip_address: '52.142.116.150'
+      username: 'fwadmin'
+      password: 'Paloalto123'
+      name: 'Test-NextVR5'
+      destination: '5.5.59.0/24'
+      nexthop: 'untrust'
+      virtual_router: 'trust'
+      nexthop_type: 'next-vr'
 
   # - name: Create route 'Test-Four'
   #   panos_static_route:
@@ -29,16 +29,14 @@
   #     nexthop: '10.217.127.36'
   #     virtual_router: 'trust'
 
-  - name: enable DHCP client on ethernet1/2 in zone internal
-    panos_interface:
-      ip_address: '52.142.90.238'
-      username: 'fwadmin'
-      password: 'Paloalto123'
-      if_name: "ethernet1/1"
-      zone_name: "untrust"
-      #operation: "add"
-      state: present
-      vr_name: "untrust"
-      create_dhcp_default_route: false
-      #operation: "update"
-      #management_profile: "Azure HealthProbe"
+  # - name: enable DHCP client on ethernet1/2 in zone internal
+  #   panos_interface:
+  #     ip_address: '52.142.90.238'
+  #     username: 'fwadmin'
+  #     password: 'Paloalto123'
+  #     if_name: "ethernet1/1"
+  #     zone_name: "untrust"
+  #     state: present
+  #     vr_name: "untrust"
+  #     create_dhcp_default_route: false
+  #     management_profile: "Azure HealthProbe"

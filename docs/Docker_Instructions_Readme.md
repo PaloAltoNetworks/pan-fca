@@ -4,6 +4,7 @@ Two versions of this container are included in this repository:
 
 - `slim` container: Based on Alpine Linux
 - `full` container: Based on Debian Linux
+- `FCA` container: Based on Debian Linux
 
 ### System Requirements
 
@@ -21,6 +22,9 @@ Both images have the following packages installed:
 - jsonschema
 - python2.7
 - pip
+- Ansible Role: PaloAltoNetworks.paloaltonetworks (FCA)
+- Azure CLI (FCA)
+
 
 ### Usage
 
@@ -32,9 +36,16 @@ Both images have the following packages installed:
 
 `docker pull dirtyonekanobi/ansible-terraform-slim` _slim image (200MB)_
 
+#### Obtaining Container Image from GitHub
+
+`download the file Dockerfile-FCA`  _full image (500MB)_
+
 > Build from Dockerfile
 
 `docker build -t <insert your tag name> -f Dockerfile-<full|slim> .`
+
+`docker build - < Dockerfile-FCA`
+`docker build -t fca - < Dockerfile-FCA`
 
 
 #### Add Data
@@ -54,6 +65,8 @@ All data is contained within the `./root` directory
 `docker run -v ${PWD}:/fca -it dirtyonekanobi/ansible-terraform-slim` _for slim image_
 
 `docker run -v ${PWD}:/fca -it <tag used in build step>` _for built image_
+
+`docker run -v ${PWD}:/fca -it fca>` _for built image_
 
 Adjusted command above since Root directory was removed.
 This mounts the `./root` directory in the `fca` directory, and launches container

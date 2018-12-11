@@ -69,10 +69,10 @@
       tags:
         - 'tf'
 
-#    - name:  "USE TERRAFORM OUTPUT STORE AZURE TEMP VALUES"
-#      set_fact:
-#        private_address: "{{ private_address.stdout |from_json }}"
-#      when: cloud_provider == 'azure'
+  #  - name:  "USE TERRAFORM OUTPUT STORE AZURE TEMP VALUES"
+  #    set_fact:
+  #      private_address: "{{ private_address.stdout |from_json }}"
+  #    when: cloud_provider == 'azure'
 
 
 - name: "DEPLOY CONFIGURATIONS AND VALIDATE"
@@ -141,10 +141,40 @@
     #  include_role:
     #    name: "pa_validate"
 
-    - name: "COMMIT THE CHANGES"
-      panos_commit:
+    # - name: "COMMIT THE CHANGES"
+    #   panos_commit:
+    #     ip_address: '{{ ansible_host }}'
+    #     username: '{{ username }}'
+    #     password: '{{ password }}'
+    #   tags:
+    #     - 'ansible'
+
+    - name: "Create Static routes"
+      include_role:
+        name: "pa_staticroute"
+      tags:
+        - 'ansible'
+
+- name: "CONFIGURE Firewall Part 2"
+  hosts: "firewalls"
+  connection: "local"
+  gather_facts: "no"
+
+  vars_files:
+    - "{{ playbook_dir }}/provider.yml"
+
+  roles:
+    - role: "PaloAltoNetworks.paloaltonetworks"
+
+  tasks:
+    - name: "Update PANOS Software"
+      panos_software:
         ip_address: '{{ ansible_host }}'
         username: '{{ username }}'
         password: '{{ password }}'
+        version: "{{ item.value.version}}"
+        restart: "{{ item.value.restart }}"
+      with_dict: "{{ cm_panos_software }}"
+      when: "cm_panos_software is defined"
       tags:
         - 'ansible'

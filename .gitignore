@@ -5,6 +5,8 @@ host_vars/*
 virtual_networks/*
 !virtual_networks/VPCTransit.yml.example
 !virtual_networks/Spoke1.yml.example
+!virtual_networks/AzureSpoke.yml.example
+!virtual_networks/AzureHUB.yml.example
 
 *.pyc
 .DS_Store

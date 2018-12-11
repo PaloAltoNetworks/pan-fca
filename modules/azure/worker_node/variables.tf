@@ -13,7 +13,8 @@ variable "vnet_subnet_id" {
 
 variable "public_ip_dns" {
   description = "Optional globally unique per datacenter region domain name label to apply to each public ip address. e.g. thisvar.varlocation.cloudapp.azure.com where you specify only thisvar here. This is an array of names which will pair up sequentially to the number of public ips defined in var.nb_public_ip. One name or empty string is required for every public ip. If no public ip is desired, then set this to an array with a single empty string."
-  default     = [""]
+  type = "list"
+  default     = []
 }
 
 variable "admin_password" {
@@ -53,12 +54,12 @@ variable "nb_instances" {
 
 variable "vm_hostname" {
   description = "local name of the VM"
-  default     = "myvm"
+  default     = "panw_worker_node"
 }
 
 variable "vm_os_simple" {
   description = "Specify UbuntuServer, WindowsServer, RHEL, openSUSE-Leap, CentOS, Debian, CoreOS and SLES to get the latest image version of the specified os.  Do not provide this value if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku."
-  default     = ""
+  default     = "UbuntuServer"
 }
 
 variable "vm_os_id" {
@@ -73,7 +74,7 @@ variable "is_windows_image" {
 
 variable "vm_os_publisher" {
   description = "The name of the publisher of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
-  default     = ""
+  default     = "Canonical"
 }
 
 variable "vm_os_offer" {

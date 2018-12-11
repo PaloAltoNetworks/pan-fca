@@ -37,7 +37,7 @@ resource "azurerm_storage_container" "storagecon" {
 
 # Create the availability set
 resource "azurerm_availability_set" "avset" {
-    name                                = "${var.avsetname}"
+    name                                = "av-fw"
     location                            = "${azurerm_resource_group.vm.location}"
     resource_group_name                 = "${azurerm_resource_group.vm.name}"
     platform_update_domain_count        = 5

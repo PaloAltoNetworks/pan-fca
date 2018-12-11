@@ -45,7 +45,7 @@ module "lambda" {
 
 
 module "eni_natgw" {
-  source = "./eni_lambda_natgw"
+  source = "eni\/eni_lambda_natgw"
   StackName = "${var.StackName}"
   NATGateway = "${var.NATGateway}"
   LambdaExecutionRole = "${module.lambda.lambda_execution_role_arn}"
@@ -58,7 +58,7 @@ module "eni_natgw" {
 }
 
 module "eni" {
-  source = "./eni_lambda"
+  source = "eni\/eni_lambda"
   NATGateway = "${var.NATGateway}"
   StackName = "${var.StackName}"
   LambdaExecutionRole = "${module.lambda.lambda_execution_role_arn}"

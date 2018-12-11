@@ -1,7 +1,7 @@
 FROM debian:jessie-slim
 
 ENV ANSIBLE_VERSION=2.6.4
-ENV TERRAFORM_VERSION=0.11.8
+ENV TERRAFORM_VERSION=0.11.10
 
 RUN DEBIAN_FRONTEND=noninteractive \
     apt-get update -y && \

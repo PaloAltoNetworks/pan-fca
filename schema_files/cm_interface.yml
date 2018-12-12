@@ -40,10 +40,10 @@ items:
       description: Create default route learned via dhcp
       type: boolean
       default: false
-    operation:
+    state:
       description: To complete the operation
       type: string
-      default: "add"
+      default: "present"
   additionalProperties: false
   required:
     - "name"

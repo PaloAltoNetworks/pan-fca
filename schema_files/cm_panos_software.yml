@@ -1,0 +1,16 @@
+---
+"$schema": http://json-schema.org/draft-04/schema#
+description: Updating the PANOS Version
+title: PANOS Software Update
+id: cm_panos_software
+type: array
+items:
+  type: object
+  properties:
+    version:
+      description: Define the Version to Update
+      type: string
+      maxLength: 10
+
+  additionalProperties: false
+additionalProperties: false

@@ -1,0 +1,69 @@
+
+firewalls:
+  - name: Firewall
+    vmcount: 1
+    fwname: VM-
+    fwvmsize: Standard_D3_v2
+
+load_balancers:
+  - name: public
+    fename: Untrust
+    bename: Untrust
+    type: public
+    lbrulename: Http
+    lbrulefrontport: 80
+    lbruleprotocol: tcp
+    lbrulebackport: 80
+    lbprobename: http
+    lbruleprobeport: 80
+
+  - name: private
+    fename: Trust
+    bename: Trust
+    type: private
+    lbrulename: HA
+    lbrulefrontport: 0
+    lbruleprotocol: All
+    lbrulebackport: 0
+    lbprobename: ssh
+    lbruleprobeport: 22
+
+vnet_network:
+  name: TransitVNet
+  network: "10.217.127.0/24"
+  peers:
+    - Web-Azure
+    - DEV-Azure
+  subnet:
+  - name: Management
+    network: "10.217.127.64/27"
+    #rte: Default_RT
+  - name: Trust
+    network: "10.217.127.32/27"
+    #rte: internal_network
+  - name: Untrust
+    network: "10.217.127.0/27"
+    #rte: default_internet
+  - name: EgressLB
+    network: "10.217.127.96/27"
+    #rte: default_internet
+
+route_tables:
+  - name: Default
+    routes:
+      - cidr: 0.0.0.0/0
+        name: VirtualAppliance
+        gateway: 1.1.1.1
+
+security_groups:
+  - name: Outbound allow
+    priority: 100
+    direction: inbound
+    action: allow
+    src_ip: 0.0.0.0
+    src_port: any
+    dst_port: any
+    dst_network: 0.0.0.0
+    protocol: any
+
+

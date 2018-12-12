@@ -1,0 +1,15 @@
+---
+
+- name: Create Static Route
+  panos_static_route:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    name: "{{ item['name'] }}"
+    destination: "{{ item['destination'] }}"
+    nexthop: "{{ item['nexthop'] }}"
+    virtual_router: "{{ item['virtual_router'] }}"
+    nexthop_type: "{{ item['nexthop_type'] | default ('ip-address') }}"
+    interface: "{{ item['interface'] | default (omit) }}"
+  with_items: "{{ cm_panos_static_route | list }}"
+  when: "cm_panos_static_route is defined"

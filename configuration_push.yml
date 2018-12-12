@@ -113,7 +113,7 @@
         newpassword: "{{ password }}"
       when: cloud_provider == 'aws'
 
-    - name: "DEPLOY ANY LICENSES OR ADMIN TASKS"
+    - name: "DEPLOY ADMIN TASKS"
       include_role:
         name: "pa_admin"
       tags:
@@ -155,7 +155,7 @@
       tags:
         - 'ansible'
 
-- name: "CONFIGURE Firewall Part 2"
+- name: "CONFIGURE FIREWALL WITH ROLE PALOALTONETWORKS"
   hosts: "firewalls"
   connection: "local"
   gather_facts: "no"
@@ -176,5 +176,16 @@
         restart: "{{ item.value.restart }}"
       with_dict: "{{ cm_panos_software }}"
       when: "cm_panos_software is defined"
+      tags:
+        - 'ansible'
+
+    - name: "License the Firewall with Auth_Code"
+      panos_lic:
+        ip_address: '{{ ansible_host }}'
+        username: '{{ username }}'
+        password: '{{ password }}'
+        auth_code: "{{ item.value.auth_code}}"
+      with_dict: "{{ cm_panos_lic }}"
+      when: "cm_panos_lic is defined"
       tags:
         - 'ansible'

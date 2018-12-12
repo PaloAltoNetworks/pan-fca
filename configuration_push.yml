@@ -93,7 +93,7 @@
       wait_for:
         host: "{{ ansible_host }}"
         port: 443
-        timeout: 300
+        timeout: 450
 
     - name: "WAIT FOR MGMT AVAILABILITY"
       pause:

@@ -1,44 +1,27 @@
 ---
 
-- name: "FIND NAT RULE"
+- name: "ADD/REMOVE NAT RULE"
   panos_nat_rule:
     ip_address: '{{ ansible_host }}'
     username: '{{ username }}'
     password: '{{ password }}'
-    rule_name: "{{ item['name']}}"
-    operation: "find"
-  with_items: "{{ cm_nat_rule }}"
-  register: "find_nat"
-  ignore_errors: true
+    rule_name: "{{ item['name'] }}"
+    state: "{{ item['state'] | default('present') }}"
+    source_zone: "{{ item['source']['zone'] }}"
+    destination_zone: "{{ item['destination']['zone'] }}"
+    source_ip: "{{ item['source']['network'] }}"
+    destination_ip: "{{ item['destination']['network'] }}"
+    service: "{{ item['service'] | default(omit) }}"
+    snat_type: "{{ item['snat_type'] | default(omit) }}"
+    snat_interface_address: "{{ ((item['snat_translation'] | default(omit))['ip']) | default(omit) }}"
+    snat_address_type: "{{ item['snat_address_type'] | default(omit) }}"
+    snat_interface: "{{ ((item['snat_translation'] | default(omit))['interface']) | default(omit) }}"
+    dnat_address: "{{ ((item['dnat_translation'] | default(omit))['ip']) | default(omit) }}"
+    dnat_port: "{{ ((item['dnat_translation'] | default(omit))['port']) | default(omit) }}"
+    #dnat_type: "{{ item['dnat_type'] | default(omit) }}"
+  with_items: "{{ cm_nat_rule | list }}"
+  #ignore_errors: true
   when: "cm_nat_rule is defined"
-
-- name: "CREATE POLICY"
-  panos_nat_rule:
-    ip_address: '{{ ansible_host }}'
-    username: '{{ username }}'
-    password: '{{ password }}'
-    rule_name: "{{ item['item']['name']}}"
-    operation: "add"
-    source_zone: "{{ item['item']['source']['zone'] }}"
-    destination_zone: "{{ item['item']['source']['zone'] }}"
-    source_ip: "{{ item['item']['source']['network'] }}"
-    destination_ip: "{{ item['item']['destination']['network'] }}"
-    service: "{{ item['item']['service'] }}"
-    # snat_type: ""
-    # snat_interface: "{{ item['item']['']['translation']['interface'] | default(omit) }}"
-    dnat_address: ""
-    dnat_port: "22"
-  with_items: "{{ find_nat['results'] | selectattr('failed', 'equalto', true) | list }}"
-  register: "find_srule"
-  # ignore_errors: true
-  when:
-    - "cm_nat_rule is defined"
-
-# cm_nat_rule:
-#    source_translation:
-#      ip: '200.10.10.1'
-#      mask: '24'
-#      interface: 'ethernet1/3'
 
 - name: "FIND POLICY ON THE DEVICE"
   panos_security_rule:

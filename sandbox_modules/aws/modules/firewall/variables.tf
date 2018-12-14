@@ -1,13 +1,76 @@
 # Firewall Deployment Variables
-data "aws_availability_zones" "available" {}
+variable "region" {
+  default = "us-east-1"
+}
+variable "trust_subnets" {
+  description = "list of trusted subnet ids"
+  type = "list"
+  default = []
+}
+
+variable "untrust_subnets" {
+  description = "list of untrusted subnet ids"
+  type = "list"
+  default = []
+}
+
+variable "management_subnets" {
+  description = "list of management subnet ids"
+  type = "list"
+  default = []
+}
+
+variable "mgmt_security_group" {
+  description = "ID of security Group to use with mgmt interface"
+  default = ""
+}
+
+variable "untrust_security_group" {
+  description = "ID of SG to use with public interface"
+  default = ""
+}
+
+variable "trust_security_group" {
+  description = "ID of SG to use w/private interface"
+  default = ""
+}
+
+variable "untrust_elastic_ips" {
+  description = "List of untrusted elastic ip ids"
+  type = "list"
+  default = []
+}
+
+variable "management_elastic_ips" {
+  description = "list of mgmt elastic ip ids"
+  type = "list"
+  default = []
+}
+
+variable "management_elastic_ip_addresses" {
+  description = "list of mgmt elastic ip addresses"
+  type = "list"
+  default = []
+}
 
 variable "fw_instance_count" {
   description = "number of instances to create"
   default = 1
 }
 
+variable "fw_key_name" {
+  description = "SSH Public Key to use w/firewall"
+  default = ""
+}
+
+variable "fw_key" {
+  description = "SSH Public Key"
+  default = ""
+}
+
 #AZ zones
 variable "availability_zones" {
+  type = "list"
   default = []
 }
 #AZ zone1
@@ -16,35 +79,24 @@ variable "az1" {
 }
 
 #Application Stackname
-variable "StackName" {
+variable "stack_name" {
   default = ""
-}
-
-#Main Stackname
-variable "MainStackName" {
-  default = ""
-}
-
-#AZ zone2
-variable "az2" {
-
+  description = "Generic name for application stack"
 }
 
 # select the key for auth
-variable "serverkey" {}
-
+variable "serverkey" {
+  default = ""
+}
+/*
 # s3 bucket for bootstrapping the firewall1
 variable "MasterS3Bucket" {}
 variable "bootstrap1" {}
 variable "bootstrap2" {}
 variable "bootstrap3" {}
 variable "bootstrap4" {}
+*/
 
-# set up this count variable
-variable "count" {}
-
-#Specify region
-variable "aws_region" {}
 
 # specify the region ami map
 #Palo AMI region MAP version8.0.8
@@ -203,3 +255,38 @@ variable "AWSInstanceType2Arch" {
     "cc2.8xlarge" = "HVM64"
   }
 }
+/*
+##Variables for autoscaling##
+output "PanFwAmiId" {
+  value = "${var.PanFwAmiId}"
+}
+
+output "VPCID" {
+  value = "${aws_vpc.main.id}"
+}
+
+output "KeyName" {
+  value = "${var.KeyName}"
+}
+
+output "KeyPANWPanorama" {
+  value = "${var.KeyPANWPanorama}"
+}
+
+output "KeDeLicense" {
+  value = "${var.KeyDeLicense}"
+}
+
+output "MasterS3Bucket" {
+  value = "${var.MasterS3Bucket}"
+}
+
+output "NATGateway" {
+  value = "${var.NATGateway}"
+}
+
+output "SSHLocation" {
+  value = "${var.SSHLocation}"
+}
+*/
+

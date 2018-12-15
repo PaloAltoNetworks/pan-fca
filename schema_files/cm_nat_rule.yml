@@ -11,6 +11,10 @@ items:
       description: The Name of the NAT Rule
       type: string
       maxLength: 256
+    snat_type:
+      description: Type of Source NAT
+      type: string
+      maxLength: 256
     source:
       description: Source attributes of the Object
       type: object
@@ -40,24 +44,42 @@ items:
           items:
             description:
             type: string
-        translation:
-          description: somethign
-          type: object
-          properties:
-            ip:
-              description:
-              type: array
-              items:
-                description:
-                type: string
-                regex: ''
-            interface:
+      snat_translation:
+        description: SNAT Translation Details
+        type: object
+        properties:
+          ip:
+            description:
+            type: array
+            items:
               description:
               type: string
-        service:
-          descriptions:
-          type: string
-
+              regex: ''
+          interface:
+            description:
+            type: string
+      dnat_translation:
+        description: DNAT Translation Details
+        type: object
+        properties:
+          ip:
+            description:
+            type: array
+            items:
+              description:
+              type: string
+              regex: ''
+          port:
+            description:
+            type: array
+            items:
+              description:
+              type: string
+              regex: ''
+      service:
+        descriptions:
+        type: string
+        maxLength: 31
   additionalProperties: false
   required:
     - "name"

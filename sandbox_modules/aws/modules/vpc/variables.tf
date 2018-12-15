@@ -13,23 +13,10 @@ variable "vpc_cidr" {
     default = ""
 }
 
-variable "untrust_subnets" {
-    description = "List of untrusted subnets to create"
-    default = []
-}
-
-variable "trust_subnets" {
-    description = "List of Trusted Subnets to Create"
-    default = []
-}
-
-variable "availability_zones" {
-    description = "List of Availability zones"
-    default = []
-}
 
 variable "customer_asns" {
     description = "List of ASNs Customer has provided"
+    type = "list"
     default = []
 }
 
@@ -37,6 +24,7 @@ variable "region" {
     description = "AWS region"
     default = "us-east-1"
 }
+
 
 data "aws_availability_zones" "default" {
 }

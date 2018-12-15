@@ -14,206 +14,287 @@ credentials:
 
 username: "{{ credentials[cloud_provider]['username'] }}"
 password: "{{ credentials[cloud_provider]['password'] }}"
-ip_address: '34.226.48.243'
+#ip_address: '34.226.48.243'
 
 virtual_networks:
-  - VPCTransit
-  - Spoke1
+#  - Web-Azure
+#  - Transit-Azure
+  #- DEV-Azure
+   - VPCTransit
 
 # removed "external" for testing
 # TODO: Re-add external after licensing resolved
 cm_virtual_router:
-  - 'trust'
-  - 'default'
+#  - 'trust'
+#  - 'untrust'
+  #- 'anton_test'
+   - 'default'
+
+# cm_mgmt_profile:
+#   - name: 'AzureProbe'
+#     permitted_network:
+#         - "172.26.0.0/12"
+#         - "10.0.0.0/8"
+#         - "168.63.129.16/32"
+#     https: true
+#     ssh: true
 
 cm_interface:
-
   - name: 'ethernet1/1'
-    #ip: '10.217.127.5'
-    #mask: 24
     virtual_router: 'default'
     zone: "untrust"
     dhcp: true
-    operation: 'add'
+    mgmt_profile: 'AzureProbe'
+    state: 'present'
   - name: 'ethernet1/2'
-    #ip: '10.217.127.38'
-    #mask: 24
     virtual_router: 'default'
     zone: "trust"
     dhcp: true
-    operation: 'add'
-    #  - name: 'tunnel.500'
-    # ip: '10.1.5.1'
-    #mask: 24
-    #mgmt_profile: 'ping-only'
-    #virtual_router: 'default'
-    #zone: "trust"
+    mgmt_profile: 'AzureProbe'
+    state: 'present'
+##   - name: 'tunnel.500'
+##     ip: '10.1.5.1'
+##     mask: 24
+#     mgmt_profile: 'AzureProbe'
+#     virtual_router: 'trust'
+#     zone: "test3"
 
-cm_object_address:
-  - name: 'site-a-internal'
-    ip-range: '10.1.1.0-10.1.2.255'
-  - name: 'site-b-internal'
-    ip-range: '10.2.1.0-10.2.2.255'
-  - name: 'google-dns-1'
-    ip: '8.8.8.8/32'
-  - name: 'google-dns-2'
-    ip: '8.8.4.4/32'
-  - name: 'ip-chicken'
-    fqdn: 'www.ipchicken.com'
-  - name: 'Azure-Health-Probe'
-    ip: '168.63.129.16/32'
-        
-cm_object_service:
-  - name: 'http-alt'
-    port: '8000'
-    protocol: 'tcp'
-  - name: 'dns'
-    port: '53'
-    protocol: 'udp'
+# cm_object_address:
+#   - name: 'site-a-internal'
+#     ip-range: '10.1.1.0-10.1.2.255'
+#   - name: 'site-b-internal'
+#     ip-range: '10.2.1.0-10.2.2.255'
+#   - name: 'google-dns-1'
+#     ip: '8.8.8.8/32'
+#   - name: 'google-dns-2'
+#     ip: '8.8.4.4/32'
+#   - name: 'ip-chicken'
+#     fqdn: 'www.ipchicken.com'
+#   - name: 'Azure-Health-Probe'
+#     ip: '168.63.129.16/32'
 
-cm_object_service_group:
-  - name: 'http-all'
-    services:
-     - 'http-alt'
-     - 'service-http'
+# cm_object_service:
+#   - name: 'http-alt'
+#     port: '8000'
+#     protocol: 'tcp'
+#   - name: 'dns'
+#     port: '53'
+#     protocol: 'udp'
 
-cm_object_address_group:
-  - name: 'public-servers'
-    addresses:
-     - 'google-dns-1'
-     - 'ip-chicken'
+# cm_object_service_group:
+#   - name: 'http-all'
+#     services:
+#      - 'http-alt'
+#      - 'service-http'
 
-cm_object_app_group:
-  - name: 'ping-all'
-    apps:
-     - 'icmp'
-     - 'ping'
+# cm_object_address_group:
+#   - name: 'public-servers'
+#     addresses:
+#      - 'google-dns-1'
+#      - 'ip-chicken'
 
-cm_ntp:
-  ntp_primary: '129.6.15.32'
-  ntp_secondary: '128.138.141.177'
+# cm_object_app_group:
+#   - name: 'ping-all'
+#     apps:
+#      - 'icmp'
+#      - 'ping'
 
-cm_dns:
-  dns_primary: '8.8.8.8'
-  dns_secondary: '1.1.1.1'
+# cm_ntp:
+#   ntp_primary: '129.6.15.32'
+#   ntp_secondary: '128.138.141.177'
 
-cm_panorama1:
-  primary: '8.8.8.8'
-  secondary: '1.1.1.1'
+# cm_dns:
+#   dns_primary: '8.8.8.8'
+#   dns_secondary: '1.1.1.1'
 
-cm_fw_user:
-  - username: 'ken_test'
-    password: 'TheBestPassword'
-    role: "devicereader"
-  - username: 'ntc'
-    password: 'The2ndBestPassword'
-    role: "deviceadmin"
-  - username: 'pa1'
-    password: 'The3rdBestPassword'
-    role: "superreader"
+# cm_panorama1:
+#   primary: '8.8.8.8'
+#   secondary: '1.1.1.1'
 
-cm_mgmt_profile:
-  - name: 'allow ssh_https'
-    permitted_network: 
-        - "172.26.0.0/12"
-        - "10.0.0.0/8"
-    https: true
-    ssh: true
+# cm_fw_user:
+#   - username: 'ken_test'
+#     password: 'TheBestPassword'
+#     role: "devicereader"
+#   - username: 'ntc'
+#     password: 'The2ndBestPassword'
+#     role: "deviceadmin"
+#   - username: 'pa1'
+#     password: 'The3rdBestPassword'
+#     role: "superreader"
 
 
-
-cm_security_rule:
-  - name: 'Outside Web Server'
-    action: 'allow'
-    disabled: 'no'
-    to_zone:
-      - 'untrust'
-    from_zone:
-      - 'trust'
-    source:
-      - 'site-a-internal'
-    destination:
-      - 'public-servers'
-    application:
-      - 'any'
-    service:
-      - 'http-alt'
-      - 'service-http'
-    tags:
-     - 'Outbound'
-    category:
-     - 'any'
-    source_user:
-     - 'any'
-    hip_profiles:
-     - 'any'
-    rule_type: 'universal'
-  - name: 'Inside Web Server'
-    action: 'allow'
-    disabled: 'no'
-    to_zone:
-      - 'untrust'
-    from_zone:
-      - 'trust'
-    source:
-      - 'site-a-internal'
-    destination:
-      - 'public-servers'
-    application:
-      - 'any'
-    service:
-      - 'http-alt'
-      - 'service-http'
-    tags:
-     - 'Outbound'
-    category:
-     - 'any'
-    source_user:
-     - 'any'
-    hip_profiles:
-     - 'any'
-    rule_type: 'universal'
+# # Create Security Rules
+# cm_security_rule:
+#   - name: 'Allow Any'
+#     action: 'allow'
+#     disabled: 'no'
+#     to_zone:
+#       - 'any'
+#     from_zone:
+#       - 'any'
+#     application:
+#       - 'any'
+#     category:
+#      - 'any'
+#     source_user:
+#      - 'any'
+#     hip_profiles:
+#      - 'any'
+#     rule_type: 'universal'
+#   - name: 'Outside Web Server'
+#     action: 'allow'
+#     disabled: 'no'
+#     to_zone:
+#       - 'untrust'
+#     from_zone:
+#       - 'trust'
+#     source:
+#       - 'site-a-internal'
+#     destination:
+#       - 'public-servers'
+#     application:
+#       - 'any'
+#     service:
+#       - 'http-alt'
+#       - 'service-http'
+#     tags:
+#      - 'Outbound'
+#     category:
+#      - 'any'
+#     source_user:
+#      - 'any'
+#     hip_profiles:
+#      - 'any'
+#     rule_type: 'universal'
+#   - name: 'Inside Web Server'
+#     action: 'allow'
+#     disabled: 'no'
+#     to_zone:
+#       - 'untrust'
+#     from_zone:
+#       - 'trust'
+#     source:
+#       - 'site-a-internal'
+#     destination:
+#       - 'public-servers'
+#     application:
+#       - 'any'
+#     service:
+#       - 'http-alt'
+#       - 'service-http'
+#     tags:
+#      - 'Outbound'
+#     category:
+#      - 'any'
+#     source_user:
+#      - 'any'
+#     hip_profiles:
+#      - 'any'
+#     rule_type: 'universal'
 
 cm_nat_rule:
- #- name: 'No-NAT-Azure-Probe-Untrust'
-  #  source:
-  #   zone: "untrust"
-  #    network:
-  #      - 'Azure_Probe'
-  #  destination:
-  #    zone: 'untrust'
-  #    network: 'any'
   # - name: 'No-NAT-Azure-Probe-Trust'
-  #  source:
-  #    zone: "trust"
-  #    network:
-  #      - 'Azure_Probe'
-  #  destination:
-  #    zone: 'trust'
+  #   source:
+  #     zone: "trust"
+  #     network: '168.63.129.16/32'
+  #   destination:
+  #     zone: "trust"
+  #     network: 'any'
+  # - name: 'No-NAT-Azure-Probe-Untrust'
+  #   source:
+  #    zone: "untrust"
+  #    network: '168.63.129.16/32'
+  #   destination:
+  #    zone: "untrust"
   #    network: 'any'
-  - name: 'NAT default Outbound'
-    source:
-      zone: 'trust'
-      network:
-      - 'any'
-    destination:
-      zone: 'untrust'
-      network:
-      - 'any'
-      translation:
-        ip:
-          - ''
-        interface: 'ethernet1/1'
-    service: 'any'
-  - name: 'Inbound-NAT-to-DMZ-Server1'
-    source:
-      zone: "untrust"
-      network:
-        - 'any'
-    destination:
-      zone: "untrust"
-      network: "public-servers"
-      translation: 
-      ip:
-        - 'google-dns-1'
-    service: 'any'
+  # - name: 'NAT default Outbound'
+  #   source:
+  #     zone: "trust"
+  #     network:
+  #     - 'any'
+  #   destination:
+  #     zone: "untrust"
+  #     network:
+  #     - 'any'
+  #     translation:
+  #       ip:
+  #         - ''
+  #       interface: 'ethernet1/1'
+  #   service: 'any'
+
+# # - name: 'No-NAT-Azure-Probe-Untrust'
+# #    source:
+# #      zone: 'trust'
+# #      network:
+# #      - 'Azure-Probe'
+# #    destination:
+# #      zone: 'untrust'
+# #      network: 'any'
+#   # - name: 'No-NAT-Azure-Probe-Trust'
+#   #  source:
+#   #    zone: 'trust'
+#   #    network: 'Azure_Probe'
+#   #  destination:
+#   #    zone: 'trust'
+#   #    network: 'any'
+#  - name: 'NAT default Outbound'
+#    source:
+#      zone: 'trust'
+#     network:
+#      - 'any'
+#    destination:
+#      zone: 'untrust'
+#      network:
+#      - 'any'
+#      translation:
+#        ip:
+#          - ''
+#        interface: 'ethernet1/1'
+#    service: 'any'
+#  - name: 'Inbound-NAT-to-DMZ-Server1'
+#    source:
+#      zone: "untrust"
+#      network:
+#        - 'any'
+#    destination:
+#      zone: "untrust"
+#      network: "public-servers"
+#      translation:
+#      ip:
+#        - 'google-dns-1'
+#    service: 'any'
+
+#Create Static Routes
+#cm_panos_static_route:
+#  - name: 'DefaultGW_trust'
+#    destination: '0.0.0.0/0'
+#    nexthop: 'untrust'
+#    virtual_router: 'trust'
+#    nexthop_type: 'next-vr'
+#  - name: 'DefaultGW_Untrust'
+#    destination: '0.0.0.0/0'
+#    nexthop: '10.217.127.1/32'
+#    interface: 'ethernet1/1'
+#    nexthop_type: 'ip-address'
+#    virtual_router: 'untrust'
+#  - name: 'AzureProbe-Trust'
+#    destination: '168.63.129.16/32'
+#    nexthop: '10.217.127.33/32'
+#    interface: 'ethernet1/2'
+#    nexthop_type: 'ip-address'
+#    virtual_router: 'trust'
+#  - name: 'AzureProbe-Untrust'
+#    destination: '168.63.129.16/32'
+#    nexthop: '10.217.127.1/32'
+#    interface: 'ethernet1/1'
+#    nexthop_type: 'ip-address'
+#    virtual_router: 'untrust'
+
+# cm_panos_software:
+#   values:
+#     version: '8.1.1'
+#     restart: false
+
+# cm_panos_lic:
+#   values:
+#     auth_code: 'I6474155'

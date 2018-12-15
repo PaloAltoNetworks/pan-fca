@@ -5,6 +5,7 @@ vpc_cidr = "{{ vnet['vnet_network']['network'] }}"
 untrust_subnets = [{% for sub in vnet['vnet_network']['subnet'] if sub.type == 'untrusted' %}"{{ sub.network }}",{% endfor %}]
 trust_subnets = [{% for sub in vnet['vnet_network']['subnet'] if sub.type == 'trusted' %}"{{ sub.network }}",{% endfor %}]
 mgmt_subnets = [{% for sub in vnet['vnet_network']['subnet'] if sub.type == 'mgmt' %}"{{ sub.network }}",{% endfor %}]
+#Todo for Spoke subnet testing #subcriber_subnets = [{% for sub in vnet['vnet_network']['subnet'] if sub.type == 'subscriber' %}"{{ sub.network }}",{% endfor %}]
 region = "{{ location }}"
 {% if vnet.availability_zones is defined %}
 availability_zones = [{% for zone in vnet.availability_zones %}"{{ location }}{{ zone }}",{% endfor %}]
@@ -14,3 +15,6 @@ stack_name = "{{ name }}"
 customer_asns = ["{{ vnet['vnet_network']['bgp_asn'] }}"]
 }
 {% endfor %}
+
+#Todo move subnet creation route association to a module in terraform called network#
+#Todo create test and  move lambda,loadbalancer,S3,Transit,eni,backend,vpn to own modules reference outputs for sharing and jinja template for all#

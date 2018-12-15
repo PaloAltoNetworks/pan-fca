@@ -16,7 +16,6 @@ RUN DEBIAN_FRONTEND=noninteractive \
     python-pip \
     build-essential \
     libssl-dev \
-    azure-cli \
     libffi-dev && \
     pip install --upgrade setuptools pip cffi && \
     pip install --upgrade pyopenssl && \

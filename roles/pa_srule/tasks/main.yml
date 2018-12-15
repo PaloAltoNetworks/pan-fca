@@ -17,8 +17,9 @@
     ip_address: '{{ ansible_host }}'
     username: '{{ username }}'
     password: '{{ password }}'
-    rule_name: "{{ item['item']['name']}}"
+    rule_name: "{{ item['item']['name'] }}"
     operation: "add"
+    #state: "{{ item['item']['state'] }}"
     source_zone: "{{ item['item']['source']['zone'] }}"
     destination_zone: "{{ item['item']['source']['zone'] }}"
     source_ip: "{{ item['item']['source']['network'] }}"

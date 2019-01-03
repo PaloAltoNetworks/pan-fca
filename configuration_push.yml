@@ -69,6 +69,12 @@
       tags:
         - 'tf'
 
+  #  - name:  "USE TERRAFORM OUTPUT STORE AZURE TEMP VALUES"
+  #    set_fact:
+  #      private_address: "{{ private_address.stdout |from_json }}"
+  #    when: cloud_provider == 'azure'
+
+
 - name: "DEPLOY CONFIGURATIONS AND VALIDATE"
   hosts: "firewalls"
   connection: "local"
@@ -87,21 +93,27 @@
       wait_for:
         host: "{{ ansible_host }}"
         port: 443
-        timeout: 300
+        timeout: 450
 
     - name: "WAIT FOR MGMT AVAILABILITY"
       pause:
-        seconds: 60
+        seconds: 600
+      when: cloud_provider == 'aws'
+
+    - name: "WAIT FOR MGMT AVAILABILITY"
+      pause:
+        seconds: 240
+      when: cloud_provider == 'azure'
 
     - name: "CONFIGURE MGMT ACCESS"
       panos_admpwd:
         ip_address: "{{ ansible_host }}"
-        key_filename: "{{ temp_key }}"
+        key_filename: "{{ lookup('env', 'HOME') }}/paloalto/creds/tempkey"
         username: "{{ username }}"
         newpassword: "{{ password }}"
       when: cloud_provider == 'aws'
 
-    - name: "DEPLOY ANY LICENSES OR ADMIN TASKS"
+    - name: "DEPLOY ADMIN TASKS"
       include_role:
         name: "pa_admin"
       tags:
@@ -129,10 +141,51 @@
     #  include_role:
     #    name: "pa_validate"
 
-    - name: "COMMIT THE CHANGES"
-      panos_commit:
+    # - name: "COMMIT THE CHANGES"
+    #   panos_commit:
+    #     ip_address: '{{ ansible_host }}'
+    #     username: '{{ username }}'
+    #     password: '{{ password }}'
+    #   tags:
+    #     - 'ansible'
+
+    - name: "Create Static routes"
+      include_role:
+        name: "pa_staticroute"
+      tags:
+        - 'ansible'
+
+- name: "CONFIGURE FIREWALL WITH ROLE PALOALTONETWORKS"
+  hosts: "firewalls"
+  connection: "local"
+  gather_facts: "no"
+
+  vars_files:
+    - "{{ playbook_dir }}/provider.yml"
+
+  roles:
+    - role: "PaloAltoNetworks.paloaltonetworks"
+
+  tasks:
+    - name: "Update PANOS Software"
+      panos_software:
         ip_address: '{{ ansible_host }}'
         username: '{{ username }}'
         password: '{{ password }}'
+        version: "{{ item.value.version}}"
+        restart: "{{ item.value.restart }}"
+      with_dict: "{{ cm_panos_software }}"
+      when: "cm_panos_software is defined"
+      tags:
+        - 'ansible'
+
+    - name: "License the Firewall with Auth_Code"
+      panos_lic:
+        ip_address: '{{ ansible_host }}'
+        username: '{{ username }}'
+        password: '{{ password }}'
+        auth_code: "{{ item.value.auth_code}}"
+      with_dict: "{{ cm_panos_lic }}"
+      when: "cm_panos_lic is defined"
       tags:
         - 'ansible'

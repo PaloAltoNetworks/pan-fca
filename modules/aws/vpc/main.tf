@@ -2,13 +2,17 @@
 locals {
   //aws_zones = ["${length(var.availability_zones) > 0 ? var.availability_zones : data.aws_availability_zones.default.names}"]
   // aws_zones = ["${split(",", length(join(",", var.availability_zones)) > 0 ? join(",", var.availablity_zones) : join(",", data.aws_availability_zones.default.names))}"] 
-  aws_zones = ["${var.region}a", "${var.region}b"]
+  #aws_zones = ["${var.region}a", "${var.region}b"]
+  #aws_zones = ["${var.region}${element(var.availability_zones, count.index)}]
 }
+
 
 provider "aws" {
   region = "${var.region}"
 }
 // Create VPC Resource
+
+
 resource "aws_vpc" "palo" {
   cidr_block = "${var.vpc_cidr}"
   tags = {
@@ -30,23 +34,36 @@ resource "aws_vpn_gateway" "palo_vpn" {
 #  create Services VPC Subnets  #
 #################################
 resource "aws_subnet" "untrust_subnet" {
-count = "${length(var.untrust_subnets)}"
+  count = "${length(var.untrust_subnets)}"
   vpc_id = "${aws_vpc.palo.id}"
   cidr_block = "${element(var.untrust_subnets, count.index)}"
-  availability_zone = "${element(local.aws_zones, count.index)}"
-  tags = {
-      "Name" = "${var.stack_name}"
+  availability_zone = "${element(var.availability_zones, count.index)}"
+
+  tags {
+    Name = "${element(var.availability_zones, count.index)}-untrust-subnet"
   }
 }
 
 resource "aws_subnet" "trust_subnet" {
-    count = "${length(var.trust_subnets)}"
+  count = "${length(var.trust_subnets)}"
   vpc_id = "${aws_vpc.palo.id}"
-  availability_zone = "${element(local.aws_zones, count.index)}"
-    cidr_block = "${element(var.trust_subnets, count.index)}"
-    tags = {
-        "Name" = "${var.stack_name}"
-    }
+  availability_zone = "${element(var.availability_zones, count.index)}"
+  cidr_block = "${element(var.trust_subnets, count.index)}"
+
+  tags {
+    Name = "${element(var.availability_zones, count.index)}-trust-subnet"
+  }
+}
+
+resource "aws_subnet" "mgmt_subnet" {
+  count = "${length(var.mgmt_subnets)}"
+  vpc_id = "${aws_vpc.palo.id}"
+  availability_zone = "${element(var.availability_zones, count.index)}"
+  cidr_block = "${element(var.mgmt_subnets, count.index)}"
+
+  tags {
+    Name = "${element(var.availability_zones, count.index)}-mgmt-subnet"
+  }
 }
 
 resource "aws_default_route_table" "palo" {
@@ -158,11 +175,19 @@ resource "aws_vpc_endpoint_route_table_association" "rtpalos3" {
 #### Create the Elastic IP Addresses ####
 #########################################
 resource "aws_eip" "untrust_elastic_ip" {
-  count      = "${length(local.aws_zones)}"
+  count      = "${length(var.availability_zones)}"
   vpc        = true
+
+  tags {
+    Name = "${element(var.availability_zones, count.index)}-untrust-eip"
+  }
 }
 
 resource "aws_eip" "management_elastic_ip" {
-  count      = "${length(local.aws_zones)}"
+  count      = "${length(var.availability_zones)}"
   vpc        = true
+
+  tags {
+    Name = "${element(var.availability_zones, count.index)}-mgmt-eip"
+  }
 }

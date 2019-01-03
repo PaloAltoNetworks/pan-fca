@@ -1,10 +1,13 @@
 group_vars/*
 !group_vars/all.yml.example
+!group_vars/all.yml.azure.example
 host_vars/*
 !host_vars/fw.yml.example
 virtual_networks/*
 !virtual_networks/VPCTransit.yml.example
 !virtual_networks/Spoke1.yml.example
+!virtual_networks/AzureSpoke.yml.example
+!virtual_networks/AzureHUB.yml.example
 
 *.pyc
 .DS_Store

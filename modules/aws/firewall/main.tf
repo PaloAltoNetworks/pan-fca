@@ -84,11 +84,8 @@ resource "aws_instance" "FWInstance" {
   ami = "${var.BYOLPANFWRegionMap809[var.region]}"
   instance_type = "m4.xlarge"
 
-  ebs_block_device {
-    device_name = "/dev/xvda"
-    volume_type = "gp2"
+  root_block_device {
     delete_on_termination = true
-    volume_size = 60
 }
   key_name = "${aws_key_pair.generated_key.key_name}"
   monitoring = false

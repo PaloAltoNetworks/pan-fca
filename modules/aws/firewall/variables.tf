@@ -126,7 +126,7 @@ variable "BYOLPANFWRegionMap809" {
   type = "map"
   default =
     {
-      "us-west-2" = "ami-04273e64",
+      "us-west-2" = "ami-659eec1d",
       "ap-northeast-1" =   "ami-621bec1d",
       "us-west-1"      =   "ami-04273e64",
       "ap-northeast-2" =   "ami-38b61e56",

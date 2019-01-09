@@ -74,6 +74,30 @@ resource "aws_key_pair" "generated_key" {
   public_key = "${var.fw_key}"
 }
 
+#### PA VM AMI ID Lookup based on license type, region, version ####
+
+data "aws_ami" "pa-vm" {
+ most_recent = true
+
+ filter {
+   name   = "owner-alias"
+   values = ["aws-marketplace"]
+ }
+
+  filter {
+   name   = "product-code"
+   values = ["${var.fw_license_type_map[var.fw_license_type]}"]
+ }
+
+ filter {
+   name   = "name"
+   values = ["PA-VM-AWS-${var.fw_version}*"]
+ }
+}
+
+
+#### Create the Firewall Instances ####
+
 resource "aws_instance" "FWInstance" {
   count = "${var.fw_instance_count}"
   disable_api_termination = false
@@ -81,14 +105,11 @@ resource "aws_instance" "FWInstance" {
   instance_initiated_shutdown_behavior = "stop"
   availability_zone = "${element(var.availability_zones, count.index)}"
   ebs_optimized = true
-  ami = "${var.BYOLPANFWRegionMap809[var.region]}"
+  ami = "${data.aws_ami.pa-vm.id}"
   instance_type = "m4.xlarge"
 
-  ebs_block_device {
-    device_name = "/dev/xvda"
-    volume_type = "gp2"
+  root_block_device {
     delete_on_termination = true
-    volume_size = 60
 }
   key_name = "${aws_key_pair.generated_key.key_name}"
   monitoring = false

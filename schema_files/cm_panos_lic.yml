@@ -1,0 +1,16 @@
+---
+"$schema": http://json-schema.org/draft-04/schema#
+description: Activate Firewall with Auth Code
+title: License PAN Firewall with Auth_Code
+id: cm_panos_lic
+type: array
+items:
+  type: object
+  properties:
+    auth_code:
+      description: Define your Authentication Code
+      type: string
+      maxLength: 10
+
+  additionalProperties: false
+additionalProperties: false

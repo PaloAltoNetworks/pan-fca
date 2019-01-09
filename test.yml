@@ -18,16 +18,16 @@
       virtual_router: 'trust'
       nexthop_type: 'next-vr'
 
-  # - name: Create route 'Test-Four'
-  #   panos_static_route:
-  #     ip_address: '52.142.90.238'
-  #     username: 'fwadmin'
-  #     password: 'Paloalto123'
-  #     name: 'Test-Four'
-  #     destination: '0.0.0.0/0'
-  #     interface: 'ethernet1/2'
-  #     nexthop: '10.217.127.36'
-  #     virtual_router: 'trust'
+  - name: Create route 'Test-Four'
+    panos_static_route:
+      ip_address: '52.142.90.238'
+      username: 'fwadmin'
+      password: 'Paloalto123'
+      name: 'Test-Four'
+      destination: '0.0.0.0/0'
+      interface: 'ethernet1/2'
+      nexthop: '10.217.127.36'
+      virtual_router: 'trust'
 
   # - name: enable DHCP client on ethernet1/2 in zone internal
   #   panos_interface:

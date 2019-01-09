@@ -8,7 +8,7 @@ Two versions of this container are included in this repository:
 
 ### System Requirements
 
-- `Docker` v 18.0.6 or higher
+- `Docker` v 18.0.9 or higher
 -  `Docker Installation` To install Docker on your local operating system visit:
 - Windows - https://docs.docker.com/docker-for-windows/install/
 - Mac     - https://docs.docker.com/docker-for-mac/
@@ -61,17 +61,16 @@ Option #2
 **(You should already have this by Forking and Cloning upstream/master FCA Github repository. If not please contact administrator of Repo if not public!)**
 
 **Now you will build from the Dockerfile located in repository.**
->`docker build -t <insert your tag name> -f Dockerfile-FCA <-slim> .`
 
 Full image build
 
-`docker build -t <tag name> - Dockerfile-FCA .`
- _Example:_ `docker build -t fca -Dockerfile-FCA .`
+`docker build -t <tag name> -f Dockerfile-FCA .`
+ _Example:_ `docker build -t fca -f Dockerfile-FCA .`
 
 Slim image build
 
-`docker build -t <tag name> - Dockerfile-FCA-slim .`
- _Example:_ `docker build -t fca -Dockerfile-FCA-slim .`
+`docker build -t <tag name> -f Dockerfile-FCA-slim .`
+ _Example:_ `docker build -t fca -f Dockerfile-FCA-slim .`
 
 
 

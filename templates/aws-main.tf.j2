@@ -1,5 +1,10 @@
+provider "aws" {
+  region = "{{ location }}"
+}
+
 {% include 'aws-vpc.tf.j2' %}
 {% include 'aws-firewall.tf.j2' %}
+{% include 'aws-sg.tf.j2' %}
 
 #Todo create templates for sandbox modules and test be able to test against the data model more includes will be needed per new module#
 #Todo clean up AWS working modules to reflect their prospective jinja template#

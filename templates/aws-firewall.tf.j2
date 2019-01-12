@@ -12,7 +12,7 @@ module "{{ name }}-firewall" {
     untrust_security_group  = "${module.{{ name }}.untrust_security_group}"
     trust_subnets           = ["${module.{{ name }}.trust_subnets}"]
     trust_security_group    = "${module.{{ name }}.trust_security_group}"
-    mgmt_security_group     = "${module.{{ name }}.mgmt_security_group}"
+    mgmt_security_group     = "${module.{{ name }}-sg-management.this_security_group_id}"
     untrust_elastic_ips     = ["${module.{{ name }}.untrust_elastic_ips}"]
     management_elastic_ips  = ["${module.{{ name }}.management_elastic_ips}"]
     management_elastic_ip_addresses = ["${module.{{ name }}.management_elastic_ip_addresses}"]

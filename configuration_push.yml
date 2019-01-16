@@ -189,3 +189,12 @@
       when: "cm_panos_lic is defined"
       tags:
         - 'ansible'
+
+
+    - name: "COMMIT THE CHANGES"
+      panos_commit:
+        ip_address: '{{ ansible_host }}'
+        username: '{{ username }}'
+        password: '{{ password }}'
+      tags:
+        - 'ansible'

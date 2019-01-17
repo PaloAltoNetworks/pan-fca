@@ -1,4 +1,5 @@
-group_vars/*
+group_vars/all/all.yml
+!group_vars/constants.yml
 !group_vars/all.yml.example
 !group_vars/all.yml.azure.example
 host_vars/*

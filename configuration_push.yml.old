@@ -20,7 +20,6 @@
     - name: "SETUP CREDENTIALS & ENV FOR {{ cloud_provider| upper }}"
       include_role:
         name: "env_setup"
-        tasks_from: "{{ cloud_provider |lower}}.yml"
       tags:
         - 'always'
         - 'tf'
@@ -98,58 +97,13 @@
 
     - name: "WAIT FOR MGMT AVAILABILITY"
       pause:
-        seconds: "{{ cloud_unique[cloud_provider | lower]['timeout'] }}"
+        seconds: 600
+      when: cloud_provider == 'aws'
 
-    - name: "DEPLOY ADMIN TASKS"
-      include_role:
-        name: "pa_admin"
-      tags:
-        - 'ansible'
-
-- name: "IMPORT IRON SKILLET WITH ROLE PALOALTONETWORKS AND ADD AGAIN ADMIN"
-  hosts: "firewalls"
-  connection: "local"
-  gather_facts: "no"
-
-  vars_files:
-    - "{{ playbook_dir }}/provider.yml"
-
-  roles:
-    - role: "PaloAltoNetworks.paloaltonetworks"
-
-  tasks:
-# Import and load config file from URL
-  - name: Import IRON SKILLET
-    include_role: 
-      name: 'iron_skillet'
-      tasks_from: '{{ cloud_provider }}.yml'
-      
-# Create Firewall admin
-# Doesn't commit the candidate config
-  - name: Create Firewall Admin
-    panos_administrator:
-      ip_address: "{{ ansible_host }}"
-      username: "{{ username }}"
-      password: "{{ password }}"
-      admin_username: "{{ username }}"
-      admin_password: "{{ password }}"
-      state: "present"
-      superuser: true
-      commit: false
-
-- name: "DEPLOY CONFIGURATIONS AND VALIDATE"
-  hosts: "firewalls"
-  connection: "local"
-  gather_facts: "no"
-
-  vars_files:
-    - "{{ playbook_dir }}/provider.yml"
-
-  vars:
-    temp_key_dir: "{{ lookup('env', 'HOME') }}/paloalto/creds"
-    temp_key: "{{ temp_key_dir }}/tempkey"
-
-  tasks:
+    - name: "WAIT FOR MGMT AVAILABILITY"
+      pause:
+        seconds: 240
+      when: cloud_provider == 'azure'
 
     - name: "CONFIGURE MGMT ACCESS"
       panos_admpwd:
@@ -236,38 +190,6 @@
       tags:
         - 'ansible'
 
-# # Import and load config file from URL
-#     - name: Import Iron Skillet for Azure
-#       panos_import:
-#         ip_address: '{{ ansible_host }}'
-#         username: '{{ username }}'
-#         password: '{{ password }}'
-#         url: "https://raw.githubusercontent.com/PaloAltoNetworks/iron-skillet/panos_v8.1/loadable_configs/sample-cloud-Azure/panos/iron_skillet_panos_full.xml"
-#         category: "configuration"
-#         validate_certs: false
-#       register: result
-#       tags:
-#         - 'ansible'
-
-#     - name: Load Iron Skillet for Azure
-#       panos_loadcfg:
-#         ip_address: "{{ ansible_host }}"
-#         username: "{{ username }}"
-#         password: "{{ password }}"
-#         file: "{{result.filename}}"
-      
-# Create Firewall admin
-# Doesn't commit the candidate config
-    - name: Create Firewall Admin
-      panos_administrator:
-        ip_address: '{{ ansible_host }}'
-        username: '{{ username }}'
-        password: '{{ password }}'
-        admin_username: "{{ username }}"
-        admin_password: "{{ password }}"
-        state: "present"
-        superuser: true
-        commit: false
 
     - name: "COMMIT THE CHANGES"
       panos_commit:

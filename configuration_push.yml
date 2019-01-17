@@ -236,39 +236,6 @@
       tags:
         - 'ansible'
 
-# # Import and load config file from URL
-#     - name: Import Iron Skillet for Azure
-#       panos_import:
-#         ip_address: '{{ ansible_host }}'
-#         username: '{{ username }}'
-#         password: '{{ password }}'
-#         url: "https://raw.githubusercontent.com/PaloAltoNetworks/iron-skillet/panos_v8.1/loadable_configs/sample-cloud-Azure/panos/iron_skillet_panos_full.xml"
-#         category: "configuration"
-#         validate_certs: false
-#       register: result
-#       tags:
-#         - 'ansible'
-
-#     - name: Load Iron Skillet for Azure
-#       panos_loadcfg:
-#         ip_address: "{{ ansible_host }}"
-#         username: "{{ username }}"
-#         password: "{{ password }}"
-#         file: "{{result.filename}}"
-      
-# Create Firewall admin
-# Doesn't commit the candidate config
-    - name: Create Firewall Admin
-      panos_administrator:
-        ip_address: '{{ ansible_host }}'
-        username: '{{ username }}'
-        password: '{{ password }}'
-        admin_username: "{{ username }}"
-        admin_password: "{{ password }}"
-        state: "present"
-        superuser: true
-        commit: false
-
     - name: "COMMIT THE CHANGES"
       panos_commit:
         ip_address: '{{ ansible_host }}'

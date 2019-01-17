@@ -28,6 +28,8 @@ RUN DEBIAN_FRONTEND=noninteractive \
         azure-cli \
         paramiko \
         ipaddress \
+        requests-toolbelt \
+        requests\
         jsonschema && \
     ansible-galaxy install PaloAltoNetworks.paloaltonetworks && \
     curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip > terraform.zip && \

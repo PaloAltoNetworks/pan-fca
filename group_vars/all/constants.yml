@@ -1,0 +1,5 @@
+cloud_unique:
+  aws:
+    timeout: '600'
+  azure:
+    timeout: '240'

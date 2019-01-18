@@ -15,6 +15,12 @@
     {% if fw['fw_license'] is defined %}
     fw_sku                  = "{{ fw['fw_license'] }}"
     {% endif %}
+    {% if fw['Username'] is defined %}
+    adminUsername                 = "{{ fw['Username'] }}"
+    {% endif %}
+    {% if fw['Password'] is defined %}
+    adminPassword                 = "{{ fw['Password'] }}"
+    {% endif %}
     vnet_subnet_id_trust        = "${module.{{ name }}.vnet_subnets[1]}"
     vnet_subnet_id_untrust      = "${module.{{ name }}.vnet_subnets[2]}"
     vnet_subnet_id_mgmt         = "${module.{{ name }}.vnet_subnets[0]}"

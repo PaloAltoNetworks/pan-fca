@@ -100,12 +100,6 @@
       pause:
         seconds: "{{ cloud_unique[cloud_provider | lower]['timeout'] }}"
 
-    - name: "DEPLOY ADMIN TASKS"
-      include_role:
-        name: "pa_admin"
-      tags:
-        - 'ansible'
-
 - name: "IMPORT IRON SKILLET WITH ROLE PALOALTONETWORKS AND ADD AGAIN ADMIN"
   hosts: "firewalls"
   connection: "local"
@@ -150,6 +144,12 @@
     temp_key: "{{ temp_key_dir }}/tempkey"
 
   tasks:
+  
+    - name: "DEPLOY ADMIN TASKS"
+      include_role:
+        name: "pa_admin"
+      tags:
+        - 'ansible'
 
     - name: "CONFIGURE MGMT ACCESS"
       panos_admpwd:

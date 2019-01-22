@@ -322,10 +322,12 @@ def main():
     vsys_dg = module.params['vsys_dg']
     commit = module.params['commit']
     dhcp_default_route = module.params['dhcp_default_route']
+    management_profile = module.params['management_profile']
     if_name = module.params['if_name']
 
     dhcpe = ('<entry name="%s"><layer3><dhcp-client><enable>yes</enable><create-default-route>%s</create-default-route>'
-             '</dhcp-client></layer3></entry>' % (if_name,dhcp_default_route))
+             '</dhcp-client><interface-management-profile>%s</interface-management-profile></layer3></entry>' %
+             (if_name,dhcp_default_route,management_profile))
     dhcpx = ("/config/devices/entry[@name='localhost.localdomain']/network/interface/ethernet/entry[@name='%s']" % (if_name))
 
     # Open the connection to the PANOS device.

@@ -54,8 +54,9 @@ resource "azurerm_public_ip" "pip" {
     resource_group_name             = "${azurerm_resource_group.vm.name}"
     public_ip_address_allocation    = "static"
     sku								= "Standard"
+    #domain_name_label               = "${var.fw_dnshostname == "" ? "" : "${var.fw_dnshostname}${count.index+1}"}"
     domain_name_label               = "${var.fw_dnshostname}${count.index+1}"
-    
+
     tags {
      displayname = "${join("", list("PublicNetworkinterfaces", ""))}"
      }

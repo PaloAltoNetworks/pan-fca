@@ -16,3 +16,4 @@
 
 - name: "SETUP ENV FOR {{ cloud_provider }}"
   include_tasks: "{{ cloud_provider }}.yml"
+  

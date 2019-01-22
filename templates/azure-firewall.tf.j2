@@ -9,6 +9,12 @@
     location                    = "{{ location }}"
     resource_group_name         = "{{ name }}"
     nb_instances                = "{{ fw.vmcount }}"
+    {% if fw['fw_version'] is defined %}
+    fw_version                  = "{{ fw['fw_version'] }}"
+    {% endif %}
+    {% if fw['fw_license'] is defined %}
+    fw_sku                  = "{{ fw['fw_license'] }}"
+    {% endif %}
     vnet_subnet_id_trust        = "${module.{{ name }}.vnet_subnets[1]}"
     vnet_subnet_id_untrust      = "${module.{{ name }}.vnet_subnets[2]}"
     vnet_subnet_id_mgmt         = "${module.{{ name }}.vnet_subnets[0]}"
@@ -22,7 +28,7 @@
     {% endif %}
     {% endfor %}
     {% endif %}
-    general_int_name            = "{{ fw.fwname }}"
+    fw_hostname                 = "{{ fw.fwname }}"
     fw_size                     = "{{ fw.fwvmsize }}"
     avsetname                   = "{{ fw.avsetname }}"
   }

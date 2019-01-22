@@ -29,3 +29,18 @@
       commit: "{{ item['commit'] | default('false') }}"
   with_items: "{{ cm_panos_ike_profile }}"
   when: "cm_panos_ike_profile is defined"
+
+
+- name: Add IPSEC Tunnel to the firewall
+    panos_ipsec_tunnel:
+      ip_address: '{{ ansible_host }}'
+      username: '{{ username }}'
+      password: '{{ password }}'
+      state: "{{ item['state'] | default('present') }}"
+      name: "{{ item['name'] }}"
+      tunnel_interface: 'tunnel.2'
+      ike_gtw_name: 'IKEGW-Ansible'
+      ipsec_profile: 'IPSec-Ansible'
+      commit: "{{ item['commit'] | default('false') }}"
+  with_items: "{{ cm_panos_ipsec_tunnel }}"
+  when: "cm_panos_ipsec_tunnel is defined"

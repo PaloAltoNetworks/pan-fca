@@ -351,7 +351,7 @@ def main():
         module.fail_json(msg="Ethernet interfaces don't exist on Panorama")
     else:
         # Firewall
-        # Normally we should set the vsys here, but since  are
+        # Normally we should set the vsys here, but since interfaces are
         # vsys importables, we'll use organize_into_vsys() to help find and
         # cleanup when the interface is imported into an undesired vsys.
         # con.vsys = vsys_dg

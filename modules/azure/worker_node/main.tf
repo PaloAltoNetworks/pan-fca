@@ -1,5 +1,3 @@
-
-
 data "azurerm_subnet" "datasubnet" {
   name                 = "${var.subnet_name}"
   virtual_network_name = "${var.vnet_name}"
@@ -190,7 +188,8 @@ resource "null_resource" remoteExecProvisionerPostProcess {
   depends_on = ["null_resource.remoteExecProvisionerUploadMonitor"]
 
   connection {
-    host        = "${azurerm_public_ip.vm-pip.ip_address}"
+//    host        = "${azurerm_public_ip.vm-pip.ip_address}"
+    host = "${azurerm_network_interface.vm.private_ip_addresses}"
     type        = "ssh"
     user        = "${var.admin_username}"
     private_key = "${file(var.ssh_key)}"
@@ -204,7 +203,7 @@ resource "null_resource" remoteExecProvisionerPostProcess {
           "chmod 755 /worker_node/publish.py",
           "sleep 10",
           "crontab -l > _tmp_file",
-          "echo \"*/5 * * * * /worker_node/monitor.py\" >> _tmp_file",
+          "echo \"*/5 * * * * /usr/bin/python /worker_node/monitor.py\" >> _tmp_file",
           "crontab _tmp_file",
     ]
   }

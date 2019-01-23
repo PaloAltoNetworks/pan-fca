@@ -118,4 +118,21 @@ resource "azurerm_virtual_machine" "vm" {
     enabled     = true
     storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
   }
+
+  #   provisioner "remote-exec" {
+  #       connection {
+  #           type      = "ssh"
+  #           user      = "${var.admin_username}"
+  #           password  = "${var.admin_password}"
+  #           host      = "${azurerm_public_ip.pip.ip_address}"
+  #       }
+  #       inline = [
+  #           "sudo apt-get update",
+  #           "sudo apt-get upgrade -y",
+  #           "sudo apt-get install apache2",
+  #           "sudo systemctl restart apache2"
+  #       ]
+  #   }
+  #  depends_on = ["azurerm_virtual_machine.vm"] 
+   
 }

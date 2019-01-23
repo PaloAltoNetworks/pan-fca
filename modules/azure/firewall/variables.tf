@@ -53,7 +53,7 @@ variable "fw_hostname" {
 }
 variable "fw_dnshostname" {
   description = "local name of the VM"
-  default     = "panfw"
+  default = "panfw"
 }
 
 variable "vm_os_simple" {

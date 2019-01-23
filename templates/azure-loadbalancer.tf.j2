@@ -3,9 +3,9 @@
 {% for lb in vnet['load_balancers'] %}
 # Creating Load Balancer
 
-module "{{ name }}-{{ lb.name }}-lb" {
+module "{{ lb.name }}" {
   source                                 = "{{ module_dir }}/loadbalancer"
-  name                                   = "{{ lb.name }}-LB"
+  name                                   = "{{ lb.name }}"
   location                               = "{{ location }}"
   resource_group_name                    = "{{ name }}"
   type                                   = "{{ lb.type }}"

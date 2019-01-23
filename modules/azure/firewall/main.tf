@@ -49,12 +49,14 @@ resource "azurerm_availability_set" "avset" {
 # Create the public IP address
 resource "azurerm_public_ip" "pip" {
     count                           = "${var.nb_instances}"
-    name                            = "${var.general_int_name}${count.index+1}-publicIP"
+    name                            = "${var.fw_hostname}${count.index+1}-publicIP"
     location                        = "${azurerm_resource_group.vm.location}"
     resource_group_name             = "${azurerm_resource_group.vm.name}"
     public_ip_address_allocation    = "static"
     sku								= "Standard"
-    
+    #domain_name_label               = "${var.fw_dnshostname == "" ? "" : "${var.fw_dnshostname}${count.index+1}"}"
+    domain_name_label               = "${var.fw_dnshostname}${count.index+1}"
+
     tags {
      displayname = "${join("", list("PublicNetworkinterfaces", ""))}"
      }
@@ -117,12 +119,12 @@ resource "azurerm_network_security_group" "ssh" {
 # Create the network interfaces
 resource "azurerm_network_interface" "Management" {
     count                               = "${var.nb_instances}"
-    name                                = "${var.general_int_name}${count.index+1}-mgmt"
+    name                                = "${var.fw_hostname}${count.index+1}-mgmt"
     location                            = "${azurerm_resource_group.vm.location}"
     resource_group_name                 = "${azurerm_resource_group.vm.name}"
     
     ip_configuration {
-        name                            = "${var.general_int_name}${count.index+1}-ip-0"
+        name                            = "${var.fw_hostname}${count.index+1}-ip-0"
         subnet_id                        = "${var.vnet_subnet_id_mgmt}"
         private_ip_address_allocation     = "dynamic"
         public_ip_address_id = "${element(azurerm_public_ip.pip.*.id, count.index)}"
@@ -132,14 +134,14 @@ resource "azurerm_network_interface" "Management" {
 
 # Create the network interfaces
 resource "azurerm_network_interface" "Trust" {
-    count                                = "${var.nb_instances}"
-    name                                = "${var.general_int_name}${count.index+1}-trust"
+    count                               = "${var.nb_instances}"
+    name                                = "${var.fw_hostname}${count.index+1}-trust"
     location                            = "${azurerm_resource_group.vm.location}"
     resource_group_name                 = "${azurerm_resource_group.vm.name}"
     enable_ip_forwarding                = "${var.enable_ip_forwarding}"
 
     ip_configuration {
-        name                            = "${var.general_int_name}${count.index+1}-ip-0"
+        name                            = "${var.fw_hostname}${count.index+1}-ip-0"
         subnet_id                        = "${var.vnet_subnet_id_trust}"
         private_ip_address_allocation     = "dynamic"
         load_balancer_backend_address_pools_ids = ["${var.lb_backend_pool_trust}"]
@@ -150,13 +152,13 @@ resource "azurerm_network_interface" "Trust" {
 # Create the network interfaces
 resource "azurerm_network_interface" "Untrust" {
     count                               = "${var.nb_instances}"
-    name                                = "${var.general_int_name}${count.index+1}-untrust"
+    name                                = "${var.fw_hostname}${count.index+1}-untrust"
     location                            = "${azurerm_resource_group.vm.location}"
     resource_group_name                 = "${azurerm_resource_group.vm.name}"
     enable_ip_forwarding                = "${var.enable_ip_forwarding}"
 
     ip_configuration {
-        name                                    = "${var.general_int_name}${count.index+1}-ip-0"
+        name                                    = "${var.fw_hostname}${count.index+1}-ip-0"
         subnet_id                               = "${var.vnet_subnet_id_untrust}"
         private_ip_address_allocation           = "Dynamic"
         load_balancer_backend_address_pools_ids = ["${var.lb_backend_pool_untrust}"]
@@ -170,7 +172,7 @@ resource "azurerm_network_interface" "Untrust" {
 # to create.
 resource "azurerm_virtual_machine" "firewall" {
     count                         = "${var.nb_instances}" 
-    name                          = "${var.vm_hostname}${count.index+1}"
+    name                          = "${var.fw_hostname}${count.index+1}"
     location                      = "${var.location}"
     resource_group_name           = "${azurerm_resource_group.vm.name}"
     network_interface_ids         = 
@@ -209,7 +211,7 @@ resource "azurerm_virtual_machine" "firewall" {
     delete_data_disks_on_termination = true
 
     os_profile     {
-        computer_name     = "pa-vm"
+        computer_name     = "${var.fw_hostname}${count.index+1}"
         admin_username    = "${var.adminUsername}"
         admin_password    = "${var.adminPassword}"
     }

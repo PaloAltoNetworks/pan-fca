@@ -47,9 +47,13 @@ variable "nb_instances" {
   default     = ""
 }
 
-variable "vm_hostname" {
+variable "fw_hostname" {
   description = "local name of the VM"
   default     = "FW"
+}
+variable "fw_dnshostname" {
+  description = "local name of the VM"
+  default = "panfw"
 }
 
 variable "vm_os_simple" {
@@ -83,7 +87,7 @@ variable "vm_os_sku" {
 }
 
 variable "vm_os_version" {
-  description = "The version of the image that you want to deploy. This is ignored when vm_os_id or vm_os_simple are provided."
+  description = "The version of the image that you want to deploy."
   default     = "latest"
 }
 
@@ -160,6 +164,7 @@ variable "vm_series" {
 }
 
 variable "fw_version" {
+  # Latest / 8.1.0 / 8.0.0 / 7.1.1
   default = "latest"
 }
 

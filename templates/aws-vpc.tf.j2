@@ -15,6 +15,3 @@ stack_name = "{{ name }}"
 customer_asns = ["{{ vnet['vnet_network']['bgp_asn'] }}"]
 }
 {% endfor %}
-
-#Todo move subnet creation route association to a module in terraform called network#
-#Todo create test and  move lambda,loadbalancer,S3,Transit,eni,backend,vpn to own modules reference outputs for sharing and jinja template for all#

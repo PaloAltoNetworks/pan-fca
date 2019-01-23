@@ -1,0 +1,33 @@
+variable "subnet_names" {
+  description = "List of Subnet Names to be created"
+  type        = "list"
+  default     = [""]
+}
+
+variable "vnet_name" {
+  description = "Name of vNet to Deploy Subnets into"
+  type        = "string"
+  default     = ""
+}
+
+variable "subnet_prefixes" {
+  description = "List of Subnet Prefixes to be generated"
+  type        = "list"
+  default     = [""]
+}
+
+variable "resource_group_name" {
+  description = "Name of Resource group to deploy subnets into"
+  type        = "string"
+  default     = ""
+}
+
+variable "nsg_id" {
+  type    = "string"
+  default = ""
+}
+
+variable "mgmt_subnet" {
+  type = "string"
+  default = ""
+}

@@ -1,12 +1,30 @@
-
+#Define Firewalls
 firewalls:
-  - name: Firewall
+  - name: Firewall-Set-1
     vmcount: 1
-    fwname: VM-
+    fwname: VMPAN-
     fwvmsize: Standard_D3_v2
+    avsetname: "AVSet1"
+    fw_version: latest
+    fw_sku: byol
+    Username: fwadmin
+    Password: Paloalto123
+    dnshostname: vmpan
 
+  - name: Firewall-Set-2
+    vmcount: 1
+    fwname: VMTEST-
+    fwvmsize: Standard_D3_v2
+    avsetname: "AVSet2"
+    fw_version: latest
+    fw_sku: byol
+    Username: fwadmin
+    Password: Paloalto123
+    dnshostname: vmtest
+
+#Define Load Balancers  
 load_balancers:
-  - name: public
+  - name: PUB-LB
     fename: Untrust
     bename: Untrust
     type: public
@@ -17,7 +35,7 @@ load_balancers:
     lbprobename: http
     lbruleprobeport: 80
 
-  - name: private
+  - name: PRIV-LB
     fename: Trust
     bename: Trust
     type: private
@@ -28,33 +46,26 @@ load_balancers:
     lbprobename: ssh
     lbruleprobeport: 22
 
+# Define Virtual Networks
+# IMPORTANT the first Network has to be the Firewall Network
+# 1 Subnet = Management; 2 Subnet = Trust; 3 Subnet = Untrust  
 vnet_network:
-  name: TransitVNet
+  name: Transit-Test
   network: "10.217.127.0/24"
   peers:
-    - Web-Azure
-    - DEV-Azure
+    - Web-Test
+    #- DEV-Azure
   subnet:
   - name: Management
     network: "10.217.127.64/27"
-    #rte: Default_RT
   - name: Trust
     network: "10.217.127.32/27"
-    #rte: internal_network
   - name: Untrust
     network: "10.217.127.0/27"
-    #rte: default_internet
   - name: EgressLB
     network: "10.217.127.96/27"
-    #rte: default_internet
 
-route_tables:
-  - name: Default
-    routes:
-      - cidr: 0.0.0.0/0
-        name: VirtualAppliance
-        gateway: 1.1.1.1
-
+#Define Security Groups
 security_groups:
   - name: Outbound allow
     priority: 100

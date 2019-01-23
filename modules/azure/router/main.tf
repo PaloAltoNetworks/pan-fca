@@ -20,4 +20,3 @@ resource "azurerm_route" "route_entry" {
   next_hop_in_ip_address    = "${lookup(var.routes[count.index], "gateway")}"
   depends_on = ["azurerm_route_table.route_table"]
 }
-

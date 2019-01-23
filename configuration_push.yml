@@ -20,6 +20,7 @@
     - name: "SETUP CREDENTIALS & ENV FOR {{ cloud_provider| upper }}"
       include_role:
         name: "env_setup"
+        tasks_from: "{{ cloud_provider |lower}}.yml"
       tags:
         - 'always'
         - 'tf'
@@ -97,13 +98,58 @@
 
     - name: "WAIT FOR MGMT AVAILABILITY"
       pause:
-        seconds: 600
-      when: cloud_provider == 'aws'
+        seconds: "{{ cloud_unique[cloud_provider | lower]['timeout'] }}"
 
-    - name: "WAIT FOR MGMT AVAILABILITY"
-      pause:
-        seconds: 240
-      when: cloud_provider == 'azure'
+- name: "IMPORT IRON SKILLET WITH ROLE PALOALTONETWORKS AND ADD AGAIN ADMIN"
+  hosts: "firewalls"
+  connection: "local"
+  gather_facts: "no"
+
+  vars_files:
+    - "{{ playbook_dir }}/provider.yml"
+
+  roles:
+    - role: "PaloAltoNetworks.paloaltonetworks"
+
+  tasks:
+# Import and load config file from URL
+  - name: Import IRON SKILLET
+    include_role: 
+      name: 'iron_skillet'
+      tasks_from: '{{ cloud_provider }}.yml'
+      
+# Create Firewall admin
+# Doesn't commit the candidate config
+  - name: Create Firewall Admin
+    panos_administrator:
+      ip_address: "{{ ansible_host }}"
+      username: "{{ username }}"
+      password: "{{ password }}"
+      admin_username: "{{ username }}"
+      admin_password: "{{ password }}"
+      state: "present"
+      superuser: true
+      commit: false
+
+- name: "DEPLOY CONFIGURATIONS AND VALIDATE"
+  hosts: "firewalls"
+  connection: "local"
+  gather_facts: "no"
+
+  vars_files:
+    - "{{ playbook_dir }}/provider.yml"
+
+  vars:
+    temp_key_dir: "{{ lookup('env', 'HOME') }}/paloalto/creds"
+    temp_key: "{{ temp_key_dir }}/tempkey"
+
+  tasks:
+  
+    - name: "DEPLOY ADMIN TASKS"
+      include_role:
+        name: "pa_admin"
+      tags:
+        - 'ansible'
 
     - name: "CONFIGURE MGMT ACCESS"
       panos_admpwd:
@@ -187,5 +233,13 @@
         auth_code: "{{ item.value.auth_code}}"
       with_dict: "{{ cm_panos_lic }}"
       when: "cm_panos_lic is defined"
+      tags:
+        - 'ansible'
+
+    - name: "COMMIT THE CHANGES"
+      panos_commit:
+        ip_address: '{{ ansible_host }}'
+        username: '{{ username }}'
+        password: '{{ password }}'
       tags:
         - 'ansible'

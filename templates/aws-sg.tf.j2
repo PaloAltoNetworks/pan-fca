@@ -11,7 +11,6 @@ module "{{ name }}-sg-{{ sg.type }}" {
     ingress_cidr_blocks     = [{% for rule in sg['rules'] %},"{{ rule['source_cidr'] }}",{% endfor %}] 
     ingress_rules           = ["https-443-tcp", "ssh-tcp"]
 }
-
 {% endfor %}
 
 {% endif %}

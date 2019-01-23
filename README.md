@@ -7,7 +7,6 @@ Flexible Cloud Automation
 panos-fca, stands for Flexible Cloud Automation, is an ever evolving initiative to build a Multi-Cloud Deployment and Configuration Framework
 
 <p float="left">
-  <img src="/images/Mark50.png" width="120" /> 
   <img src="/images/panosmarkpof.PNG" width="700" />
 </p>
 
@@ -19,7 +18,6 @@ This version being the second iteration of PS Cloud Automation, the code name is
 panos-mark II is built out of 4 fundational modules, and supports 3 Cloud platforms 
 
 <p float="left">
-  <img src="/images/MarkII.jpg" width="190" /> 
   <img src="/images/MarkIIArchi.PNG" width="600" />
 </p>
 

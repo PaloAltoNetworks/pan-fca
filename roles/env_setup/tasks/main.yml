@@ -6,13 +6,14 @@
 
 - name: "PROMPT FOR DELETION"
   pause:
-    prompt: "Detected previous state file, do you wish to execute against this state? If selecting no, previous state file will be backed up but ignored for this execution. (yes/no)"
+    prompt: "Detected previous state file, do you wish to backup? (yes/no)"
   register: state_backup
   when: statefile.stat.exists
 
 - name: "BACKUP FILES"
   include_tasks: "backup-state.yml"
-  when: statefile.stat.exists and not state_backup.user_input | bool
+  when: statefile.stat.exists and state_backup.user_input | bool
 
 - name: "SETUP ENV FOR {{ cloud_provider }}"
   include_tasks: "{{ cloud_provider }}.yml"
+  

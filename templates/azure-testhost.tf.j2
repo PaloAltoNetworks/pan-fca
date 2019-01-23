@@ -11,7 +11,7 @@
     vnet_subnet_id_vm           = "${module.{{ name }}.vnet_subnets[0]}"
     hostname                    = "{{ vm.hostname }}"
     admin_password              = "{{ vm.password }}"
-    admin_username              = "{{ vm.password }}"
+    admin_username              = "{{ vm.username }}"
     dns_name                    = "{{ vm.dnsname }}"
   }
 

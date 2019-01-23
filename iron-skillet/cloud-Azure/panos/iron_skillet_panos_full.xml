@@ -441,7 +441,7 @@
 <login-banner>You have accessed a protected system.
 Log off immediately if you are not an authorized user.</login-banner>
 <timezone>UTC</timezone>
-<hostname>sample</hostname>
+<hostname></hostname>
 <type>
    <dhcp-client>
      <send-hostname>yes</send-hostname>

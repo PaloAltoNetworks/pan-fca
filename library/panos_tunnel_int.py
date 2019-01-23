@@ -141,22 +141,22 @@ options:
 EXAMPLES = '''
 # Create ethernet1/1 as DHCP.
 - name: enable DHCP client on ethernet1/1 in zone public
-  panos_interface:
+  panos_tunnel_int:
     ip_address: "192.168.1.1"
     username: "ansible"
     password: "secret"
-    if_name: "ethernet1/1"
+    if_name: "tunnel.1"
     zone_name: "public"
     enable_dhcp: true
     dhcp_default_route: "no"
 
 # Update ethernet1/2 with a static IP address in zone dmz.
 - name: ethernet1/2 as static in zone dmz
-  panos_interface:
+  panos_tunnel_int:
     ip_address: "192.168.1.1"
     username: "ansible"
     password: "secret"
-    if_name: "ethernet1/2"
+    if_name: "tunnel.2"
     mode: "layer3"
     ip: ["10.1.1.1/24"]
     enable_dhcp: false
@@ -177,7 +177,7 @@ from ansible.module_utils.basic import get_exception
 
 try:
     from pandevice.base import PanDevice
-    from pandevice.network import EthernetInterface, Zone, VirtualRouter
+    from pandevice.network import EthernetInterface, Zone, VirtualRouter, TunnelInterface
     from pandevice.device import Vsys
     from pandevice.errors import PanDeviceError
     HAS_LIB = True
@@ -185,7 +185,7 @@ except ImportError:
     HAS_LIB = False
 
 
-def set_zone(con, eth, zone_name, zones):
+def set_zone(con, tun, zone_name, zones):
     changed = False
     desired_zone = None
 
@@ -193,22 +193,22 @@ def set_zone(con, eth, zone_name, zones):
     for z in zones:
         if z.name == zone_name:
             desired_zone = z
-        elif eth.name in z.interface:
-            z.interface.remove(eth.name)
+        elif tun.name in z.interface:
+            z.interface.remove(tun.name)
             z.update('interface')
             changed = True
 
     if desired_zone is not None:
-        if desired_zone.mode != eth.mode:
-            raise ValueError('Mode mismatch: {0} is {1}, zone is {2}'.format(eth.name, eth.mode, z.mode))
+        if desired_zone.mode != tun.mode:
+            raise ValueError('Mode mismatch: {0} is {1}, zone is {2}'.format(tun.name, tun.mode, z.mode))
         if desired_zone.interface is None:
             desired_zone.interface = []
-        if eth.name not in desired_zone.interface:
-            desired_zone.interface.append(eth.name)
+        if tun.name not in desired_zone.interface:
+            desired_zone.interface.append(tun.name)
             desired_zone.update('interface')
             changed = True
     elif zone_name is not None:
-        z = Zone(zone_name, interface=[eth.name, ], mode=eth.mode)
+        z = Zone(zone_name, interface=[tun.name, ], mode=tun.mode)
         con.add(z)
         z.create()
         changed = True
@@ -216,7 +216,7 @@ def set_zone(con, eth, zone_name, zones):
     return changed
 
 
-def set_virtual_router(con, eth, vr_name, routers):
+def set_virtual_router(con, tun, vr_name, routers):
     changed = False
     desired_vr = None
 
@@ -224,16 +224,16 @@ def set_virtual_router(con, eth, vr_name, routers):
         if vr.name == vr_name:
             desired_vr = vr
 
-        elif vr.interface and eth.name in vr.interface:
-            vr.interface.remove(eth.name)
+        elif vr.interface and tun.name in vr.interface:
+            vr.interface.remove(tun.name)
             vr.update('interface')
             changed = True
 
     if desired_vr is not None:
         if desired_vr.interface is None:
             desired_vr.interface = []
-        if eth.name not in desired_vr.interface:
-            desired_vr.interface.append(eth.name)
+        if tun.name not in desired_vr.interface:
+            desired_vr.interface.append(tun.name)
             desired_vr.update('interface')
             changed = True
     elif vr_name is not None:
@@ -322,12 +322,10 @@ def main():
     vsys_dg = module.params['vsys_dg']
     commit = module.params['commit']
     dhcp_default_route = module.params['dhcp_default_route']
-    management_profile = module.params['management_profile']
     if_name = module.params['if_name']
 
     dhcpe = ('<entry name="%s"><layer3><dhcp-client><enable>yes</enable><create-default-route>%s</create-default-route>'
-             '</dhcp-client><interface-management-profile>%s</interface-management-profile></layer3></entry>' %
-             (if_name,dhcp_default_route,management_profile))
+             '</dhcp-client></layer3></entry>' % (if_name,dhcp_default_route))
     dhcpx = ("/config/devices/entry[@name='localhost.localdomain']/network/interface/ethernet/entry[@name='%s']" % (if_name))
 
     # Open the connection to the PANOS device.
@@ -359,7 +357,7 @@ def main():
 
     # Retrieve the current config.
     try:
-        interfaces = EthernetInterface.refreshall(con, add=False, name_only=True)
+        interfaces = TunnelInterface.refreshall(con, add=False, name_only=True)
         zones = Zone.refreshall(con)
         routers = VirtualRouter.refreshall(con)
         vsys_list = Vsys.refreshall(con)
@@ -368,82 +366,82 @@ def main():
         module.fail_json(msg=e.message)
 
     # Build the object based on the user spec.
-    eth = EthernetInterface(**spec)
-    con.add(eth)
+    tun = TunnelInterface(**spec)
+    con.add(tun)
 
     # Which action should we take on the interface?
     changed = False
     if state == 'present':
-        if eth.name in [x.name for x in interfaces]:
-            i = EthernetInterface(eth.name)
+        if tun.name in [x.name for x in interfaces]:
+            i = TunnelInterface(tun.name)
             con.add(i)
             try:
                 i.refresh()
             except PanDeviceError as e:
                 module.fail_json(msg='Failed "present" refresh: {0}'.format(e))
-            if not i.equal(eth, compare_children=False):
-                eth.extend(i.children)
+            if not i.equal(tun, compare_children=False):
+                tun.extend(i.children)
                 try:
-                    eth.apply()
+                    tun.apply()
                     changed = True
                 except PanDeviceError as e:
                     module.fail_json(msg='Failed "present" apply: {0}'.format(e))
         else:
             try:
-                eth.create()
+                tun.create()
                 changed = True
             except PanDeviceError as e:
                 module.fail_json(msg='Failed "present" create: {0}'.format(e))
         try:
-            changed |= set_zone(con, eth, zone_name, zones)
-            changed |= set_virtual_router(con, eth, vr_name, routers)
+            changed |= set_zone(con, tun, zone_name, zones)
+            changed |= set_virtual_router(con, tun, vr_name, routers)
             if enable_dhcp is True:
                 con.xapi.edit(xpath=dhcpx,element=dhcpe)
         except PanDeviceError as e:
             module.fail_json(msg='Failed zone/vr assignment: {0}'.format(e))
     elif state == 'absent':
         try:
-            changed |= set_zone(con, eth, None, zones)
-            changed |= set_virtual_router(con, eth, None, routers)
+            changed |= set_zone(con, tun, None, zones)
+            changed |= set_virtual_router(con, tun, None, routers)
         except PanDeviceError as e:
             module.fail_json(msg='Failed "absent" zone/vr cleanup: {0}'.format(e))
             changed = True
-        if eth.name in [x.name for x in interfaces]:
+        if tun.name in [x.name for x in interfaces]:
             try:
-                eth.delete()
+                tun.delete()
                 changed = True
             except PanDeviceError as e:
                 module.fail_json(msg='Failed "absent" delete: {0}'.format(e))
     elif operation == 'delete':
-        if eth.name not in [x.name for x in interfaces]:
-            module.fail_json(msg='Interface {0} does not exist, and thus cannot be deleted'.format(eth.name))
+        if tun.name not in [x.name for x in interfaces]:
+            module.fail_json(msg='Interface {0} does not exist, and thus cannot be deleted'.format(tun.name))
 
         try:
             con.organize_into_vsys()
-            set_zone(con, eth, None, zones)
-            set_virtual_router(con, eth, None, routers)
-            eth.delete()
+            set_zone(con, tun, None, zones)
+            set_virtual_router(con, tun, None, routers)
+            tun.delete()
             changed = True
         except (PanDeviceError, ValueError):
             e = get_exception()
             module.fail_json(msg=e.message)
     elif operation == 'add':
-        if eth.name in [x.name for x in interfaces]:
-            module.fail_json(msg='Interface {0} is already present; use operation "update"'.format(eth.name))
+        if tun.name in [x.name for x in interfaces]:
+            module.fail_json(msg='Interface {0} is already present; use operation "update"'.format(tun.name))
 
         con.vsys = vsys_dg
         # Create the interface.
         try:
-            eth.create()
-            set_zone(con, eth, zone_name, zones)
-            set_virtual_router(con, eth, vr_name, routers)
+            tun.create()
+            set_zone(con, tun, zone_name, zones)
+            set_virtual_router(con, tun, vr_name, routers)
             changed = True
         except (PanDeviceError, ValueError):
             e = get_exception()
             module.fail_json(msg=e.message)
     elif operation == 'update':
-        if eth.name not in [x.name for x in interfaces]:
-            module.fail_json(msg='Interface {0} is not present; use operation "add" to create it'.format(eth.name))
+        if tun.name not in [x.name for x in interfaces]:
+            module.fail_json(msg='Interface {0} is not present; use operation "add" to create it'.format(tun.name))
 
         # If the interface is in the wrong vsys, remove it from the old vsys.
         try:
@@ -451,9 +449,9 @@ def main():
         except PanDeviceError:
             e = get_exception()
             module.fail_json(msg=e.message)
-        if eth.vsys != vsys_dg:
+        if tun.vsys != vsys_dg:
             try:
-                eth.delete_import()
+                tun.delete_import()
             except PanDeviceError:
                 e = get_exception()
                 module.fail_json(msg=e.message)
@@ -461,16 +459,16 @@ def main():
         # Move the ethernet object to the correct vsys.
         for vsys in vsys_list:
             if vsys.name == vsys_dg:
-                vsys.add(eth)
+                vsys.add(tun)
                 break
         else:
             module.fail_json(msg='Vsys {0} does not exist'.format(vsys))
 
         # Update the interface.
         try:
-            eth.apply()
-            set_zone(con, eth, zone_name, zones)
-            set_virtual_router(con, eth, vr_name, routers)
+            tun.apply()
+            set_zone(con, tun, zone_name, zones)
+            set_virtual_router(con, tun, vr_name, routers)
             changed = True
         except (PanDeviceError, ValueError):
             e = get_exception()

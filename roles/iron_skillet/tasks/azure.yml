@@ -5,7 +5,7 @@
     ip_address: '{{ ansible_host }}'
     username: '{{ username }}'
     password: '{{ password }}'
-    url: "https://raw.githubusercontent.com/PaloAltoNetworks/panos-fca/master/iron-skillet/sample-cloud-Azure/panos/iron_skillet_panos_full.xml?token=AdgFEEglAXhCcBVM7V0vT3lSKmM-7Gspks5cUWS9wA%3D%3D"
+    url: "https://raw.githubusercontent.com/PaloAltoNetworks/panos-fca/master/iron-skillet/sample-cloud-Azure/panos/iron_skillet_panos_full.xml"
     category: "configuration"
     validate_certs: false
   register: result

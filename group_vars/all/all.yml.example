@@ -2,8 +2,6 @@
 
 ansible_python_interpreter: "python"
 location: "{{ cloud_provider_location }}"
-#username: "ken"
-#password: '43yRpv$RkCo'
 credentials:
   aws:
     username: 'admin'
@@ -14,20 +12,19 @@ credentials:
 
 username: "{{ credentials[cloud_provider]['username'] }}"
 password: "{{ credentials[cloud_provider]['password'] }}"
-#ip_address: '34.226.48.243'
+
 
 virtual_networks:
 #  - Web-Azure
 #  - Transit-Azure
-  #- DEV-Azure
-   - VPCTransit
+
 
 # removed "external" for testing
 # TODO: Re-add external after licensing resolved
 cm_virtual_router:
 #  - 'trust'
 #  - 'untrust'
-  #- 'anton_test'
+#  - 'anton_test'
    - 'default'
 
 # cm_mgmt_profile:
@@ -297,4 +294,4 @@ cm_nat_rule:
 
 # cm_panos_lic:
 #   values:
-#     auth_code: 'I6474155'
+#     auth_code: '<AUTH CODE>'

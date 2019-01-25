@@ -118,18 +118,18 @@
       name: 'iron_skillet'
       tasks_from: '{{ cloud_provider }}.yml'
       
-# Create Firewall admin
-# Doesn't commit the candidate config
-  - name: Create Firewall Admin
-    panos_administrator:
-      ip_address: "{{ ansible_host }}"
-      username: "{{ username }}"
-      password: "{{ password }}"
-      admin_username: "{{ username }}"
-      admin_password: "{{ password }}"
-      state: "present"
-      superuser: true
-      commit: false
+# # Create Firewall admin
+# # Doesn't commit the candidate config
+#   - name: Create Firewall Admin
+#     panos_administrator:
+#       ip_address: "{{ ansible_host }}"
+#       username: "{{ username }}"
+#       password: "{{ password }}"
+#       admin_username: "{{ username }}"
+#       admin_password: "{{ password }}"
+#       state: "present"
+#       superuser: true
+#       commit: false
 
 - name: "DEPLOY CONFIGURATIONS AND VALIDATE"
   hosts: "firewalls"

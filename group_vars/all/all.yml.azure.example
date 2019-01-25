@@ -2,40 +2,30 @@
 
 ansible_python_interpreter: "python"
 location: "{{ cloud_provider_location }}"
-#username: "ken"
-#password: '43yRpv$RkCo'
 credentials:
-  aws:
-    username: 'admin'
-    password: 'Paloalto123'
+#This are the Default Passwords
   azure:
     username: 'fwadmin'
     password: 'Paloalto123'
 
 username: "{{ credentials[cloud_provider]['username'] }}"
 password: "{{ credentials[cloud_provider]['password'] }}"
-#ip_address: '34.226.48.243'
 
 virtual_networks:
-  - Web-Test
+  - Web-Azure
   - Transit-Azure
 
 #Create Virtual Routers
 #By default will be the "default" deleted 
-# TODO: Re-add external after licensing resolved
 cm_virtual_router:
   - 'trust'
   - 'untrust'
-  #- 'anton_test'
-  #- 'default'
 
 #Create Management Profile
 cm_mgmt_profile:
   - name: 'AzureProbe'
     permitted_network: 
         - "172.26.0.0/12"
-        - "10.0.0.0/8"
-        - "168.63.129.16/32"
     https: true
     ssh: true
 
@@ -135,6 +125,25 @@ cm_dns:
 
 # Create Security Rules
 cm_security_rule:
+  - name: 'Azure Health Probe Traffic'
+    action: 'allow'
+    disabled: 'no'
+    to_zone:
+      - 'untrust'
+      - 'trust'
+    from_zone:
+      - 'untrust'
+      - 'trust'
+    source:
+      - 'Azure-Health-Probe'
+    application:
+      - 'any'
+    category:
+     - 'any'
+    source_user:
+     - 'any'
+    hip_profiles:
+     - 'any'
   - name: 'Allow Any'
     action: 'allow'
     disabled: 'no'
@@ -203,25 +212,28 @@ cm_security_rule:
 
 # Create NAT Rules
 cm_nat_rule:
-  - name: 'No-NAT-Azure-Probe-Trust'
-    source:
-      zone: "trust"
-      network: '168.63.129.16/32'
-    service: 'any'
-    destination:
-      zone: "trust"
-      network: 'any'
-    service: 'any'
-  - name: 'No-NAT-Azure-Probe-Untrust'
-    source:
-      zone: "untrust"
-      network: '168.63.129.16/32'
-    service: 'any'
-    destination:
-      zone: "untrust"
-      network: 'any'
-    service: 'any'
+  # - name: 'NAT-Traffic to WebServer'
+  #   state: 'present'
+  #   source:
+  #     zone: 'untrust'
+  #     network:
+  #     - 'any'
+  #   destination:
+  #     zone: 'untrust'
+  #     network:
+  #     - '10.217.127.4/32'
+  #   service: 'any'
+  #   snat_type: 'dynamic-ip-and-port'
+  #   snat_address_type: 'interface-address'
+  #   snat_translation:
+  #     interface: 'ethernet1/2'
+  #     ip: ''
+  #   dnat_type: 'static'
+  #   dnat_translation:
+  #     ip: '172.16.128.4/32'
+  #     port: '80'
   - name: 'NAT default Outbound'
+    state: 'present'
     source:
       zone: 'trust'
       network:
@@ -230,11 +242,47 @@ cm_nat_rule:
       zone: 'untrust'
       network:
       - 'any'
-      translation:
-        ip:
-          - ''
-        interface: 'ethernet1/2'
     service: 'any'
+    snat_type: 'dynamic-ip-and-port'
+    snat_address_type: 'interface-address'
+    snat_translation:
+      interface: 'ethernet1/1'
+      ip: ''
+  - name: 'NAT default Inbound'
+    state: 'present'
+    source:
+      zone: 'untrust'
+      network:
+      - 'any'
+    destination:
+      zone: 'untrust'
+      network:
+      - 'any'
+    service: 'any'
+    snat_type: 'dynamic-ip-and-port'
+    snat_address_type: 'interface-address'
+    snat_translation:
+      interface: 'ethernet1/2'
+      ip: '' 
+  - name: 'No-NAT-Azure-Probe-Trust'
+    source:
+      zone: "trust"
+      network: 'Azure-Health-Probe'
+    service: 'any'
+    destination:
+      zone: "trust"
+      network: 'any'
+    service: 'any'
+  - name: 'No-NAT-Azure-Probe-Untrust'
+    source:
+      zone: "untrust"
+      network: 'Azure-Health-Probe'
+    service: 'any'
+    destination:
+      zone: "untrust"
+      network: 'any'
+    service: 'any'
+
 
   
   # - name: 'Inbound-NAT-to-DMZ-Server1'
@@ -275,11 +323,22 @@ cm_panos_static_route:
     interface: 'ethernet1/1'
     nexthop_type: 'ip-address'
     virtual_router: 'untrust'
+  - name: 'Web-Net Traffic Trust'
+    destination: '172.16.128.0/24'
+    nexthop: '10.217.127.33/32'
+    interface: 'ethernet1/2'
+    nexthop_type: 'ip-address'
+    virtual_router: 'trust'
+  - name: 'Web-Net Traffic Untrust'
+    destination: '172.16.128.0/24'
+    nexthop: 'trust'
+    virtual_router: 'untrust'
+    nexthop_type: 'next-vr'
 
 # # Activate Firewall
 # cm_panos_lic:
 #   values:
-#     auth_code: 'I6474155'
+#     auth_code: '<AUTH CODE>'
 
 ## Update Firewall
 # cm_panos_software:

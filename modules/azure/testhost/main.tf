@@ -12,7 +12,7 @@ resource "azurerm_public_ip" "pip" {
   location                     = "${var.location}"
   resource_group_name          = "${azurerm_resource_group.vm.name}"
   public_ip_address_allocation = "Dynamic"
-  domain_name_label            = "${var.dns_name}"
+  #domain_name_label            = "${var.dns_name}"
 }
 
 
@@ -136,3 +136,32 @@ resource "azurerm_virtual_machine" "vm" {
   #  depends_on = ["azurerm_virtual_machine.vm"] 
    
 }
+
+# resource "null_resource" "wait_for_initialize" {
+#   depends_on = ["azurerm_virtual_machine.vm"]
+#   provisioner "local-exec" {
+#     command = "sleep 600"
+#   }
+# }
+
+# resource "null_resource" remoteExecProvisionerPostProcess {
+
+#   connection {
+# //    host        = "${azurerm_public_ip.vm-pip.ip_address}"
+#     host = "${azurerm_network_interface.vm.private_ip_addresses}"
+#     type        = "ssh"
+#     user        = "${var.admin_username}"
+#     password    = "${var.admin_password}"
+#     agent       = false
+#   }
+
+#   provisioner "remote-exec" {
+#     inline = [
+#           "sudo apt-get update -y",
+#             "sudo apt-get upgrade -y",
+#             "sudo apt-get install apache2",
+#             "sudo systemctl restart apache2",
+#             "sudo restart"
+#     ]
+#   }
+# }

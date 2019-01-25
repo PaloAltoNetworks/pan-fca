@@ -14,7 +14,7 @@ module "{{ name }}-vpc-{{ vpc.name }}" {
     azs                     = [{% for az in vpc['azs'] %},"{{ az }}",{% endfor %}]
     private_subnets         = [{% for subnet in vpc['subnets'] %},"{{ subnet['cidr'] }}",{% endfor %}]
     map_public_ip_on_launch = false
-    enable_vpn_gateway      = false
+    enable_vpn_gateway      = true
     amazon_side_asn         = "{{ vpc['asn'] }}"
 }
 

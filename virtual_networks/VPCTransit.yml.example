@@ -72,7 +72,6 @@ vnet_network:
     #        name: internal_network
     #        gateway: 10.227.128.63
 
-
 # AWS Security groups for permitted inbound traffic to firewall interfaces (Management, Untrust, Trust)
 security_groups:
   - management:
@@ -97,6 +96,58 @@ security_groups:
         source_cidr: 10.0.100.0/24     
       - name: Trust rule2
         source_cidr: 10.0.200.0/24
+   
+# List name, cidr, region, azs, and subnets for each spoke connected to Transit VPC Firewalls
+# Optionally supply cidr blocks and psk for each VPN from spoke to Firewall.
+spoke_vpcs:
+  - spoke_1:
+    name: spoke1
+    cidr: 10.122.0.0/23
+    region: eu-west-1
+    asn: 65122
+    azs:
+      - eu-west-1a
+      - eu-west-1b
+    subnets:
+      - name: private_subnet_az1a
+        cidr: 10.122.0.0/24
+      - name: private_subnet_az1b
+        cidr: 10.122.1.0/24
+    fw_tunnels:
+      - name: fw1
+        tunnel_1_cidr: 169.254.122.12/30
+        tunnel_1_psk: blahblah
+        tunnel_2_cidr: 169.254.122.16/30
+        tunnel_2_psk: blahblah
+      - name: fw2
+        tunnel_1_cidr: 169.254.122.20/30
+        tunnel_1_psk: blahblah
+        tunnel_2_cidr: 169.254.122.24/30
+        tunnel_2_psk: blahblah
+  - spoke_2:
+    name: spoke2
+    cidr: 10.222.0.0/23
+    region: eu-west-2
+    asn: 65222
+    azs:
+      - eu-west-2a
+      - eu-west-2b
+    subnets:
+      - name: private_subnet_az1a
+        cidr: 10.222.0.0/24
+      - name: private_subnet_az1b
+        cidr: 10.222.1.0/24     
+    fw_tunnels:
+      - name: fw1
+        tunnel_1_cidr: 169.254.222.12/30
+        tunnel_1_psk: blahblah
+        tunnel_2_cidr: 169.254.222.16/30
+        tunnel_2_psk: blahblah
+      - name: fw2
+        tunnel_1_cidr: 169.254.222.20/30
+        tunnel_1_psk: blahblah
+        tunnel_2_cidr: 169.254.222.24/30
+        tunnel_2_psk: blahblah
 
 
 tags:

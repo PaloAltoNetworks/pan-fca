@@ -20,7 +20,6 @@
     - name: "SETUP CREDENTIALS & ENV FOR {{ cloud_provider| upper }}"
       include_role:
         name: "env_setup"
-        tasks_from: "{{ cloud_provider |lower}}.yml"
       tags:
         - 'always'
         - 'tf'

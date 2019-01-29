@@ -55,7 +55,7 @@ resource "azurerm_public_ip" "pip" {
     public_ip_address_allocation    = "static"
     sku								= "Standard"
     #domain_name_label               = "${var.fw_dnshostname == "" ? "" : "${var.fw_dnshostname}${count.index+1}"}"
-    domain_name_label               = "${var.fw_dnshostname}${count.index+1}"
+    #domain_name_label               = "${var.fw_dnshostname}${count.index+1}"
 
     tags {
      displayname = "${join("", list("PublicNetworkinterfaces", ""))}"
@@ -163,7 +163,7 @@ resource "azurerm_network_interface" "Untrust" {
         private_ip_address_allocation           = "Dynamic"
         load_balancer_backend_address_pools_ids = ["${var.lb_backend_pool_untrust}"]
     }
-    network_security_group_id = "${azurerm_network_security_group.ssh.id}"
+    network_security_group_id = "${azurerm_network_security_group.open.id}"
 }
 
 # ********** VIRTUAL MACHINE CREATION **********

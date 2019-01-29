@@ -88,6 +88,12 @@ resource "azurerm_virtual_machine" "vm" {
     version   = "${var.image_version}"
   }
 
+  plan {
+    name      = "${var.image_sku}"
+    publisher = "${var.image_publisher}"
+    product   = "${var.image_offer}"
+  }
+
   storage_os_disk {
     name              = "${var.hostname}-osdisk"
     managed_disk_type = "Standard_LRS"
@@ -117,51 +123,5 @@ resource "azurerm_virtual_machine" "vm" {
   boot_diagnostics {
     enabled     = true
     storage_uri = "${azurerm_storage_account.stor.primary_blob_endpoint}"
-  }
-
-  #   provisioner "remote-exec" {
-  #       connection {
-  #           type      = "ssh"
-  #           user      = "${var.admin_username}"
-  #           password  = "${var.admin_password}"
-  #           host      = "${azurerm_public_ip.pip.ip_address}"
-  #       }
-  #       inline = [
-  #           "sudo apt-get update",
-  #           "sudo apt-get upgrade -y",
-  #           "sudo apt-get install apache2",
-  #           "sudo systemctl restart apache2"
-  #       ]
-  #   }
-  #  depends_on = ["azurerm_virtual_machine.vm"] 
-   
+  }   
 }
-
-# resource "null_resource" "wait_for_initialize" {
-#   depends_on = ["azurerm_virtual_machine.vm"]
-#   provisioner "local-exec" {
-#     command = "sleep 600"
-#   }
-# }
-
-# resource "null_resource" remoteExecProvisionerPostProcess {
-
-#   connection {
-# //    host        = "${azurerm_public_ip.vm-pip.ip_address}"
-#     host = "${azurerm_network_interface.vm.private_ip_addresses}"
-#     type        = "ssh"
-#     user        = "${var.admin_username}"
-#     password    = "${var.admin_password}"
-#     agent       = false
-#   }
-
-#   provisioner "remote-exec" {
-#     inline = [
-#           "sudo apt-get update -y",
-#             "sudo apt-get upgrade -y",
-#             "sudo apt-get install apache2",
-#             "sudo systemctl restart apache2",
-#             "sudo restart"
-#     ]
-#   }
-# }

@@ -26,32 +26,32 @@ variable "storage_replication_type" {
 
 variable "vm_size" {
   description = "Specifies the size of the virtual machine."
-  default     = "Standard_F2"
+  default     = "Basic_A1"
 }
 
 variable "image_publisher" {
   description = "name of the publisher of the image (az vm image list)"
-  default     = "Canonical"
+  default     = "tunnelbiz"
 }
 
 variable "image_offer" {
   description = "the name of the offer (az vm image list)"
-  default     = "UbuntuServer"
+  default     = "ubuntu_server"
 }
 
 variable "image_sku" {
   description = "image sku to apply (az vm image list)"
-  default     = "16.04-LTS"
+  default     = "ubuntu1810webserver"
 }
 
 variable "image_version" {
   description = "version of the image to apply (az vm image list)"
-  default     = "latest"
+  default     = "0.0.1"
 }
 
 variable "admin_username" {
   description = "administrator user name"
-  default     = "vmadmin"
+  default     = "creator"
 }
 
 variable "admin_password" {

@@ -4,7 +4,6 @@
 # Creating routes
 
 module "{{ name }}-{{ rt['name'] }}" {
-# module "{{ name }}-rt" {
   source                = "{{ module_dir }}/router"
   location              = "{{ location }}"
   resource_group_name   = "${module.{{ name }}.resource_group_name}"

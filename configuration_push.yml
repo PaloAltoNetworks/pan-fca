@@ -182,17 +182,9 @@
       tags:
         - 'ansible'
 
-    # - name: "PERFORM OPERATIONAL VALIDATION"
-    #  include_role:
-    #    name: "pa_validate"
-
-    # - name: "COMMIT THE CHANGES"
-    #   panos_commit:
-    #     ip_address: '{{ ansible_host }}'
-    #     username: '{{ username }}'
-    #     password: '{{ password }}'
-    #   tags:
-    #     - 'ansible'
+    - name: "PERFORM OPERATIONAL VALIDATION"
+      include_role:
+       name: "pa_validate"
 
     - name: "Create Static routes"
       include_role:
@@ -200,7 +192,16 @@
       tags:
         - 'ansible'
 
-- name: "CONFIGURE FIREWALL WITH ROLE PALOALTONETWORKS"
+    - name: "COMMIT THE CHANGES"
+      panos_commit:
+        ip_address: '{{ ansible_host }}'
+        username: '{{ username }}'
+        password: '{{ password }}'
+      tags:
+        - 'ansible'
+
+
+- name: "CUpdate and License Firewall"
   hosts: "firewalls"
   connection: "local"
   gather_facts: "no"
@@ -212,6 +213,14 @@
     - role: "PaloAltoNetworks.paloaltonetworks"
 
   tasks:
+    # - name: "COMMIT THE CHANGES"
+    #   panos_commit:
+    #     ip_address: '{{ ansible_host }}'
+    #     username: '{{ username }}'
+    #     password: '{{ password }}'
+    #   tags:
+    #     - 'ansible'
+
     - name: "Update PANOS Software"
       panos_software:
         ip_address: '{{ ansible_host }}'
@@ -232,13 +241,5 @@
         auth_code: "{{ item.value.auth_code}}"
       with_dict: "{{ cm_panos_lic }}"
       when: "cm_panos_lic is defined"
-      tags:
-        - 'ansible'
-
-    - name: "COMMIT THE CHANGES"
-      panos_commit:
-        ip_address: '{{ ansible_host }}'
-        username: '{{ username }}'
-        password: '{{ password }}'
       tags:
         - 'ansible'

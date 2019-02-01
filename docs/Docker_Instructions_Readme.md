@@ -2,8 +2,7 @@
 
 Two versions of this container are included in this repository:
 
-- Dockerfile-FCA-slim `slim` container: Based on Alpine Linux
-- Dockerfile-FCA `full` container: Based on Debian Linux
+- Dockerfile-FCA  container: Based on Alpine Linux
 
 
 ### System Requirements

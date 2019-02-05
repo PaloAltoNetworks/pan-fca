@@ -31,6 +31,40 @@
   when: "cm_panos_ike_profile is defined"
 
 
+- name: ADD IKE Gateway to Firewall
+    panos_ike_gateway:
+      ip_address: '{{ ansible_host }}'
+      username: '{{ username }}'
+      password: '{{ password }}'
+      state: "{{ item['state'] | default('present') }}"
+      name: "{{ item['name'] }}"
+      protocol_version: 'ikev2'
+      interface: 'ethernet1/1'
+      passive_mode: 'True'
+      liveness_check: '5'
+      peer_ip_value: '1.2.3.4'
+      psk: 'CHANGEME'
+      crypto_profile_name: 'IKE-Ansible'
+      local_ip_address_type: "(default=None, choices=['ip', 'floating-ip'])"
+      local_ip_address: dict(default=None),
+      nat_traversal: "(type='bool', default=False)"
+      fragmentation: "(type='bool', default=False)"
+      dead_peer_detection: "(type='bool', default=False)"
+      dead_peer_detection_interval: "(type='int', default=99)"
+      dead_peer_detection_retry: "(type='int', default=10)"
+      ikev1_exchange_mode: "(default=None, choices=['auto', 'main', 'aggressive'])"
+    when: "cm_panos_ike_gw is defined"
+
+- name: ADD Tunnel Interface
+    panos_tunnel_int:
+      ip_address: '{{ ansible_host }}'
+      username: '{{ username }}'
+      password: '{{ password }}'
+      state: "{{ item['state'] | default('present') }}"
+      name: "{{ item['name'] }}"
+      if_name: "tunnel{{ iterateNum }}"
+      zone_name: "trust"
+
 - name: Add IPSEC Tunnel to the firewall
     panos_ipsec_tunnel:
       ip_address: '{{ ansible_host }}'

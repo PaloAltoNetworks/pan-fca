@@ -56,9 +56,14 @@
       command: 'terraform output -json firewalls_created'
       register: firewalls_created
 
+    - name: "GET VPN CUSTOMER GATEWAY EIPs"
+      command: 'terraform output -json customer_gateways'
+      register: customer_gateways
+
     - name: "USE TERRAFORM OUTPUT STORE TEMP VALUES"
       set_fact:
         firewalls: "{{ firewalls_created.stdout |from_json }}"
+        gateways: "{{ customer_gateways.stdout |from_json }}"
 
     - name: "ADD HOSTS FROM TF OUTPUT TO FIREWALL GROUP"
       add_host:
@@ -144,7 +149,7 @@
     temp_key: "{{ temp_key_dir }}/tempkey"
 
   tasks:
-  
+
     - name: "DEPLOY ADMIN TASKS"
       include_role:
         name: "pa_admin"
@@ -180,6 +185,12 @@
     - name: "PUSH SECURITY RULES"
       include_role:
         name: "pa_srule"
+      tags:
+        - 'ansible'
+
+    - name: "PUSH IPSEC CONFIGURATION"
+      include_role:
+        name: "pa_ipsec"
       tags:
         - 'ansible'
 

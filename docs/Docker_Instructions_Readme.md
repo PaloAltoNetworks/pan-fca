@@ -2,8 +2,7 @@
 
 Two versions of this container are included in this repository:
 
-- Dockerfile-FCA-slim `slim` container: Based on Alpine Linux
-- Dockerfile-FCA `full` container: Based on Debian Linux
+- Dockerfile-FCA  container: Based on Alpine Linux
 
 
 ### System Requirements
@@ -25,6 +24,8 @@ Both images have the following packages installed:
 - pandevice
 - xmltodict
 - jsonschema
+- requests
+- requests-toolbelt
 - python2.7
 - pip
 - Ansible Role: PaloAltoNetworks.paloaltonetworks (FCA)
@@ -43,13 +44,10 @@ _**(Use this for Pre-built Container image)**_
 
 `docker pull panfca/tool:fca ` _full image (744MB)_
 
-`docker pull panfca/tool:fca-slim` _slim image (500MB)_
-
 #### Obtaining Container Image from GitHub
 Option #2
 
 `download the file Dockerfile-FCA`  _full image (744MB)_
-`download the file Dockerfile-FCA-slim` _slim image (500MB)_
 
 **Build from Dockerfile**
 
@@ -67,22 +65,6 @@ Full image build
 `docker build -t <tag name> -f Dockerfile-FCA .`
  _Example:_ `docker build -t fca -f Dockerfile-FCA .`
 
-Slim image build
-
-`docker build -t <tag name> -f Dockerfile-FCA-slim .`
- _Example:_ `docker build -t fca -f Dockerfile-FCA-slim .`
-
-
-
-#### Add Data
-
-All data is contained within the `./root` directory
-
-- Add Hub/Spokes data to the `./root/virtual_networks/<name>.yml`, with one `.yml` file per virtual network _see example files for details_
-- Add the name of the Hub/Spoke to the `./root/group_vars/all.yml` file under `virtual_networks`
-- Create a file called `provider.yml` _(see provider.example) for details_ that contains the `cloud_provider name`, `cloud_provider_location`, and appropriate credentials for the cloud provider
-
-#### Launch Topology
 
 Note:
 If you want to create your own image name you can tag it with a custom tag.
@@ -95,8 +77,6 @@ Make sure you are in the root fca folder of the cloned repository or specify ful
 - **Start docker container and mount the root folder**
 
 `docker run -v ${PWD}:/fca -it panfca/tool:fca` _for full image_
-
-`docker run -v ${PWD}:/fca -it panfca/tool:fca-slim` _for slim image_
 
 `docker run -v ${PWD}:/fca -it <tag used in build step>` _for built image_
 
@@ -113,6 +93,15 @@ you then will see the example files for both and will need to be adjusted and re
 
 **_As further Mark phases of FCA project develop this manual intervention will not be needed and would be replaced by a Top level GUI interface that drives data input into a api layer._**
 
+#### Add Data
+
+All data is contained within the `fca` directory
+
+- Add Hub/Spokes data to the `./fca/virtual_networks/<name>.yml`, with one `.yml` file per virtual network _see example files for details_
+- Add the name of the Hub/Spoke to the `./fca/group_vars/all.yml` file under `virtual_networks`
+- Create a file called `provider.yml` _(see provider.example) for details_ that contains the `cloud_provider name`, `cloud_provider_location`, and appropriate credentials for the cloud provider
+
+#### Launch Topology
 
 - **Launch topology from within container image.**
 

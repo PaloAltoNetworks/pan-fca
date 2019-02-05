@@ -1,0 +1,94 @@
+{# AWS VPN module template from https://github.com/terraform-aws-modules/terraform-aws-vpn-gateway #}
+{% for name, vnet in vnets.items() %}
+{% if vnet['spoke_vpcs'] is defined %}
+
+{% for vpc in vnet['spoke_vpcs'] %}
+{% if vpc['fw_tunnels'] is defined %}
+{% for fw in vpc['fw_tunnels'] %}
+
+{% if fw.name == 'fw1' %}
+module "{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}" {
+    source                                       = "{{ module_dir }}/vpn"
+    providers               = {
+                                aws = "aws.{{ vpc['region'] }}"
+    }
+    name                                         = "{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}"
+    vpc_id                                       = "${module.{{ name }}-vpc-{{ vpc.name }}.vpc_id}"
+    vpn_gateway_id                               = "${module.{{ name }}-vpc-{{ vpc.name }}.vgw_id}"
+    tunnel1_inside_cidr                          = "{{ fw['tunnel_1_cidr'] }}"
+    tunnel2_inside_cidr                          = "{{ fw['tunnel_2_cidr'] }}"
+    tunnel1_preshared_key                        = "{{ fw['tunnel_1_psk'] }}"
+    tunnel2_preshared_key                        = "{{ fw['tunnel_2_psk'] }}"
+    customer_gw_asn                              = ["{{ vnet['vnet_network']['bgp_asn'] }}"]
+    customer_gw_ip                               = ["${module.{{ name }}.untrust_elastic_ip_addresses[0]}"]
+}
+
+output "{{ vpc.name }}-{{ fw.name }}_spoke_asn" {
+  value = ["${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.spoke_asn}"]
+}
+
+output "{{ vpc.name }}-{{ fw.name }}_spoke_vpn_name" {
+  value = ["${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.spoke_vpn_name}"]
+} 
+
+output "{{ vpc.name }}-{{ fw.name }}_fw_tunnel_ips" {
+  value = ["${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.fw_tunnel_ips}"]
+}
+
+output "{{ vpc.name }}-{{ fw.name }}_vgw_tunnel_ips" {
+  value = ["${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.vgw_tunnel_ips}"]
+} 
+
+output "{{ vpc.name }}-{{ fw.name }}_vgw_public_ips" {
+  value = ["${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.vgw_public_ips}"]
+} 
+
+{% endif %}
+
+{% if fw.name == 'fw2' %}
+module "{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}" {
+    source                                       = "{{ module_dir }}/vpn"
+    providers               = {
+                                aws = "aws.{{ vpc['region'] }}"
+    }
+    name                                         = "{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}"
+    vpc_id                                       = "${module.{{ name }}-vpc-{{ vpc.name }}.vpc_id}"
+    vpn_gateway_id                               = "${module.{{ name }}-vpc-{{ vpc.name }}.vgw_id}"
+    tunnel1_inside_cidr                          = "{{ fw['tunnel_1_cidr'] }}"
+    tunnel2_inside_cidr                          = "{{ fw['tunnel_2_cidr'] }}"
+    tunnel1_preshared_key                        = "{{ fw['tunnel_1_psk'] }}"
+    tunnel2_preshared_key                        = "{{ fw['tunnel_2_psk'] }}"
+    customer_gw_asn                              = ["{{ vnet['vnet_network']['bgp_asn'] }}"]
+    customer_gw_ip                               = ["${module.{{ name }}.untrust_elastic_ip_addresses[1]}"]
+}
+
+output "{{ vpc.name }}-{{ fw.name }}_spoke_asn" {
+  value = ["${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.spoke_asn}"]
+}
+
+output "{{ vpc.name }}-{{ fw.name }}_spoke_vpn_name" {
+  value = ["${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.spoke_vpn_name}"]
+} 
+
+output "{{ vpc.name }}-{{ fw.name }}_fw_tunnel_ips" {
+  value = ["${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.fw_tunnel_ips}"]
+}
+
+output "{{ vpc.name }}-{{ fw.name }}_vgw_tunnel_ips" {
+  value = ["${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.vgw_tunnel_ips}"]
+} 
+
+output "{{ vpc.name }}-{{ fw.name }}_vgw_public_ips" {
+  value = ["${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.vgw_public_ips}"]
+} 
+
+
+{% endif %}
+
+
+{% endfor %}
+{% endif %}
+
+{% endfor %}
+{% endif %}
+{% endfor %}

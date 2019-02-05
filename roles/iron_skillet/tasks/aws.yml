@@ -10,9 +10,9 @@
     validate_certs: false
   register: result
 
-- name: Load Iron Skillet for AWS
-  panos_loadcfg:
-    ip_address: "{{ ansible_host }}"
-    username: "{{ username }}"
-    password: "{{ password }}"
-    file: "{{result.filename}}"
+# - name: Load Iron Skillet for AWS
+#   panos_loadcfg:
+#     ip_address: "{{ ansible_host }}"
+#     username: "{{ username }}"
+#     password: "{{ password }}"
+#     file: "{{result.filename}}"

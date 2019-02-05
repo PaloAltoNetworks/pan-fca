@@ -1,48 +1,45 @@
-FROM debian:jessie-slim
+FROM alpine:3.7
 
+ENV PYTHONBUFFERED 1
+ENV PYTHONFAULTHANDLER 1
 ENV ANSIBLE_VERSION=2.6.4
 ENV TERRAFORM_VERSION=0.11.10
 
-RUN DEBIAN_FRONTEND=noninteractive \
-    apt-get update -y && \
-    apt-get install -y python-software-properties && \
-    apt-get install -y \
-    python \
-    curl \
-    unzip \
-    openssh-client && \
-    apt-get install -y \
-    python-dev \
-    python-pip \
-    git-core \
-    build-essential \
-    libssl-dev \
-    libffi-dev && \
-    pip install --upgrade setuptools pip cffi && \
-    pip install --upgrade pyopenssl && \
-    pip install ansible==${ANSIBLE_VERSION} \
+RUN apk add --no-cache --virtual .build-deps \
+        gcc \
+        libc-dev \
+        linux-headers \
+        build-base \
+        libffi-dev && \
+    apk add --no-cache \
+        bash \
+        openssh \
+        wget \
+        curl \
+        unzip \
+        openssl openssl-dev \
+        libxml2 libxml2-dev libxslt-dev \
+        python python-dev py-pip && \
+    pip install --upgrade \
+        pip \
+        cffi \
+        setuptools \
+        ansible==${ANSIBLE_VERSION} \
         pandevice \
-        pan-python \
         xmltodict \
-        awscli \
-        azure-cli \
+        pan-python \
         paramiko \
         ipaddress \
+        azure-cli \
+        awscli \
         requests-toolbelt \
-        requests\
+        requests \
         jsonschema && \
-    ansible-galaxy install PaloAltoNetworks.paloaltonetworks && \
+        ansible-galaxy install PaloAltoNetworks.paloaltonetworks && \
     curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip > terraform.zip && \
     unzip terraform.zip -d /bin && \
-    rm -f terraform.zip && \
-    apt-get -y autoremove && \
-    apt-get -y autoclean && \ 
-    apt-get -y clean all && \
-    rm -rf /root/.cache/pip && \
-    rm -rf /root/.pip/cache && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /var/cache/apt
+    rm -rf terraform.zip && \
+    mkdir /usr/local/fca && \
+    apk del .build-deps
 
 ENTRYPOINT ["/bin/bash"]
-
-

@@ -20,7 +20,6 @@
     - name: "SETUP CREDENTIALS & ENV FOR {{ cloud_provider| upper }}"
       include_role:
         name: "env_setup"
-        tasks_from: "{{ cloud_provider |lower}}.yml"
       tags:
         - 'always'
         - 'tf'
@@ -100,6 +99,15 @@
       pause:
         seconds: "{{ cloud_unique[cloud_provider | lower]['timeout'] }}"
 
+    - name: "CONFIGURE MGMT ACCESS"
+      panos_admpwd:
+        ip_address: "{{ ansible_host }}"
+        key_filename: "{{ lookup('env', 'HOME') }}/paloalto/creds/tempkey"
+        username: "{{ username }}"
+        newpassword: "{{ password }}"
+      when: cloud_provider == 'aws'
+
+
 - name: "IMPORT IRON SKILLET WITH ROLE PALOALTONETWORKS AND ADD AGAIN ADMIN"
   hosts: "firewalls"
   connection: "local"
@@ -118,18 +126,18 @@
       name: 'iron_skillet'
       tasks_from: '{{ cloud_provider }}.yml'
       
-# Create Firewall admin
-# Doesn't commit the candidate config
-  - name: Create Firewall Admin
-    panos_administrator:
-      ip_address: "{{ ansible_host }}"
-      username: "{{ username }}"
-      password: "{{ password }}"
-      admin_username: "{{ username }}"
-      admin_password: "{{ password }}"
-      state: "present"
-      superuser: true
-      commit: false
+# # Create Firewall admin
+# # Doesn't commit the candidate config
+#   - name: Create Firewall Admin
+#     panos_administrator:
+#       ip_address: "{{ ansible_host }}"
+#       username: "{{ username }}"
+#       password: "{{ password }}"
+#       admin_username: "{{ username }}"
+#       admin_password: "{{ password }}"
+#       state: "present"
+#       superuser: true
+#       commit: false
 
 - name: "DEPLOY CONFIGURATIONS AND VALIDATE"
   hosts: "firewalls"
@@ -183,17 +191,9 @@
       tags:
         - 'ansible'
 
-    # - name: "PERFORM OPERATIONAL VALIDATION"
-    #  include_role:
-    #    name: "pa_validate"
-
-    # - name: "COMMIT THE CHANGES"
-    #   panos_commit:
-    #     ip_address: '{{ ansible_host }}'
-    #     username: '{{ username }}'
-    #     password: '{{ password }}'
-    #   tags:
-    #     - 'ansible'
+    - name: "PERFORM OPERATIONAL VALIDATION"
+      include_role:
+       name: "pa_validate"
 
     - name: "Create Static routes"
       include_role:
@@ -201,7 +201,16 @@
       tags:
         - 'ansible'
 
-- name: "CONFIGURE FIREWALL WITH ROLE PALOALTONETWORKS"
+    - name: "COMMIT THE CHANGES"
+      panos_commit:
+        ip_address: '{{ ansible_host }}'
+        username: '{{ username }}'
+        password: '{{ password }}'
+      tags:
+        - 'ansible'
+
+
+- name: "CUpdate and License Firewall"
   hosts: "firewalls"
   connection: "local"
   gather_facts: "no"
@@ -213,6 +222,14 @@
     - role: "PaloAltoNetworks.paloaltonetworks"
 
   tasks:
+    # - name: "COMMIT THE CHANGES"
+    #   panos_commit:
+    #     ip_address: '{{ ansible_host }}'
+    #     username: '{{ username }}'
+    #     password: '{{ password }}'
+    #   tags:
+    #     - 'ansible'
+
     - name: "Update PANOS Software"
       panos_software:
         ip_address: '{{ ansible_host }}'
@@ -233,13 +250,5 @@
         auth_code: "{{ item.value.auth_code}}"
       with_dict: "{{ cm_panos_lic }}"
       when: "cm_panos_lic is defined"
-      tags:
-        - 'ansible'
-
-    - name: "COMMIT THE CHANGES"
-      panos_commit:
-        ip_address: '{{ ansible_host }}'
-        username: '{{ username }}'
-        password: '{{ password }}'
       tags:
         - 'ansible'

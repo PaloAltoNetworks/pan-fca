@@ -4,8 +4,8 @@
 # Creating Application Gateway
 
 module "{{ appgw.name }}" {
-  source                                 = "{{ module_dir }}/loadbalancer"
-  name                                   = "{{ lb.name }}"
+  source                                 = "{{ module_dir }}/app_gateway"
+  name                                   = "{{ appgw.name }}"
   location                               = "{{ location }}"
   resource_group_name                    = "{{ name }}"
   type                                   = "{{ lb.type }}"
@@ -17,19 +17,7 @@ module "{{ appgw.name }}" {
   frontend_private_ip_address            = "${cidrhost(module.{{ name }}.vnet_subnet_prefixes[1], -3)}"
   backendpoolname                        = "{{ lb.bename }}"
   lb_probename                           = "{{ lb.lbprobename }}"
- 
 
- "remote_port" {
-    ssh = ["Tcp", "22"]
-  }
-
-  "lb_port" {
-    {{ lb.lbrulename }}  = ["{{ lb.lbrulefrontport }}", "{{ lb.lbruleprotocol }}", "{{ lb.lbrulebackport }}"]
-  }
-
-  "lb_probe_port" {
-      {{ lb.lbprobename }} = ["{{ lb.lbruleprobeport }}"]
-}
 }
 {% endfor %}
 {% endif %}

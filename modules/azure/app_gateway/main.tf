@@ -12,6 +12,8 @@ resource "azurerm_public_ip" "pip" {
      }
 }
 
+
+#Create Application Gateway
 resource "azurerm_application_gateway" "network" {
   name                = "${var.app_gw_name}"
   resource_group_name = "${var.resource_group_name}"

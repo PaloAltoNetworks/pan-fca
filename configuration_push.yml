@@ -210,7 +210,7 @@
         - 'ansible'
 
 
-- name: "CUpdate and License Firewall"
+- name: "Update and License Firewall"
   hosts: "firewalls"
   connection: "local"
   gather_facts: "no"

@@ -3,7 +3,6 @@
 ansible_python_interpreter: "python"
 location: "{{ cloud_provider_location }}"
 credentials:
-#This are the Default Passwords
   azure:
     username: 'fwadmin'
     password: 'Paloalto123'
@@ -12,8 +11,8 @@ username: "{{ credentials[cloud_provider]['username'] }}"
 password: "{{ credentials[cloud_provider]['password'] }}"
 
 virtual_networks:
-  - Web-Azure
-  - Transit-Azure
+  - TransitAzureFCA
+  - WebAzureFCA
 
 #Create Virtual Routers
 #By default will be the "default" deleted 
@@ -25,7 +24,7 @@ cm_virtual_router:
 cm_mgmt_profile:
   - name: 'AzureProbe'
     permitted_network: 
-        - "172.26.0.0/12"
+        - "168.63.129.16/32"
     https: true
     ssh: true
 
@@ -43,12 +42,12 @@ cm_interface:
     dhcp: true
     mgmt_profile: 'AzureProbe'
     state: 'present'
-  # - name: 'tunnel.500'
-  #   ip: '10.1.5.1'
-  #   mask: 24
-  #   mgmt_profile: 'AzureProbe'
-  #   virtual_router: 'trust'
-  #   zone: "test3"
+  - name: 'tunnel.500'
+    ip: '10.1.5.1'
+    mask: 24
+    mgmt_profile: 'AzureProbe'
+    virtual_router: 'trust'
+    zone: "test3"
 
 #Create Address Objects
 cm_object_address:
@@ -105,22 +104,22 @@ cm_dns:
   dns_primary: '8.8.8.8'
   dns_secondary: '1.1.1.1'
 
-##Configure Panorama
-# cm_panorama1:
-#   primary: '8.8.8.8'
-#   secondary: '1.1.1.1'
+#Configure Panorama
+cm_panorama1:
+  primary: '8.8.8.8'
+  secondary: '1.1.1.1'
 
-##Create Firewall accounts
-# cm_fw_user:
-#   - username: 'ken_test'
-#     password: 'TheBestPassword'
-#     role: "devicereader"
-#   - username: 'ntc'
-#     password: 'The2ndBestPassword'
-#     role: "deviceadmin"
-#   - username: 'pa1'
-#     password: 'The3rdBestPassword'
-#     role: "superreader"
+#Create Firewall accounts
+cm_fw_user:
+  - username: 'ken_test'
+    password: 'TheBestPassword'
+    role: "devicereader"
+  - username: 'ntc'
+    password: 'The2ndBestPassword'
+    role: "deviceadmin"
+  - username: 'pa1'
+    password: 'The3rdBestPassword'
+    role: "superreader"
 
 
 # Create Security Rules
@@ -159,111 +158,10 @@ cm_security_rule:
      - 'any'
     hip_profiles:
      - 'any'
-#   - name: 'Outside Web Server'
-#     action: 'allow'
-#     disabled: 'no'
-#     to_zone:
-#       - 'untrust'
-#     from_zone:
-#       - 'trust'
-#     source:
-#       - 'site-a-internal'
-#     destination:
-#       - 'public-servers'
-#     application:
-#       - 'any'
-#     service:
-#       - 'http-alt'
-#       - 'service-http'
-#     tags:
-#      - 'Outbound'
-#     category:
-#      - 'any'
-#     source_user:
-#      - 'any'
-#     hip_profiles:
-#      - 'any'
-#     rule_type: 'universal'
-#   - name: 'Inside Web Server'
-#     action: 'allow'
-#     disabled: 'no'
-#     to_zone:
-#       - 'untrust'
-#     from_zone:
-#       - 'trust'
-#     source:
-#       - 'site-a-internal'
-#     destination:
-#       - 'public-servers'
-#     application:
-#       - 'any'
-#     service:
-#       - 'http-alt'
-#       - 'service-http'
-#     tags:
-#      - 'Outbound'
-#     category:
-#      - 'any'
-#     source_user:
-#      - 'any'
-#     hip_profiles:
-#      - 'any'
-#     rule_type: 'universal'
+
 
 # Create NAT Rules
 cm_nat_rule:
-  # - name: 'NAT-Traffic to WebServer'
-  #   state: 'present'
-  #   source:
-  #     zone: 'untrust'
-  #     network:
-  #     - 'any'
-  #   destination:
-  #     zone: 'untrust'
-  #     network:
-  #     - '10.217.127.4/32'
-  #   service: 'any'
-  #   snat_type: 'dynamic-ip-and-port'
-  #   snat_address_type: 'interface-address'
-  #   snat_translation:
-  #     interface: 'ethernet1/2'
-  #     ip: ''
-  #   dnat_type: 'static'
-  #   dnat_translation:
-  #     ip: '172.16.128.4/32'
-  #     port: '80'
-  - name: 'NAT default Outbound'
-    state: 'present'
-    source:
-      zone: 'trust'
-      network:
-      - 'any'
-    destination:
-      zone: 'untrust'
-      network:
-      - 'any'
-    service: 'any'
-    snat_type: 'dynamic-ip-and-port'
-    snat_address_type: 'interface-address'
-    snat_translation:
-      interface: 'ethernet1/1'
-      ip: ''
-  - name: 'NAT default Inbound'
-    state: 'present'
-    source:
-      zone: 'untrust'
-      network:
-      - 'any'
-    destination:
-      zone: 'untrust'
-      network:
-      - 'any'
-    service: 'any'
-    snat_type: 'dynamic-ip-and-port'
-    snat_address_type: 'interface-address'
-    snat_translation:
-      interface: 'ethernet1/2'
-      ip: '' 
   - name: 'No-NAT-Azure-Probe-Trust'
     source:
       zone: "trust"
@@ -282,21 +180,58 @@ cm_nat_rule:
       zone: "untrust"
       network: 'any'
     service: 'any'
-
-
-  
-  # - name: 'Inbound-NAT-to-DMZ-Server1'
-  #   source:
-  #     zone: "untrust"
-  #     network:
-  #       - 'any'
-  #   destination:
-  #     zone: "untrust"
-  #     network: "public-servers"
-  #     translation: 
-  #     ip:
-  #       - 'google-dns-1'
-  #   service: 'any'
+  - name: 'NAT default Outbound'
+    state: 'present'
+    source:
+      zone: 'trust'
+      network:
+      - 'any'
+    destination:
+      zone: 'untrust'
+      network:
+      - 'any'
+    service: 'any'
+    snat_type: 'dynamic-ip-and-port'
+    snat_address_type: 'interface-address'
+    snat_translation:
+      interface: 'ethernet1/1'
+      ip: ''
+  - name: 'NAT-Traffic to WebServer'
+    state: 'present'
+    source:
+      zone: 'untrust'
+      network:
+      - 'any'
+    destination:
+      zone: 'untrust'
+      network:
+      - '10.217.130.4/32'
+    service: 'any'
+    snat_type: 'dynamic-ip-and-port'
+    snat_address_type: 'interface-address'
+    snat_translation:
+      interface: 'ethernet1/2'
+      ip: ''
+    dnat_type: 'static'
+    dnat_translation:
+      ip: '172.16.130.4/32'
+      port: '80'
+  - name: 'NAT default Inbound'
+    state: 'present'
+    source:
+      zone: 'untrust'
+      network:
+      - 'any'
+    destination:
+      zone: 'untrust'
+      network:
+      - 'any'
+    service: 'any'
+    snat_type: 'dynamic-ip-and-port'
+    snat_address_type: 'interface-address'
+    snat_translation:
+      interface: 'ethernet1/2'
+      ip: '' 
 
 #Create Static Routes
 cm_panos_static_route:
@@ -307,30 +242,30 @@ cm_panos_static_route:
     nexthop_type: 'next-vr'
   - name: 'DefaultGW_Untrust'
     destination: '0.0.0.0/0'
-    nexthop: '10.217.127.1/32'
+    nexthop: '10.217.130.1/32'
     interface: 'ethernet1/1'
     nexthop_type: 'ip-address'
     virtual_router: 'untrust'
   - name: 'AzureProbe-Trust'
     destination: '168.63.129.16/32'
-    nexthop: '10.217.127.33/32'
+    nexthop: '10.217.130.33/32'
     interface: 'ethernet1/2'
     nexthop_type: 'ip-address'
     virtual_router: 'trust'
   - name: 'AzureProbe-Untrust'
     destination: '168.63.129.16/32'
-    nexthop: '10.217.127.1/32'
+    nexthop: '10.217.130.1/32'
     interface: 'ethernet1/1'
     nexthop_type: 'ip-address'
     virtual_router: 'untrust'
   - name: 'Web-Net Traffic Trust'
-    destination: '172.16.128.0/24'
-    nexthop: '10.217.127.33/32'
+    destination: '172.16.130.0/24'
+    nexthop: '10.217.130.33/32'
     interface: 'ethernet1/2'
     nexthop_type: 'ip-address'
     virtual_router: 'trust'
   - name: 'Web-Net Traffic Untrust'
-    destination: '172.16.128.0/24'
+    destination: '172.16.130.0/24'
     nexthop: 'trust'
     virtual_router: 'untrust'
     nexthop_type: 'next-vr'
@@ -343,5 +278,5 @@ cm_panos_static_route:
 ## Update Firewall
 # cm_panos_software:
 #   values:
-#     version: '8.1.4'
+#     version: '8.1.6'
 #     restart: false

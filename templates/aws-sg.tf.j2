@@ -10,6 +10,7 @@ module "{{ name }}-sg-{{ sg.type }}" {
     vpc_id                  = "${module.{{ name }}.vpc_id}"
     ingress_cidr_blocks     = [{% for rule in sg['rules'] %},"{{ rule['source_cidr'] }}",{% endfor %}] 
     ingress_rules           = ["https-443-tcp", "ssh-tcp"]
+    egress_rules            = [ "all-all" ]
 }
 {% endfor %}
 

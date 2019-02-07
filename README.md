@@ -42,5 +42,5 @@ The data model is be found [here.](./docs/DATA_MODEL.md)
 User and Developer guide can be found [here.](./docs/overview.md)
 
 
-## Support Policy
-This is a community supported framework. The support policy can be found [here.](./LICENSE)
+## License and Support Policy
+This framework is licensed under the MIT license and is community supported. The license can be found [here.](./LICENSE) support policy can be found [here.](./SUPPORT_POLICY)

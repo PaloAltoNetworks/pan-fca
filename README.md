@@ -43,4 +43,4 @@ User and Developer guide can be found [here.](./docs/overview.md)
 
 
 ## License and Support Policy
-This framework is licensed under the MIT license and is community supported. The license can be found [here.](./LICENSE) support policy can be found [here.](./SUPPORT_POLICY)
+This framework is licensed under the MIT license and is community supported. The license can be found [here](./LICENSE) support policy can be found [here.](./SUPPORT_POLICY)

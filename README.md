@@ -1,10 +1,10 @@
 
-# panos-fca
+# pan-fca
 Flexible Cloud Automation
 
 ## Description
 
-panos-fca, stands for Flexible Cloud Automation, is an ever evolving initiative to build a Multi-Cloud Deployment and Configuration Framework
+pan-fca, stands for Palo Alto Networks - Flexible Cloud Automation, is an ever evolving initiative to build a Multi-Cloud Deployment and Configuration Framework
 
 <p float="left">
   <img src="/images/panosmarkpof.PNG" width="700" />

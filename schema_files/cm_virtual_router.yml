@@ -1,0 +1,10 @@
+---
+"$schema": http://json-schema.org/draft-04/schema#
+description: A list of virtual routers defined
+title: Configuation Managmenet Virtual Routers
+type: array
+items:
+  description: The name of the virtual router you want to define
+  type: string
+  maxLength: 64
+additionalProperties: true

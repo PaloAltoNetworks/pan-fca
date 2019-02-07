@@ -1,0 +1,126 @@
+---
+"$schema": http://json-schema.org/draft-04/schema#
+description: The configuration options for PANOS NAT RULES.
+title: PANOS NAT Rule
+id: cm_nat_rule
+type: array
+items:
+  type: object
+  properties:
+    name:
+      description: The Name of the NAT Rule
+      type: string
+      maxLength: 256
+    snat_type:
+      description: Type of Source NAT
+      type: string
+      maxLength: 256
+    source:
+      description: Source attributes of the Object
+      type: object
+      properties:
+        zone:
+          descriptions:
+          type: string
+        network:
+          descriptions:
+          type: array
+          items:
+            description:
+            type: string
+    destination:
+      description: Destination attributes of the Object
+      type: object
+      properties:
+        zone:
+          descriptions:
+          type: string
+        interface:
+          descriptions:
+          type: string
+        network:
+          descriptions:
+          type: array
+          items:
+            description:
+            type: string
+      snat_translation:
+        description: SNAT Translation Details
+        type: object
+        properties:
+          ip:
+            description:
+            type: array
+            items:
+              description:
+              type: string
+              regex: ''
+          interface:
+            description:
+            type: string
+      dnat_translation:
+        description: DNAT Translation Details
+        type: object
+        properties:
+          ip:
+            description:
+            type: array
+            items:
+              description:
+              type: string
+              regex: ''
+          port:
+            description:
+            type: array
+            items:
+              description:
+              type: string
+              regex: ''
+      service:
+        descriptions:
+        type: string
+        maxLength: 31
+  additionalProperties: false
+  required:
+    - "name"
+    - "zone"
+# additionalProperties: false
+#    * to_interface (string) - Interface where packet will leave
+#    * source_translation (dict) - Dict to describe the source translation
+#       * ip (ip_addr) - IP address to source from
+#       * ip_dynamic (list) - list of either IPs or objects
+#       * mask (cidr) - Mask of source
+#       * type (enum) - Either translated-address or the default interface-address
+#       * interface (string) - Interface for source
+#       * bidirectional (bool) - Whether or not the rule is bi-directional
+#    * destination_translation (dict) - Dict to describe the destination translation
+#       * translated_address (ip_addr) - Address object for translated address
+#       * port (port) - Address object for translated address
+#
+# cm_nat_rule:
+#  - name: 'NAT default'
+#    source:
+#      zone: 'untrust'
+#      network:
+#      - 'site-a-internal'
+#    destination:
+#      zone: 'trust'
+#      network:
+#      - 'any'
+#      translation:
+#        ip:
+#          - '200.10.10.1/24'
+#        interface: 'ethernet1/3'
+#    service: 'any'
+#  - name: 'Inbound-NAT-to-DMZ-Server1'
+#    source:
+#      zone: "untrust"
+#      network:
+#        - 'any'
+#    destination:
+#      zone: "untrust"
+#      network: "public-servers"
+#      translation:
+#      ip:
+#        - 'google-dns-1'
+#    service: 'any'

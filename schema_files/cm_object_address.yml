@@ -1,0 +1,26 @@
+---
+"$schema": http://json-schema.org/draft-04/schema#
+description: The configuration options for PANOS Addresss Objects.
+title: PANOS Address configuration
+id: cm_object_address
+type: array
+items:
+  type: object
+  properties:
+    name:
+      description: Name of address object
+      type: string
+      maxLength: 64
+    ip:
+      description: IP and subnet mask of address object.
+      type: string
+    ip-range:
+      description: The IP range of the address object
+      type: string
+    fqdn:
+      description: The FQDN of the address object
+      type: string
+  additionalProperties: false
+  required:
+    - "name"
+additionalProperties: false

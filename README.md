@@ -43,4 +43,4 @@ User and Developer guide can be found [here.](./docs/overview.md)
 
 
 ## Support Policy
-This is a community supported framework. The support policy can be found [here.](./SUPPORT POLICY)
+This is a community supported framework. The support policy can be found [here.](./LICENSE)

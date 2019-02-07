@@ -1,0 +1,46 @@
+---
+
+- name: Generate IPSec Profiles on Firewalls
+  panos_ipsec_profile:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    state: "{{ item['state'] | default('present') }}"
+    name: "{{ item['name'] }}"
+    encryption: "{{ ((item['encryption'] | default(omit))['aes-256-cbc']) | default(omit) }}"
+    authentication: "{{ ((item['authentication'] | default(omit))['sha1']) | default(omit) }}"
+    dhgroup: "{{ ((item['dhgroup'] | default(omit))['group2']) | default(omit) }}"
+    lifetime_hrs: "{{ ((item['lifetime_hrs'] | default(omit))['1']) | default(omit) }}"
+    commit: "{{ item['commit'] | default('false') }}"
+  with_items: "{{ cm_panos_ipsec_profile }}"
+  when: "cm_panos_ipsec_profile is defined"
+
+- name: Add IKE crypto config to the firewall
+    panos_ike_crypto_profile:
+      ip_address: '{{ ansible_host }}'
+      username: '{{ username }}'
+      password: '{{ password }}'
+      state: "{{ item['state'] | default('present') }}"
+      name: "{{ item['name'] }}"
+      dhgroup: "{{ ((item['dhgroup'] | default(omit))['group2']) | default(omit) }}"
+      authentication: "{{ ((item['authentication'] | default(omit))['sha1']) | default(omit) }}"
+      encryption: "{{ ((item['encryption'] | default(omit))['aes-256-cbc']) | default(omit) }}"
+      lifetime_sec: "{{ ((item['lifetime_hrs'] | default(omit))['28800']) | default(omit) }}"
+      commit: "{{ item['commit'] | default('false') }}"
+  with_items: "{{ cm_panos_ike_profile }}"
+  when: "cm_panos_ike_profile is defined"
+
+
+- name: Add IPSEC Tunnel to the firewall
+    panos_ipsec_tunnel:
+      ip_address: '{{ ansible_host }}'
+      username: '{{ username }}'
+      password: '{{ password }}'
+      state: "{{ item['state'] | default('present') }}"
+      name: "{{ item['name'] }}"
+      tunnel_interface: 'tunnel.2'
+      ike_gtw_name: 'IKEGW-Ansible'
+      ipsec_profile: 'IPSec-Ansible'
+      commit: "{{ item['commit'] | default('false') }}"
+  with_items: "{{ cm_panos_ipsec_tunnel }}"
+  when: "cm_panos_ipsec_tunnel is defined"

@@ -1,0 +1,64 @@
+---
+
+- name: "CREATE USERS"
+  panos_admin:
+    ip_address: "{{ ansible_host }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    admin_username: "{{ item['username'] }}"
+    admin_password: "{{ item['password'] }}"
+    role: "{{ item['role'] }}"
+    commit: false
+  with_items: "{{ cm_fw_user }}"
+  when: "cm_fw_user is defined"
+
+  # - name: "CONFIGURE NTP CONFIFURATION"
+  #  panos_mgtconfig:
+  #    ip_address: "{{ ansible_host }}"
+  #    username: "{{ username }}"
+  #    password: "{{ password }}"
+  #    ntp_server_primary: "{{ cm_ntp['ntp_primary'] }}"
+  #    ntp_server_secondary: "{{ cm_ntp['ntp_secondary'] | default(omit) }}"
+  #    commit: False
+  #  when: "cm_ntp is defined"
+
+- name: "CONFIGURE DNS CONFIFURATION"
+  panos_mgtconfig:
+    ip_address: "{{ ansible_host }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    dns_server_primary: "{{ cm_dns['dns_primary'] }}"
+    dns_server_secondary: "{{ cm_dns['dns_server_secondary'] | default(omit) }}"
+    commit: false
+  when: "cm_dns is defined"
+
+- name: "CONFIGURE PANORAMA CONFIFURATION"
+  panos_mgtconfig:
+    ip_address: "{{ ansible_host }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    panorama_primary: "{{ cm_panorama['primary'] }}"
+    panorama_secondary: "{{ cm_panorama['secondary'] | default(omit) }}"
+    commit: false
+  when: "cm_panorama is defined"
+
+- name: "CONFIGURE MANAGEMENT PROFILE"
+  panos_management_profile:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    name: '{{ item["name"] }}'
+    ssh: '{{ item["ssh"] | default(False) }}'
+    https: '{{ item["https"] | default(False) }}'
+    http: '{{ item["http"] | default(False) }}'
+    snmp: '{{ item["snmp"] | default(False) }}'
+    ping: '{{ item["http"] | default(False) }}'
+    response_pages: '{{ item["response_pages"] | default(False) }}'
+    userid_service: '{{ item["userid_service"] | default(False) }}'
+    userid_syslog_listener_ssl: '{{ item["userid_syslog_listener_ssl"] | default(False) }}'
+    userid_syslog_listener_udp: '{{ item["userid_syslog_listener_udp"] | default(False) }}'
+    permitted_ip: '{{ item["permitted_network"] | default(omit) }}'
+    state: 'present'
+    commit: false
+  with_items: "{{ cm_mgmt_profile }}"
+  when: "cm_mgmt_profile is defined"

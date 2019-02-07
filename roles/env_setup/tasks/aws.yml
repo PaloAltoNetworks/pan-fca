@@ -1,0 +1,10 @@
+---
+- name: "SET AWS ENVIRONMENT"
+  set_fact:
+    cloud_env:
+      AWS_ACCESS_KEY_ID: "{{ aws_access_key }}"
+      AWS_SECRET_ACCESS_KEY: "{{ aws_secret_access_key }}"
+
+- name: "SETUP AWS SSH CONFIGURATION"
+  include_role:
+    name: "ssh_setup"

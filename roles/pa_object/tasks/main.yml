@@ -1,0 +1,216 @@
+---
+
+- name: "SET FACT FOR ADDRESS OBJECTS"
+  set_fact:
+    address: "{{ cm_object_address | default([]) | selectattr('ip', 'defined') | list }}"
+    address_range: "{{ cm_object_address | default([]) | selectattr('ip-range', 'defined') | list }}"
+    address_fqdn: "{{ cm_object_address | default([]) | selectattr('fqdn', 'defined') | list }}"
+
+- name: "FIND ADDRESS IP-NETWORK OBJECTS TO SEE IF EXISTS ALREADY"
+  panos_object:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: "find"
+    address_type: "ip-netmask"
+    addressobject: "{{ item['name'] }}"
+    address: "{{ item['ip'] }}"
+  register: "find_addr"
+  ignore_errors: "true"
+  with_items: "{{ address }}"
+  when:
+    - "cm_object_address is defined"
+    - "address > 0"
+
+- name: "PUSH ADDRESS IP-NETWORK OBJECTS"
+  panos_object:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: "add"
+    address_type: "ip-netmask"
+    addressobject: "{{ item['item']['name'] }}"
+    address: "{{ item['item']['ip'] }}"
+  with_items: "{{ find_addr['results'] | selectattr('failed', 'equalto', true) | list }}"
+  when:
+    - "cm_object_address is defined"
+    - "find_addr['results'] | selectattr('failed', 'equalto', true) | list > 0"
+
+- name: "FIND ADDRESS IP-RANGE OBJECTS TO SEE IF EXISTS ALREADY"
+  panos_object:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: "find"
+    address_type: "ip-range"
+    addressobject: "{{ item['name'] }}"
+    address: "{{ item['ip-range'] }}"
+  register: "find_addr_range"
+  ignore_errors: "true"
+  with_items: "{{ address_range }}"
+  when:
+    - "cm_object_address is defined"
+    - "address_range > 0"
+
+- name: "PUSH ADDRESS IP-RANGE OBJECTS"
+  panos_object:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: "add"
+    address_type: "ip-range"
+    addressobject: "{{ item['item']['name'] }}"
+    address: "{{ item['item']['ip-range'] }}"
+  with_items: "{{ find_addr_range['results'] | selectattr('failed', 'equalto', true) | list }}"
+  when:
+    - "cm_object_address is defined"
+    - "find_addr_range['results'] | selectattr('failed', 'equalto', true) | list > 0"
+
+- name: "FIND ADDRESS FQDN OBJECTS TO SEE IF EXISTS ALREADY"
+  panos_object:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: "find"
+    address_type: "fqdn"
+    addressobject: "{{ item['name'] }}"
+    address: "{{ item['fqdn'] }}"
+  register: "find_addr_fqdn"
+  ignore_errors: "true"
+  with_items: "{{ address_fqdn }}"
+  when:
+    - "cm_object_address is defined"
+    - "address_fqdn > 0"
+
+- name: "PUSH ADDRESS FQDN OBJECTS"
+  panos_object:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: "add"
+    address_type: "fqdn"
+    addressobject: "{{ item['item']['name'] }}"
+    address: "{{ item['item']['fqdn'] }}"
+  with_items: "{{ find_addr_fqdn['results'] | selectattr('failed', 'equalto', true) | list }}"
+  when:
+    - "cm_object_address is defined"
+    - "find_addr_fqdn['results'] | selectattr('failed', 'equalto', true) | list > 0"
+
+- name: "FIND ADDRESS GROUP OBJECTS"
+  panos_object:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: 'find'
+    addressgroup: "{{ item['name'] }}"
+  with_items: "{{ cm_object_address_group }}"
+  ignore_errors: true
+  register: "find_address_group"
+  when: "cm_object_address_group is defined"
+
+- name: "PUSH ADDRESS GROUP OBJECTS"
+  panos_object:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: 'add'
+    addressgroup: "{{ item['item']['name'] }}"
+    static_value: "{{ item['item']['addresses'] }}"
+  with_items: "{{ find_address_group['results'] | selectattr('failed', 'equalto', true) | list }}"
+  when:
+    - "cm_object_address_group is defined"
+    - "find_address_group['results'] | selectattr('failed', 'equalto', true) | list"
+
+- name: "FIND SERVICE OBJECTS"
+  panos_object:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: 'find'
+    serviceobject: "{{ item['name'] }}"
+    destination_port: "{{ item['port'] }}"
+    protocol: "{{ item['protocol'] }}"
+  with_items: "{{ cm_object_service }}"
+  ignore_errors: true
+  register: "find_service"
+  when: "cm_object_service is defined"
+
+- name: "PUSH SERVICE OBJECTS"
+  panos_object:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: "add"
+    serviceobject: "{{ item['item']['name'] }}"
+    destination_port: "{{ item['item']['port'] }}"
+    protocol: "{{ item['item']['protocol'] }}"
+  with_items: "{{ find_service['results'] | selectattr('failed', 'equalto', true) | list }}"
+  when:
+    - "cm_object_service is defined"
+    - "find_service['results'] | selectattr('failed', 'equalto', true) | list"
+
+- name: "FIND SERVICE GROUP OBJECTS"
+  panos_object:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: 'find'
+    servicegroup: "{{ item['name'] }}"
+    services: "{{ item['services'] }}"
+  with_items: "{{ cm_object_service_group }}"
+  ignore_errors: true
+  register: "find_service_group"
+  when: "cm_object_service_group is defined"
+
+- name: "PUSH SERVICE GROUP OBJECTS"
+  panos_object:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: "{{ password }}"
+    operation: 'add'
+    servicegroup: '{{ item["item"]["name"] }}'
+    services: "{{ item['item']['services'] }}"
+  with_items: "{{ find_service_group['results'] | selectattr('failed', 'equalto', true) | list }}"
+  when:
+    - "cm_object_service_group is defined"
+    - "find_service_group['results'] | selectattr('failed', 'equalto', true) | list"
+
+# - name: "PUSH SERVICE OBJECTS"
+#  panos_service:
+#    ip_address: '{{ ansible_host }}'
+#    username: '{{ username }}'
+#    password: "{{ password }}"
+#    service_name: "{{ item.service_name}}"
+#    protocol: "{{ item.protocol }}"
+#    port: "{{ item.port }}"
+#    commit: False
+#  with_items: "{{ service }}"
+#
+#
+# - name: "PUSH POLICY"
+#  panos_security_policy:
+#    ip_address: '{{ ansible_host }}'
+#    username: '{{ username }}'
+#    password: "{{ password }}"
+#    rule_name: "{{ item.rule_name }}"
+#    description: "{{ item.description }}"
+#    from_zone: "{{ item.from_zone }}"
+#    to_zone: "{{ item.to_zone }}"
+#    source: ['any']
+#    source_user: ['any']
+#    destination: "{{ item.destination }}"
+#    category: "{{ item.category }}"
+#    application: "{{ item.application }}"
+#    service: "{{ item.service }}"
+#    hip_profiles: ['any']
+#    action: 'allow'
+#    commit: false
+#  with_items: "{{ policy}}"
+#  ignore_errors: true
+#
+# - name: "COMMIT CONFIG"
+#  panos_commit:
+#    ip_address: '{{ ansible_host }}'
+#    username: '{{ username }}'
+#    password: "{{ password }}"
+#  when: "commit is defined"

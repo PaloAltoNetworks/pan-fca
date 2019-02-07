@@ -1,0 +1,12 @@
+---
+
+- name: "EXECUTE TERRAFORM PLAN"
+  terraform:
+    project_path: "{{ provider_dir }}"
+    force_init: "yes"
+    state: "present"
+    variables:
+      fw_key_name: "pa_temp"
+      fw_key: "{{ lookup('file', temp_key + '.pub') }}"
+  environment:
+    "{{ cloud_env }}"

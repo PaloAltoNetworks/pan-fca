@@ -1,6 +1,6 @@
 # FCA Container
 
-Two versions of this container are included in this repository:
+One version of this container are included in this repository:
 
 - Dockerfile-FCA  container: Based on Alpine Linux
 
@@ -51,12 +51,6 @@ Option #2
 
 **Build from Dockerfile**
 
-**Important Note Please Read!**
-
->You will need permissions to the:
- >https://github.com/PaloAltoNetworks/panos-fca upstream/master to download Dockerfile-FCA or Docker-FCA-slim files.  
-
-**(You should already have this by Forking and Cloning upstream/master FCA Github repository. If not please contact administrator of Repo if not public!)**
 
 **Now you will build from the Dockerfile located in repository.**
 

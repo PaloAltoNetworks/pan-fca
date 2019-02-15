@@ -146,7 +146,7 @@ def main():
         state=dict(default='present', choices=['present', 'absent']),
         name=dict(required=True),
         encryption=dict(type='list', default=['aes-256-cbc', '3des']),
-        authentication=dict(default='sha1'),
+        authentication=dict(type='list', default=['sha1']),
         dhgroup=dict(default='group2'),
         lifetime_hrs=dict(type='int', default=1),
         commit=dict(type='bool', default=True)
@@ -178,7 +178,7 @@ def main():
     #         module.fail_json(msg='\'%s\' device group not found in Panorama. Is the name correct?' % devicegroup)
 
     ipsecProfile = IPSecProfile(name=profile_name, encryption=encryption,
-                                authentication=authentication, dhgroup=dhgroup,
+                                authentication=authentication, dh_group=dhgroup,
                                 lifetime_hrs=lifetime_hrs)
 
     ipsec_crypto_prof = network.IpsecCryptoProfile(name=ipsecProfile.name, esp_encryption=ipsecProfile.encryption,

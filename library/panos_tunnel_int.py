@@ -199,8 +199,6 @@ def set_zone(con, tun, zone_name, zones):
             changed = True
 
     if desired_zone is not None:
-        if desired_zone.mode != tun.mode:
-            raise ValueError('Mode mismatch: {0} is {1}, zone is {2}'.format(tun.name, tun.mode, z.mode))
         if desired_zone.interface is None:
             desired_zone.interface = []
         if tun.name not in desired_zone.interface:
@@ -208,7 +206,7 @@ def set_zone(con, tun, zone_name, zones):
             desired_zone.update('interface')
             changed = True
     elif zone_name is not None:
-        z = Zone(zone_name, interface=[tun.name, ], mode=tun.mode)
+        z = Zone(zone_name, interface=[tun.name])
         con.add(z)
         z.create()
         changed = True
@@ -251,29 +249,12 @@ def main():
         operation=dict(default='add', choices=['add', 'update', 'delete']),
         state=dict(choices=['present', 'absent']),
         if_name=dict(required=True),
-        mode=dict(default='layer3',
-                  choices=['layer3', 'layer2', 'virtual-wire', 'tap', 'ha', 'decrypt-mirror', 'aggregate-group']),
         ip=dict(type='list'),
         ipv6_enabled=dict(),
         management_profile=dict(),
         mtu=dict(),
-        adjust_tcp_mss=dict(),
         netflow_profile=dict(),
-        lldp_enabled=dict(),
-        lldp_profile=dict(),
-        netflow_profile_l2=dict(),
-        link_speed=dict(),
-        link_duplex=dict(),
-        link_state=dict(),
-        aggregate_group=dict(),
         comment=dict(),
-        ipv4_mss_adjust=dict(),
-        ipv6_mss_adjust=dict(),
-        enable_dhcp=dict(type='bool', default=True),
-        create_default_route=dict(type='bool', default=False),
-        create_dhcp_default_route =dict(type='bool', default=False),
-        dhcp_default_route_metric=dict(),
-        dhcp_default_route=dict(type='str', default="no"),
         zone_name=dict(required=True),
         vr_name=dict(default='default'),
         vsys_dg=dict(default='vsys1'),
@@ -291,42 +272,22 @@ def main():
     # Get the object params.
     spec = {
         'name': module.params['if_name'],
-        'mode': module.params['mode'],
         'ip': module.params['ip'],
         'ipv6_enabled': module.params['ipv6_enabled'],
         'management_profile': module.params['management_profile'],
         'mtu': module.params['mtu'],
-        'adjust_tcp_mss': module.params['adjust_tcp_mss'],
         'netflow_profile': module.params['netflow_profile'],
-        'lldp_enabled': module.params['lldp_enabled'],
-        'lldp_profile': module.params['lldp_profile'],
-        'netflow_profile_l2': module.params['netflow_profile_l2'],
-        'link_speed': module.params['link_speed'],
-        'link_duplex': module.params['link_duplex'],
-        'link_state': module.params['link_state'],
-        'aggregate_group': module.params['aggregate_group'],
         'comment': module.params['comment'],
-        'ipv4_mss_adjust': module.params['ipv4_mss_adjust'],
-        'ipv6_mss_adjust': module.params['ipv6_mss_adjust'],
-        'enable_dhcp': module.params['enable_dhcp'] or None,
-        'create_dhcp_default_route': module.params['create_default_route'] or None,
-        'dhcp_default_route_metric': module.params['dhcp_default_route_metric'],
     }
 
     # Get other info.
-    enable_dhcp = module.params['enable_dhcp']
     operation = module.params['operation']
     state = module.params['state']
     zone_name = module.params['zone_name']
     vr_name = module.params['vr_name']
     vsys_dg = module.params['vsys_dg']
     commit = module.params['commit']
-    dhcp_default_route = module.params['dhcp_default_route']
     if_name = module.params['if_name']
-
-    dhcpe = ('<entry name="%s"><layer3><dhcp-client><enable>yes</enable><create-default-route>%s</create-default-route>'
-             '</dhcp-client></layer3></entry>' % (if_name,dhcp_default_route))
-    dhcpx = ("/config/devices/entry[@name='localhost.localdomain']/network/interface/ethernet/entry[@name='%s']" % (if_name))
 
     # Open the connection to the PANOS device.
     con = PanDevice.create_from_device(*auth)
@@ -395,8 +356,6 @@ def main():
         try:
             changed |= set_zone(con, tun, zone_name, zones)
             changed |= set_virtual_router(con, tun, vr_name, routers)
-            if enable_dhcp is True:
-                con.xapi.edit(xpath=dhcpx,element=dhcpe)
         except PanDeviceError as e:
             module.fail_json(msg='Failed zone/vr assignment: {0}'.format(e))
     elif state == 'absent':
@@ -479,7 +438,7 @@ def main():
     # Commit if we were asked to do so.
     if changed and commit:
         try:
-            con.commit(sync=True, exceptions=True)
+            con.commit(sync=True)
         except PanDeviceError:
             e = get_exception()
             module.fail_json(msg='Performed {0} but commit failed: {1}'.format(operation, e.message))

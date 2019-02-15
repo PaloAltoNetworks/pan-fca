@@ -1,0 +1,24 @@
+{% for name, vnet in vnets.items() %}
+{% if vnet['app_gateway'] is defined %}
+{% for appgw in vnet['app_gateway'] %}
+# Creating Application Gateway
+
+module "{{ appgw.name }}" {
+  source                                 = "{{ module_dir }}/app_gateway"
+  name                                   = "{{ appgw.name }}"
+  location                               = "{{ location }}"
+  resource_group_name                    = "{{ name }}"
+  type                                   = "{{ lb.type }}"
+
+  {% if lb.type == 'private' %}
+  frontend_name                          = "{{ lb.fename }}"
+  frontend_subnet_id                     = "${module.{{ name }}.vnet_subnets[1]}"
+  frontend_private_ip_address_allocation = "Static"
+  frontend_private_ip_address            = "${cidrhost(module.{{ name }}.vnet_subnet_prefixes[1], -3)}"
+  backendpoolname                        = "{{ lb.bename }}"
+  lb_probename                           = "{{ lb.lbprobename }}"
+
+}
+{% endfor %}
+{% endif %}
+{% endfor %}

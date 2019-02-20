@@ -162,6 +162,7 @@ resource "azurerm_network_interface" "Untrust" {
         subnet_id                               = "${var.vnet_subnet_id_untrust}"
         private_ip_address_allocation           = "Dynamic"
         load_balancer_backend_address_pools_ids = ["${var.lb_backend_pool_untrust}"]
+        application_gateway_backend_address_pools_ids = ["${var.appgw_backend_pool}"]
     }
     network_security_group_id = "${azurerm_network_security_group.open.id}"
 }

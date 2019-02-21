@@ -145,8 +145,8 @@ def main():
         api_key=dict(no_log=True),
         state=dict(default='present', choices=['present', 'absent']),
         name=dict(required=True),
-        dhgroup=dict(default='group2'),
-        authentication=dict(default='sha1'),
+        dhgroup=dict(type='list', default='group2'),
+        authentication=dict(type='list', default=['sha1']),
         encryption=dict(type='list', default=['aes-256-cbc', '3des']),
         lifetime_sec=dict(type='int', default=28800),
         commit=dict(type='bool', default=True)

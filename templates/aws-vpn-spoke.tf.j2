@@ -21,6 +21,8 @@ module "{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}" {
   tunnel2_preshared_key           = "{{ fw['tunnel_2_psk'] }}"
   customer_gw_asn                 = ["{{ vnet['vnet_network']['bgp_asn'] }}"]
   customer_gw_ip                  = ["${module.{{ name }}.untrust_elastic_ip_addresses{{[loop.index0]}} }"]
+  management_ips                  = "${module.{{ name }}.management_elastic_ip_addresses{{[loop.index0]}} }"
+  firewall_instance_ids           = "${module.{{ name }}-firewall.firewalls_ids{{[loop.index0]}} }"
 
 }
 {% endfor %}
@@ -42,5 +44,17 @@ output "vgws_tunnels_ips" {
 }
 output "vgw_public_ips" {
  value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.vgw_public_ips}",{% endfor %}{% endfor %}]
+}
+output "spoke_firewalls" {
+ value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.spoke_firewalls}",{% endfor %}{% endfor %}]
+}
+output "firewalls_ids" {
+ value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.spoke_firewalls_ids}",{% endfor %}{% endfor %}]
+}
+output "tunnel_psks" {
+ value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.tunnel_psks}",{% endfor %}{% endfor %}]
+}
+output "firewall_tunnel_ips" {
+ value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.fw_tunnel_ips}",{% endfor %}{% endfor %}]
 }
 {% endfor %}

@@ -86,24 +86,28 @@
 
 #- name: "MERGE LIST ITEMS"
 #  set_fact:
-#    lists_merged: "{{ cm_panos_ipsec_tunnel1 + cm_panos_ike_gateway1 + cm_panos_spoke_tunnel1 }}"
-#
-#
+#    cm_panos_ipsec_tunnel: "{{ cm_panos_ipsec_tunnel1 + cm_panos_ike_gateway1 + cm_panos_spoke_tunnel1 }}"
 #- name: "SET FACT TO MERGE THE DEFAULTS WITH THE FOUND VARIABLES"
 #  set_fact:
-#    cm_panos_ipsec_tunnel: "{{ lists_merged | merge_tunnel_info( tfstate, ansible_host) }}"
-#  when: "cm_panos_spoke_tunnel1 is defined"
-#
-#- name: Add IPSEC Tunnel to the firewall
-#  panos_ipsec_tunnel:
-#    ip_address: '{{ ansible_host }}'
-#    username: '{{ username }}'
-#    password: '{{ password }}'
-#    state: "{{ item['state'] | default('present') }}"
-#    name: "{{ item['spoke_name'] }}"
-#    tunnel_interface: "{{ item['if_name'] | default(omit) }}"
-#    ike_gtw_name: "{{ item['name'] }}"
-#    ipsec_profile: "{{ item['ipsec_profile'] | default(omit) }}"
-#    commit: "{{ item['commit'] | default('false') }}"
-#  with_items: "{{ cm_panos_ipsec_tunnel }}"
+#    cm_panos_ipsec_tunnel: "{{ cm_panos_ipsec_tunnel1 | collate_filter(tfstate, ansible_host) }}"
 #  when: "cm_panos_ipsec_tunnel1 is defined"
+
+- name: "SET FACT TO MERGE THE DEFAULTS WITH THE FOUND VARIABLES"
+  set_fact:
+    cm_panos_ipsec_tunnel: "{{ cm_panos_ipsec_tunnel1 | collate_filter(tfstate, ansible_host) }}"
+  when: "cm_panos_ipsec_tunnel1 is defined"
+
+- name: Add IPSEC Tunnel to the firewall
+  panos_ipsec_tunnel:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    state: "{{ item['state'] | default('present') }}"
+    name: "{{ item['spoke_name'] }}"
+    tunnel_interface: "{{ item['if_name'] | default(omit) }}"
+    ike_gtw_name: "{{ item['name'] }}"
+    ipsec_profile: "{{ item['ipsec_profile'] | default(omit) }}"
+    commit: "{{ item['commit'] | default('false') }}"
+  with_items:
+    - "{{ cm_panos_ipsec_tunnel }}"
+  when: "cm_panos_ipsec_tunnel1 is defined"

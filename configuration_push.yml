@@ -218,7 +218,6 @@
     - name: "USE TERRAFORM OUTPUT STORE AWS TUNNEL INFO"
       set_fact:
         simplified_tfstate_info: "{{ tfstate | my_magic_filter }}"
-    - debug: var=simplified_tfstate_info
       when: cloud_provider == 'aws'
 
     - name: "Create IPSEC Tunnels"

@@ -56,20 +56,30 @@ def collate_filter(panos_defaults, firewall_data, ansible_host):
                     combined_info["if_name"] = ("tunnel." + str(index + panos_defaults["begin_tunnel_number"]))
                     combined_info["fw_tunnel_ip"] = (item + panos_defaults["cidr_notation"])
                     output.append(combined_info)
+        elif panos_defaults["filter"] == "ipsec":
+            if firewall_data[k]["firewall_ip"] == ansible_host:
+                for index, item in enumerate(firewall_data[k].get("fw_tunnel_ip")):
+                    combined_info = {}
+                    for key, value in panos_defaults.items():
+                        combined_info[key] = value
+                    combined_info["name"] = k + str(index + 1)
+                    combined_info["if_name"] = ("tunnel." + str(index + panos_defaults["begin_tunnel_number"]))
+                    combined_info["spoke_name"] = (panos_defaults["suffix"] + str(index))
+                    output.append(combined_info)
     return output
 
-def merge_tunnel_info(ipsec_info, ike_info, tun_info, firewall_data, ansible_host):
-    output = []
-    for k in firewall_data.keys():
-        if firewall_data[k]["firewall_ip"] == ansible_host:
-            for index, item in enumerate(firewall_data[k].get("fw_tunnel_ip")):
-                combined_info = {}
-                for key, value in itertools.izip(ike_info.items(), tun_info.items(), ipsec_info.items()):
-                    combined_info[key] = value
-                combined_info["name"] = k + str(index + 1)
-                combined_info["spoke_name"] = (ipsec_info["suffix"] + str(index))
-                combined_info["if_name"] = ("tunnel." + str(index + tun_info["begin_tunnel_number"]))
-                output.append(combined_info)
+# def merge_tunnel_info(ipsec_info, ike_info, tun_info, firewall_data, ansible_host):
+#     output = []
+#     for k in firewall_data.keys():
+#         if firewall_data[k]["firewall_ip"] == ansible_host:
+#             for index, item in enumerate(firewall_data[k].get("fw_tunnel_ip")):
+#                 combined_info = {}
+#                 for key, value in itertools.izip(ike_info.items(), tun_info.items(), ipsec_info.items()):
+#                     combined_info[key] = value
+#                 combined_info["name"] = k + str(index + 1)
+#                 combined_info["spoke_name"] = (ipsec_info["suffix"] + str(index))
+#                 combined_info["if_name"] = ("tunnel." + str(index + tun_info["begin_tunnel_number"]))
+#                 output.append(combined_info)
 
 
 class FilterModule(object):
@@ -79,5 +89,5 @@ class FilterModule(object):
             'item_to_list' : item_to_list,
             'my_magic_filter': my_magic_filter,
             'collate_filter': collate_filter,
-            'merge_tunnel_info': merge_tunnel_info,
+            # 'merge_tunnel_info': merge_tunnel_info,
         }

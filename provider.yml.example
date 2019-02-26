@@ -4,8 +4,8 @@
 #azure_subscription_id: "thisisthebestsubever"
 
 ## AWS EXAMPLE
-cloud_provider: aws
-cloud_provider_location: "us-east-1"
-aws_access_key: "AKIAJHTLBZJEHIR6WDJQ"
-aws_secret_access_key: "KstT+FOpOrxUqdMtRZpsBL3cAfN2odBDxAutuaeP"
-fw_key_name: "put-key-name-here-key"
+#cloud_provider: aws
+#cloud_provider_location: "us-east-1"
+#aws_access_key: "ThiSisSecretK3y"
+#aws_secret_access_key: "ThisismoreS3cretkeyacc3ss"
+fw_key_name: "name_your_key"

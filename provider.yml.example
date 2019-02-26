@@ -8,3 +8,4 @@
 #cloud_provider_location: "us-east-1"
 #aws_access_key: "ThiSisSecretK3y"
 #aws_secret_access_key: "ThisismoreS3cretkeyacc3ss"
+fw_key_name: "name_your_key"

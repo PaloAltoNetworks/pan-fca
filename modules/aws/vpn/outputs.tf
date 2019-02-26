@@ -3,7 +3,8 @@ output "spoke_vpn_name" {
 }
 
 output "spoke_asn" {
-    value = "${element(concat(aws_vpn_connection.vpn.*.tunnel1_bgp_asn, list("")), 0)}"
+    #value = "${element(concat(aws_vpn_connection.vpn.*.tunnel1_bgp_asn, list("")), 0)}"
+    value = ["${aws_vpn_connection.vpn.*.tunnel1_bgp_asn}", "${aws_vpn_connection.vpn.*.tunnel2_bgp_asn}"]
 }
 
 output "fw_tunnel_ips" {
@@ -19,4 +20,12 @@ output "vgw_public_ips" {
 
 output "tunnel_psks" {
     value = ["${aws_vpn_connection.vpn.*.tunnel1_preshared_key}", "${aws_vpn_connection.vpn.tunnel2_preshared_key}"]
+}
+
+output "spoke_firewalls" {
+    value = "${var.management_ips}"
+}
+
+output "spoke_firewalls_ids" {
+    value = "${var.firewall_instance_ids}"
 }

@@ -41,3 +41,6 @@ The data model is be found [here.](./docs/DATA_MODEL.md)
 ## Guides
 User and Developer guide can be found [here.](./docs/overview.md)
 
+
+## License and Support Policy
+This framework is licensed under the APACHE-2.0 license and is community supported. The license can be found [here](./LICENSE), the support policy can be found [here.](./SUPPORT_POLICY)

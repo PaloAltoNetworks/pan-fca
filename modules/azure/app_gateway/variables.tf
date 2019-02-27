@@ -11,6 +11,7 @@ variable "resource_group_name" {
 variable "app_gw_name" {
   description = "Application Gateway Name"
   type        = "string"
+  default     = "App_GW"
 }
 
 variable "app_gw_sku_tier" {
@@ -39,12 +40,13 @@ variable "gw_ip_config_subnet_id" {
 variable "gw_ip_config_name" {
   description = "Gateway Name"
   type        = "string"
+  default     = "GW_IP_Name"
 }
 
 variable "gw_frontend_port_name" {
   description = "Gateway Frontend Port Name"
   type        = "string"
-  default     = ""
+  default     = "App-GW-Frontend-Name"
 }
 
 variable "gw_frontend_port" {
@@ -62,16 +64,19 @@ variable "gw_ip_config_frontend_pip_id" {
 variable "gw_ip_config_frontend_name" {
   description = "Gateway Frontend Name"
   type        = "string"
+  default     = "App_GW_Frontend_name"
 }
 
 variable "backend_address_pool_name" {
   description = "Backend Address Pool Name"
   type        = "string"
+  default     = ""
 }
 
 variable "backend_http_settings_name" {
   description = "Backend http/https Settings"
   type        = "string"
+  default     = "HTTP_Backend"
 }
 
 variable "backend_http_settings_cookie_aff" {
@@ -101,6 +106,7 @@ variable "backend_http_settings_timeout" {
 variable "http_listener_name" {
   description = "Http Listener Name"
   type        = "string"
+  default     = "HTTP_Listener"
 }
 
 variable "http_listener_proto" {
@@ -112,6 +118,7 @@ variable "http_listener_proto" {
 variable "request_routing_rule_name" {
   description = "request_routing_rule_name"
   type        = "string"
+  default     = "Routing_Rule_Name"
 }
 
 variable "request_routing_rule_type" {
@@ -122,7 +129,7 @@ variable "request_routing_rule_type" {
 
 variable "public_ip_address_allocation" {
   description = "(Required) Defines how an IP address is assigned. Options are Static or Dynamic."
-  default     = "static"
+  default     = "dynamic"
 }
 
 variable "tags" {
@@ -148,5 +155,14 @@ variable "waf_configuration" {
 }
 
 variable "authentication_certificate" {
+  default = ""
+}
+
+variable "appgwpipsku" {
+  description = "Standard or Basic. At the moment is only Basic possible "
+  default = "basic"
+}
+
+variable "app_gw_be_pool_id" {
   default = ""
 }

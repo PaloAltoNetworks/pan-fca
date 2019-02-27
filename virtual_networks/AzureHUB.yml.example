@@ -2,40 +2,31 @@
 firewalls:
   - name: Firewall-Set-1
     vmcount: 1
-    fwname: VMPAN-
+    fwname: TSVMPAN-
     fwvmsize: Standard_D3_v2
-    avsetname: "AVSet1"
+    # https://knowledgebase.paloaltonetworks.com/KCSArticleDetail?id=kA10g000000ClD7CAK
+    avsetname: "AzureAV"
     fw_version: latest
+    #7.1.0 / 8.0.0 / 8.1.0 = latest
     fw_sku: byol
+    # byol / bundl1 / bundle2 
     Username: fwadmin
     Password: Paloalto123
-    dnshostname: vmpan
-
-  - name: Firewall-Set-2
-    vmcount: 1
-    fwname: VMTEST-
-    fwvmsize: Standard_D3_v2
-    avsetname: "AVSet2"
-    fw_version: latest
-    fw_sku: byol
-    Username: fwadmin
-    Password: Paloalto123
-    dnshostname: vmtest
 
 #Define Load Balancers  
 load_balancers:
-  - name: PUB-LB
+  - name: External-LB
     fename: Untrust
     bename: Untrust
     type: public
-    lbrulename: Http
-    lbrulefrontport: 80
+    lbrulename: TCP-22
+    lbrulefrontport: 22
     lbruleprotocol: tcp
-    lbrulebackport: 80
-    lbprobename: http
-    lbruleprobeport: 80
+    lbrulebackport: 22
+    lbprobename: TCP-22
+    lbruleprobeport: 22
 
-  - name: PRIV-LB
+  - name: Internal-LB
     fename: Trust
     bename: Trust
     type: private
@@ -50,20 +41,17 @@ load_balancers:
 # IMPORTANT the first Network has to be the Firewall Network
 # 1 Subnet = Management; 2 Subnet = Trust; 3 Subnet = Untrust  
 vnet_network:
-  name: Transit-Test
-  network: "10.217.127.0/24"
+  name: SternTransitVNet
+  network: "10.217.130.0/24"
   peers:
-    - Web-Test
-    #- DEV-Azure
+    - WebAzureFCA
   subnet:
   - name: Management
-    network: "10.217.127.64/27"
+    network: "10.217.130.64/27"
   - name: Trust
-    network: "10.217.127.32/27"
+    network: "10.217.130.32/27"
   - name: Untrust
-    network: "10.217.127.0/27"
-  - name: EgressLB
-    network: "10.217.127.96/27"
+    network: "10.217.130.0/27"
 
 #Define Security Groups
 security_groups:

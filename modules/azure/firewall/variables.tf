@@ -23,6 +23,13 @@ variable "lb_backend_pool_untrust" {
   default = []
 }
 
+variable "appgw_backend_pool" {
+  description = "Backendpool for the Application Gateway"
+  type = "list"
+  default = []
+}
+
+
 variable "vnet_subnet_id_untrust" {
   description = "The subnet id of the virtual network where the virtual machines will reside."
 }

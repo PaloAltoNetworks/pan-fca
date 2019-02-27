@@ -6,7 +6,7 @@
     force_init: "yes"
     state: "present"
     variables:
-      fw_key_name: "pa_temp"
+      fw_key_name: "{{ fw_key_name }}"
       fw_key: "{{ lookup('file', temp_key + '.pub') }}"
   environment:
     "{{ cloud_env }}"

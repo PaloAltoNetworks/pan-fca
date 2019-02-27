@@ -43,3 +43,13 @@ variable "customer_gw_ip" {
   description = "Firewall untrust interface IPs to be used for customer gw"
   type = "list"
 }
+
+variable "management_ips" {
+  description = "Firewall management interface IPs to be used for CM"
+  default = ""
+}
+
+variable "firewall_instance_ids" {
+  description = "Firewall management interface IDs to be used for CM"
+  default = ""
+}

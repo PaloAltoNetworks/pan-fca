@@ -41,5 +41,7 @@ RUN apk add --no-cache --virtual .build-deps \
     rm -rf terraform.zip && \
     mkdir /usr/local/fca && \
     apk del .build-deps
+RUN addgroup -S fca-user && adduser -S -G fca-user fca-user
+USER fca-user
 
 ENTRYPOINT ["/bin/bash"]

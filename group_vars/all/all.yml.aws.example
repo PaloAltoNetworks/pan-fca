@@ -12,7 +12,6 @@ credentials:
 
 username: "{{ credentials[cloud_provider]['username'] }}"
 password: "{{ credentials[cloud_provider]['password'] }}"
-fw_key_name:
 
 virtual_networks:
 #  - Web-Azure

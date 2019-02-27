@@ -1,5 +1,6 @@
 provider "aws" {
   region = "{{ location }}"
+  version = "{{ cloud_provider_tf_version}}"  
 }
 
 {% for name, vnet in vnets.items() %}

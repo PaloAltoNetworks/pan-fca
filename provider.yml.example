@@ -6,6 +6,7 @@
 ## AWS EXAMPLE
 #cloud_provider: aws
 #cloud_provider_location: "us-east-1"
+#cloud_provider_tf_version: "1.60.0"
 #aws_access_key: "ThiSisSecretK3y"
 #aws_secret_access_key: "ThisismoreS3cretkeyacc3ss"
-fw_key_name: "name_your_key"
+#fw_key_name: "name_your_key"

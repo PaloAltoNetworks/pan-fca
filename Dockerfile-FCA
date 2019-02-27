@@ -43,5 +43,6 @@ RUN apk add --no-cache --virtual .build-deps \
     apk del .build-deps
 RUN addgroup -S fca-user && adduser -S -G fca-user fca-user
 USER fca-user
+RUN ansible-galaxy install PaloAltoNetworks.paloaltonetworks
 
 ENTRYPOINT ["/bin/bash"]

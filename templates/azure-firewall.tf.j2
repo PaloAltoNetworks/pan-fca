@@ -27,6 +27,7 @@
     vnet_subnet_id_trust        = "${module.{{ name }}.vnet_subnets[1]}"
     vnet_subnet_id_untrust      = "${module.{{ name }}.vnet_subnets[2]}"
     vnet_subnet_id_mgmt         = "${module.{{ name }}.vnet_subnets[0]}"
+
     {% if vnet['load_balancers'] is defined %}
     {% for lb in vnet['load_balancers']%}
     {% if lb.type == 'private' %}
@@ -37,6 +38,9 @@
     {% endif %}
     {% endfor %}
     {% endif %}
+
+    
+
     fw_hostname                 = "{{ fw.fwname }}"
     fw_size                     = "{{ fw.fwvmsize }}"
     avsetname                   = "{{ fw.avsetname }}"

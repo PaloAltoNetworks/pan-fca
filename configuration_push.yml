@@ -108,14 +108,15 @@
     - name: "WAIT FOR MGMT AVAILABILITY"
       pause:
         seconds: "{{ cloud_unique[cloud_provider | lower]['timeout'] }}"
+      when: cloud_provider == 'azure'
 
-    - name: "CONFIGURE MGMT ACCESS"
-      panos_admpwd:
-        ip_address: "{{ ansible_host }}"
-        key_filename: "{{ lookup('env', 'HOME') }}/paloalto/creds/tempkey"
-        username: "{{ username }}"
-        newpassword: "{{ password }}"
-      when: cloud_provider == 'aws'
+#    - name: "CONFIGURE MGMT ACCESS"
+#      panos_admpwd:
+#        ip_address: "{{ ansible_host }}"
+#        key_filename: "{{ lookup('env', 'HOME') }}/paloalto/creds/tempkey"
+#        username: "{{ username }}"
+#        newpassword: "{{ password }}"
+#      when: cloud_provider == 'aws'
 
 
 - name: "IMPORT IRON SKILLET WITH ROLE PALOALTONETWORKS AND ADD AGAIN ADMIN"

@@ -5,6 +5,7 @@ availability_zones:
   - b
 #Firewall choices. Choose version license type and bootstrapping options
 firewalls:
+  mgmt_sleep: "600"
   fw_version: "8.1.0"
   #Options: 6.1.18, 7.0.17, 7.1.11, 7.1.14, 7.1.17, 7.1.18, 7.1.20, 8.0.3, 8.0.6, 8.0.8, 8.0.9, 8.0.13, 8.1.0
   fw_license_type: byol

@@ -18,8 +18,12 @@ module "{{ name }}-firewall" {
     management_elastic_ip_addresses = "${module.{{ name }}.management_elastic_ip_addresses}"
     fw_key_name             = "${var.fw_key_name}"
     fw_key                  = "${var.fw_key}"
+    fw_priv_key_path        = "${var.fw_priv_key_path}"
+    username                = "${var.username}"
+    password                = "${var.password}"
     region                  = "{{ location }}"
     stack_name              = "{{ name }}"
+    mgmt_sleep              = "{{ vnet['firewalls']['mgmt_sleep'] }}"
 } 
 
 output "firewalls_created" {

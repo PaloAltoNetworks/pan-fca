@@ -6,6 +6,7 @@ ENV TERRAFORM_VERSION=0.11.10
 RUN apt-get update -y && \
     apt-get install -y software-properties-common && \
     apt-get install -y \
+    golang-go \
     python \
     curl \
     unzip \

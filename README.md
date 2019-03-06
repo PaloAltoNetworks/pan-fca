@@ -1,25 +1,25 @@
 
 # pan-fca
-Flexible Cloud Automation
+PAN-OS Flexible Cloud Automation
 
 ## Description
 
-pan-fca, stands for PAN-OS Flexible Cloud Automation, is a continuously evolving initiative to provide a multi-cloud deployment and Configuration Framework
+pan-fca, stands for PAN-OS Flexible Cloud Automation. It is an initiative to provide a continuously evolving framework for multi-cloud deployments and configuration.
 
 ## Flexible Cloud Automation - Problem oriented Features
 
-•	Handle cloud deployment, configuration and testing* (BUILD)
-•	Available for public and private* clouds and expendable to appliances*
-•	Modular: greenfield/brownfield, multiple licensing options, services multiple deployment scenarios, and a variety of 3rd parties (LoadBalancers, …), …
-•	Long-lasting and multi-version
-•	Easy to use
+- Handle cloud deployment, configuration and testing* (BUILD)
+- Available for public and private* clouds and expendable to appliances*
+- Modular: greenfield/brownfield, multiple licensing options, services multiple deployment scenarios, and a variety of 3rd parties (Load-Balancers, …), …
+- Long-lasting and multi-version
+- Easy to use
 
 *: roadmap
 
 
 ## Status
-We're curently developing an early version of the Flexible Cloud Automation Framework.
-This version is the second iteration of PS Cloud Automation. Code name: Mark-II
+We're curently developing the second version of the PAN-OS Flexible Cloud Automation Framework.
+Code name: Mark-II
 
 pan-fca Mark-II is built out of 4 foundational modules, and currently supports 3 cloud platforms 
 

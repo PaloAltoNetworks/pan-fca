@@ -24,7 +24,7 @@ Code name: Mark-II
 pan-fca Mark-II is built out of 4 foundational modules, and currently supports 3 cloud platforms 
 
 <p float="left">
-  <img src="/images/MarkIIArchi.PNG" width="600" />
+  <img src="/images/MarkIIArchi.png" width="600" />
 </p>
 
 ## Workflow

@@ -23,3 +23,8 @@ variable "password" {
   description = "FW Password"
   default = ""
 }
+
+variable "go_path" {
+  description = "Path to execute GO Initalization binary"
+  default = ""
+}

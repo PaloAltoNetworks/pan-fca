@@ -160,6 +160,11 @@ variable "mgmt_sleep" {
   default = "240"
 }
 
+variable "go_path" {
+  description = "Path to execute GO Initalization binary"
+  default = ""
+}
+
 /*
 ##Variables for autoscaling##
 output "PanFwAmiId" {

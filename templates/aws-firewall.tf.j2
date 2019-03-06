@@ -24,6 +24,7 @@ module "{{ name }}-firewall" {
     region                  = "{{ location }}"
     stack_name              = "{{ name }}"
     mgmt_sleep              = "{{ vnet['firewalls']['mgmt_sleep'] }}"
+    go_path                 = "${var.go_path}"
 } 
 
 output "firewalls_created" {

@@ -149,6 +149,6 @@ resource "null_resource" "localExecSetAdmin" {
   count      = "${var.fw_instance_count}"
 
   provisioner "local-exec" {
-    command = "./panos_init_ARM -key=${var.fw_priv_key_path} -host=${element(var.management_elastic_ip_addresses, count.index)} -username=${var.username} -password=${var.password}"
+    command = "${var.go_path} -key=${var.fw_priv_key_path} -host=${element(var.management_elastic_ip_addresses, count.index)} -username=${var.username} -password=${var.password}"
   }
 }

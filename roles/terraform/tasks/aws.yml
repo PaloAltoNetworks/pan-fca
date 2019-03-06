@@ -11,5 +11,6 @@
       fw_priv_key_path: "{{ temp_key }}"
       password: "{{ password }}"
       username: "{{ username }}"
+      go_path: "{{ go_path }}"
   environment:
     "{{ cloud_env }}"

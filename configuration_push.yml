@@ -14,6 +14,7 @@
     module_dir: "./modules/{{ cloud_provider |lower }}"
     temp_key_dir: "{{ lookup('env', 'HOME')}}/paloalto/creds"
     temp_key: "{{ temp_key_dir }}/tempkey"
+    go_path: "./library/panos_init_{{ go_os }}"
 
   tasks:
 

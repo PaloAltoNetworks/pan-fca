@@ -31,6 +31,7 @@ RUN apt-get update -y && \
         requests-toolbelt \
         cryptography==2.4.2 \
         jsonschema && \
+    go get golang.org/x/crypto/ssh && \
     ansible-galaxy install PaloAltoNetworks.paloaltonetworks && \
     curl https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip > terraform.zip && \
     unzip terraform.zip -d /bin && \

@@ -14,6 +14,7 @@
     module_dir: "./modules/{{ cloud_provider |lower }}"
     temp_key_dir: "{{ lookup('env', 'HOME')}}/paloalto/creds"
     temp_key: "{{ temp_key_dir }}/tempkey"
+    go_path: "./library/panos_init_{{ go_os }}"
 
   tasks:
 
@@ -96,6 +97,7 @@
   vars:
     temp_key_dir: "{{ lookup('env', 'HOME') }}/paloalto/creds"
     temp_key: "{{ temp_key_dir }}/tempkey"
+    go_path: "./library/panos_init_{{ go_os }}"
 
   tasks:
 
@@ -108,14 +110,20 @@
     - name: "WAIT FOR MGMT AVAILABILITY"
       pause:
         seconds: "{{ cloud_unique[cloud_provider | lower]['timeout'] }}"
+      when: cloud_provider == 'azure'
 
     - name: "CONFIGURE MGMT ACCESS"
-      panos_admpwd:
-        ip_address: "{{ ansible_host }}"
-        key_filename: "{{ lookup('env', 'HOME') }}/paloalto/creds/tempkey"
-        username: "{{ username }}"
-        newpassword: "{{ password }}"
+      include_role:
+        name: "pa_go"
       when: cloud_provider == 'aws'
+
+#    - name: "CONFIGURE MGMT ACCESS"
+#      panos_admpwd:
+#        ip_address: "{{ ansible_host }}"
+#        key_filename: "{{ lookup('env', 'HOME') }}/paloalto/creds/tempkey"
+#        username: "{{ username }}"
+#        newpassword: "{{ password }}"
+#      when: cloud_provider == 'aws'
 
 
 - name: "IMPORT IRON SKILLET WITH ROLE PALOALTONETWORKS AND ADD AGAIN ADMIN"

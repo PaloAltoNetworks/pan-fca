@@ -8,5 +8,9 @@
     variables:
       fw_key_name: "{{ fw_key_name }}"
       fw_key: "{{ lookup('file', temp_key + '.pub') }}"
+#      fw_priv_key_path: "{{ temp_key }}"
+#      password: "{{ password }}"
+#      username: "{{ username }}"
+#      go_path: "{{ go_path }}"
   environment:
     "{{ cloud_env }}"

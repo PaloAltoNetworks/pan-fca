@@ -1,0 +1,4 @@
+---
+
+- name: Run Go Initialize Script
+  shell: '{{ go_path }} -key={{ temp_key }} -host={{ ansible_host }} -username={{ username }} -password={{ password }}'

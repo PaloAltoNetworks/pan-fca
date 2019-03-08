@@ -1,28 +1,34 @@
 
-# panos-fca
-Flexible Cloud Automation
+# pan-fca
+PAN-OS Flexible Cloud Automation
 
 ## Description
 
-panos-fca, stands for Flexible Cloud Automation, is an ever evolving initiative to build a Multi-Cloud Deployment and Configuration Framework
+pan-fca, stands for PAN-OS Flexible Cloud Automation. It is an initiative to provide a continuously evolving framework for multi-cloud deployments and configuration.
 
-<p float="left">
-  <img src="/images/panosmarkpof.PNG" width="700" />
-</p>
+## Flexible Cloud Automation - Problem oriented Features
+
+- Handle cloud deployment, configuration and testing* (BUILD)
+- Available for public and private* clouds and expendable to appliances*
+- Modular: greenfield/brownfield, multiple licensing options, services multiple deployment scenarios, and a variety of 3rd parties (Load-Balancers, …), …
+- Long-lasting and multi-version
+- Easy to use
+
+*: roadmap
 
 
 ## Status
-We're curently developing an early version of the Flexible Cloud Automation.
-This version being the second iteration of PS Cloud Automation, the code name is Mark II
+We're curently developing the second version of the PAN-OS Flexible Cloud Automation Framework.
+Code name: Mark-II
 
-panos-mark II is built out of 4 fundational modules, and supports 3 Cloud platforms 
+pan-fca Mark-II is built out of 4 foundational modules, and currently supports 3 cloud platforms 
 
 <p float="left">
-  <img src="/images/MarkIIArchi.PNG" width="600" />
+  <img src="/images/MarkIIArchi.png" width="600" />
 </p>
 
 ## Workflow
-The initial proposed workflow
+The initial proposed workflow:
 
 <p float="left">
   <img src="/images/workflow.png" width="500" />
@@ -39,8 +45,8 @@ The data model is be found [here.](./docs/DATA_MODEL.md)
 
 
 ## Guides
-User and Developer guide can be found [here.](./docs/overview.md)
+User and Developer Guide can be found [here.](./docs/overview.md)
 
 
 ## License and Support Policy
-This framework is licensed under the APACHE-2.0 license and is community supported. The license can be found [here](./LICENSE), the support policy can be found [here.](./SUPPORT_POLICY)
+This framework is licensed under the APACHE-2.0 license and is community supported. The license can be found [here](./LICENSE). The support policy can be found [here.](./SUPPORT_POLICY)

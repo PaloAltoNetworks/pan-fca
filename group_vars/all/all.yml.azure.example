@@ -42,12 +42,12 @@ cm_interface:
     dhcp: true
     mgmt_profile: 'AzureProbe'
     state: 'present'
-  - name: 'tunnel.500'
-    ip: '10.1.5.1'
-    mask: 24
-    mgmt_profile: 'AzureProbe'
-    virtual_router: 'trust'
-    zone: "test3"
+  # - name: 'tunnel.500'
+  #   ip: '10.1.5.1'
+  #   mask: 24
+  #   mgmt_profile: 'AzureProbe'
+  #   virtual_router: 'trust'
+  #   zone: "test3"
 
 #Create Address Objects
 cm_object_address:
@@ -205,7 +205,7 @@ cm_nat_rule:
     destination:
       zone: 'untrust'
       network:
-      - '10.217.130.4/32'
+      - '52.155.222.208/32'
     service: 'any'
     snat_type: 'dynamic-ip-and-port'
     snat_address_type: 'interface-address'
@@ -273,10 +273,10 @@ cm_panos_static_route:
 # # Activate Firewall
 # cm_panos_lic:
 #   values:
-#     auth_code: '<AUTH CODE>'
+#     auth_code: 'I6474155'
 
-## Update Firewall
+# # Update Firewall
 # cm_panos_software:
 #   values:
 #     version: '8.1.6'
-#     restart: false
+#     restart: true

@@ -1,4 +1,5 @@
 group_vars/all/all.yml
+group_vars/all/*.ttt
 !group_vars/constants.yml
 !group_vars/all.yml.example
 !group_vars/all.yml.azure.example
@@ -9,6 +10,7 @@ virtual_networks/*
 !virtual_networks/Spoke1.yml.example
 !virtual_networks/AzureSpoke.yml.example
 !virtual_networks/AzureHUB.yml.example
+sandbox_modules
 
 TO-DO
 
@@ -36,9 +38,10 @@ crash.log
 **/*.retry
 
 provider.yml
-provider.yml.aws
+provider.yml*
 secrets.yml
 credentials.yml
 state_backup_*
 .terraform.d/
 .terraform.d/*
+*.ttt

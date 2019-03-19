@@ -155,7 +155,7 @@ variable "adminUsername" {
 }
 
 variable "adminPassword" {
-  default = "Paloalto123"
+  default = "Paloalto1234"
 }
 
 variable "vm_publisher" {

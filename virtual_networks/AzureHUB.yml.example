@@ -1,7 +1,7 @@
 #Define Firewalls
 firewalls:
   - name: Firewall-Set-1
-    vmcount: 1
+    vmcount: 2
     fwname: TSVMPAN-
     fwvmsize: Standard_D3_v2
     # https://knowledgebase.paloaltonetworks.com/KCSArticleDetail?id=kA10g000000ClD7CAK

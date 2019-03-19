@@ -135,3 +135,20 @@ resource "aws_instance" "FWInstance" {
     network_interface_id = "${element(aws_network_interface.FWPrivateNetworkInterface.*.id, count.index)}"
   }
 }
+
+//resource "null_resource" "wait_for_https" {
+//  depends_on = ["aws_instance.FWInstance"]
+//
+//  provisioner "local-exec" {
+//    command = "sleep ${var.mgmt_sleep}"
+//  }
+//}
+//
+//resource "null_resource" "localExecSetAdmin" {
+//  depends_on = ["null_resource.wait_for_https"]
+//  count      = "${var.fw_instance_count}"
+//
+//  provisioner "local-exec" {
+//    command = "${var.go_path} -key=${var.fw_priv_key_path} -host=${element(var.management_elastic_ip_addresses, count.index)} -username=${var.username} -password=${var.password}"
+//  }
+//}

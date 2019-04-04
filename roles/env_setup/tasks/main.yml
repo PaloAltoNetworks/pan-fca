@@ -6,7 +6,7 @@
 
 - name: "PROMPT FOR DELETION"
   pause:
-    prompt: "Detected previous state file, do you wish to backup? (yes/no)"
+    prompt: "Detected previous state file, do you wish to DELETE and BACKUP? (yes/no)"
   register: state_backup
   when: statefile.stat.exists
 

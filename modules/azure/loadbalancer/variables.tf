@@ -112,3 +112,7 @@ variable "lb_rulefrontport" {
 variable "lb_rulebackport" {
   default = ""
 }
+
+variable "floating_ip" {
+  default = "true"
+}

@@ -6,9 +6,9 @@ host_vars/*
 !host_vars/fw.yml.example
 virtual_networks/*
 !virtual_networks/VPCTransit.yml.aws.example
-!virtual_networks/Spoke1.yml.example
 !virtual_networks/AzureSpoke.yml.example
 !virtual_networks/AzureHUB.yml.example
+sandbox_modules
 
 TO-DO
 
@@ -35,8 +35,8 @@ crash.log
 *.retry
 **/*.retry
 
-provider.yml
-provider.yml.aws
+provider.*
+!provider.yml.example
 secrets.yml
 credentials.yml
 state_backup_*

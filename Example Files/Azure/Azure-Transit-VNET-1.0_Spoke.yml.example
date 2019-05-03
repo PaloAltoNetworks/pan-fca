@@ -1,0 +1,68 @@
+#This File is an example file to create the Network topology how is discribed here
+#https://github.com/PaloAltoNetworks/Azure-Transit-VNet/tree/master/Azure-Transit-VNET-1.0 
+# SPOKE 1 File
+
+
+testhost:
+- name: Testhost
+  hostname: Test-VM
+  username: creator
+  password: Paloalto123456789
+  dnsname: ubuntutestvm2
+
+vnet_network:
+  name: Spoke1VNET
+  network: "192.168.0.0/21"
+  subnet:
+  - name: Web
+    network: "192.168.1.0/24"
+  - name: Host
+    network: "192.168.2.0/24"
+
+route_tables:
+  - name: web-test
+    routes:
+      - cidr: 0.0.0.0/0
+        name: VirtualAppliance
+        # gateway: 10.217.130.61
+        gateway: 1.1.1.1
+
+#Define Load Balancers  
+load_balancers:
+  - name: Spoke1-External-LB
+    fename: Spoke1-Untrust
+    bename: Spoke1-Untrust
+    floating_ip: false
+    type: public
+    lbrulename: HTTP-80
+    lbrulefrontport: 80
+    lbruleprotocol: tcp
+    lbrulebackport: 80
+    lbprobename: TCP-22
+    lbruleprobeport: 22
+
+  - name: Spoke1-Internal-LB
+    fename: Spoke1-Trust
+    bename: Spoke1-Trust
+    floating_ip: true
+    type: private
+    frontend_private_ip_address_allocation: "Static"
+    lbrulename: HA
+    lbrulefrontport: 0
+    lbruleprotocol: All
+    lbrulebackport: 0
+    lbprobename: ssh
+    lbruleprobeport: 22
+
+security_groups:
+  - name: allow any
+    priority: 100
+    direction: inbound
+    action: allow
+    src_ip: 0.0.0.0
+    src_port: any
+    dst_port: any
+    dst_network: 0.0.0.0
+    protocol: any
+
+

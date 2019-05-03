@@ -136,6 +136,35 @@ variable "fw_license_type_map" {
     }
 }
 
+variable "fw_priv_key_path" {
+  description = "SSH Private Key Full Path"
+  type = "string"
+  default = ""
+}
+
+variable "username" {
+  description = "Username of firewall"
+  type = "string"
+  default = "admin"
+}
+
+variable "password" {
+  description = "Password of associated username"
+  type = "string"
+  default = ""
+}
+
+variable "mgmt_sleep" {
+  description = "Amount of time to wait until configuring intial admin access"
+  type = "string"
+  default = "240"
+}
+
+variable "go_path" {
+  description = "Path to execute GO Initalization binary"
+  default = ""
+}
+
 /*
 ##Variables for autoscaling##
 output "PanFwAmiId" {

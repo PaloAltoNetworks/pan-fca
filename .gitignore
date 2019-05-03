@@ -42,3 +42,6 @@ credentials.yml
 state_backup_*
 .terraform.d/
 .terraform.d/*
+
+# Sandbox folder
+sandbox_modules/*

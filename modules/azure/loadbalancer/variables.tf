@@ -89,7 +89,7 @@ variable "frontend_private_ip_address" {
 
 variable "frontend_private_ip_address_allocation" {
   description = "(Optional) Frontend ip allocation type (Static or Dynamic)"
-  default     = "Static"
+  default     = "Dynamic"
 }
 
 variable "load_distribution" {

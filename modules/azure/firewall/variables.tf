@@ -196,3 +196,11 @@ variable "lbtype" {
 variable "avsetname" {
   default = "av-set"
 }
+
+variable "lbnamepooluntrust" {
+  default = ""
+}
+
+variable "lbnamepooltrust" {
+  default = ""
+}

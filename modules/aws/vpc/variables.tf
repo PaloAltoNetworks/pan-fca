@@ -1,52 +1,34 @@
-variable "vpc_name"  {
-    description = "Name of VPC to be used with tagging"
-    default = ""
+variable "create_vpc" {
+  description = "Controls if VPC should be created (it affects almost all resources)"
+  default     = true
 }
 
-variable "stack_name" {
-    description = "Application Stack to be deployed"
-    default = ""
+variable "name" {
+  description = "Name to be used on all the resources as identifier"
+  default     = ""
 }
 
-variable "vpc_cidr" {
-    description = "Main VPC to be created"
-    default = ""
+variable "cidr" {
+  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overridden"
+  default     = "0.0.0.0/0"
 }
 
-variable "untrust_subnets" {
-    description = "List of untrusted subnets to create"
-    type = "list"
-    default = []
+variable "assign_generated_ipv6_cidr_block" {
+  description = "Requests an Amazon-provided IPv6 CIDR block with a /56 prefix length for the VPC. You cannot specify the range of IP addresses, or the size of the CIDR block"
+  default     = false
 }
 
-variable "mgmt_subnets" {
-    description = "List of mgmt subnets to create"
-    type = "list"
-    default = []
+variable "secondary_cidr_blocks" {
+  description = "List of secondary CIDR blocks to associate with the VPC to extend the IP Address pool"
+  default     = []
 }
 
-variable "trust_subnets" {
-    description = "List of Trusted Subnets to Create"
-    type = "list"
-    default = []
+variable "instance_tenancy" {
+  description = "A tenancy option for instances launched into the VPC"
+  default     = "default"
 }
 
-variable "availability_zones" {
-    description = "List of Availability zones"
-    type = "list"
-    default = []
-}
-
-variable "customer_asns" {
-    description = "List of ASNs Customer has provided"
-    type = "list"
-    default = []
-}
-
-variable "region" {
-    description = "AWS region"
-    default = "us-east-1"
-}
-
-data "aws_availability_zones" "default" {
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  default     = {}
 }

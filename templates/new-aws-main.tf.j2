@@ -4,8 +4,8 @@ provider "aws" {
 }
 
 {% for name, vnet in vnets.items() %}
-{% if vnet['spoke_vpcs'] is defined %}
-{% for vpc in vnet['spoke_vpcs'] %}
+{% if vnet['vpcs'] is defined %}
+{% for vpc in vnet['vpcs'] %}
 provider "aws" {
   alias  = "{{ vpc['region'] }}"
   region = "{{ vpc['region'] }}"

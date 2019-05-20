@@ -3,7 +3,7 @@
 #
 # Create a new Palo Alto Networks VM-series Firewall with
 # bootstrapping from a S3 bucket
-
+#Todo strip out hard coded modules
 # Define Region
 provider "aws" {
   region = "${var.region}"

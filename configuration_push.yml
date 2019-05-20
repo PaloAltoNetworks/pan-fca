@@ -34,7 +34,7 @@
 
     - name: "CREATING {{ cloud_provider }} TEMPLATE"
       template:
-        src: "{{ cloud_provider }}-main.tf.j2"
+        src: "new-{{ cloud_provider }}-main.tf.j2"
         dest: "{{ output_file }}"
       tags:
         - 'always'

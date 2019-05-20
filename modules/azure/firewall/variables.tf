@@ -1,10 +1,11 @@
 variable "resource_group_name" {
-  description = "The name of the resource group in which the resources will be created"
-  default     = "terraform_compute"
+  # description = "The name of the resource group in which the resources will be created"
+  # default     = "terraform_compute"
 }
 
 variable "location" {
   description = "The location/region where the virtual network is created. Changing this forces a new resource to be created."
+  default = "north europe"
 }
 
 variable "vnet_subnet_id_trust" {

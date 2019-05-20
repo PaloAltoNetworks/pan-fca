@@ -1,11 +1,14 @@
 {% for name, vnet in vnets.items() %}
-module "{{ name }}" {
 
+
+module "{{ name }}" {
 source                  = "{{ module_dir }}/vnet"
 {% if vnet['vnet_network']['resource_group_name'] is defined %}
 resource_group_name     = "{{ vnet['vnet_network']['resource_group_name'] }}"
 {% else %}
-resource_group_name     = "{{ name }}"
+{% for rg in vnet['resource_group'] %}
+resource_group_name     = "${module.{{ rg.resource_group_name }}.name}"
+{% endfor %}
 {% endif %}
 location                = "{{ location }}"
 vnet_name               = "{{ vnet['vnet_network']['name'] }}"

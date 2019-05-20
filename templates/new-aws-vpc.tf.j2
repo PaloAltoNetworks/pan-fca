@@ -1,30 +1,18 @@
 {% for name, vnet in vnets.items() %}
-module "{{ name }}" {
-  source = "terraform-aws-modules/vpc/aws"
-  name   = "{{ name }}"
-  cidr   = "{{ vnet['vnet_network']['network'] }}"
-  azs    = ""
-  private_subnets = [{% for sub in vnet['vnet_network']['subnet'] if sub.type == 'untrusted' %}"{{ sub.network }}",{% endfor %}]
-  public_subnets  = [{% for sub in vnet['vnet_network']['subnet'] if sub.type == 'trusted' %}"{{ sub.network }}",{% endfor %}]
-}
-{% endfor %}
-
-{% for name, vnet in vnets.items() %}
 {% if vnet['spoke_vpcs'] is defined %}
 
 {% for vpc in vnet['spoke_vpcs'] %}
 
 module "{{ name }}-vpc-{{ vpc.name }}" {
-    source                  = "{{ module_dir }}/aws/vpc"
-    providers               = {
-                                aws = "aws.{{ vpc['region'] }}"
+    create_vpc                          = true
+    source                              = "{{ module_dir }}/aws/vpc"
+    providers                           = {
+                                            aws = "aws.{{ vpc['region'] }}"
     }
-    name                    = "{{ name }}-vpc-{{ vpc.name }}"
-    cidr                    = "{{ vpc['cidr'] }}"
-    private_subnets         = [{% for subnet in vpc['subnets'] %},"{{ subnet['cidr'] }}",{% endfor %}]
-    map_public_ip_on_launch = false
-    enable_vpn_gateway      = true
-    amazon_side_asn         = "{{ vpc['asn'] }}"
+    name                                = "{{ name }}-vpc-{{ vpc.name }}"
+    cidr                                = "{{ vpc['cidr'] }}"
+    assign_generated_ipv6_cidr_block    = false
+    instance_tenancy                    = default
 }
 
 {% endfor %}

@@ -155,7 +155,7 @@ variable "adminUsername" {
 }
 
 variable "adminPassword" {
-  default = "Paloalto123"
+  default = "Paloalto1234"
 }
 
 variable "vm_publisher" {
@@ -195,4 +195,12 @@ variable "lbtype" {
 
 variable "avsetname" {
   default = "av-set"
+}
+
+variable "lbnamepooluntrust" {
+  default = ""
+}
+
+variable "lbnamepooltrust" {
+  default = ""
 }

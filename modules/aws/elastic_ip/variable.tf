@@ -1,4 +1,3 @@
-#Variable EIP
 variable "availability_zones" {
   type    = "list"
   default = [""]

@@ -1,4 +1,3 @@
-#EIP output
 output "aws_eips" {
   value = ["${aws_eip.new_ip.*.public_ip}"]
 }

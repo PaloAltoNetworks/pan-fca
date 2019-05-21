@@ -2,6 +2,24 @@
 #https://github.com/PaloAltoNetworks/Azure-Transit-VNet/tree/master/Azure-Transit-VNET-1.0 
 #HUB File
 
+#Create Resource Groups
+resource_group:
+  - resource_group_name: AzureHub
+
+#Create Panorama
+panorama:
+  - name: Test-Panorama
+    panname: Test-Panorama
+    panvmsize: Standard_DS3_v2
+    Username: Bastard
+    Password: PaloAlto1234! 
+
+# Create Availibity Sets
+availabilty_set:
+  - avsetname: AzureAV1
+  - avsetname: AzureAV2
+    resource_group_name: AzureSpoke
+
 #Define Firewalls
 firewalls:
   - name: Hub-Firewalls
@@ -9,8 +27,8 @@ firewalls:
     fwname: HubFW
     fwvmsize: Standard_D3_v2
     # https://knowledgebase.paloaltonetworks.com/KCSArticleDetail?id=kA10g000000ClD7CAK
-    avsetname: "AzureAV"
-    fw_version: latest
+    avsetname: "AzureAV1"
+    fw_version: 8.1.0
     # 7.1.0 / 8.0.0 / 8.1.0 = latest
     fw_sku: byol
     # byol / bundl1 / bundle2
@@ -27,8 +45,8 @@ firewalls:
     fwname: Spoke1FW
     fwvmsize: Standard_D3_v2
     # https://knowledgebase.paloaltonetworks.com/KCSArticleDetail?id=kA10g000000ClD7CAK
-    avsetname: "Spoke1AV"
-    fw_version: latest
+    avsetname: "AzureAV2"
+    fw_version: 8.1.0
     # 7.1.0 / 8.0.0 / 8.1.0 = latest
     fw_sku: byol
     # byol / bundl1 / bundle2

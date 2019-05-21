@@ -15,7 +15,7 @@ resource "azurerm_public_ip" "azlb" {
   # resource_group_name          = "${azurerm_resource_group.azlb.name}"
   resource_group_name          = "${var.resource_group_name}"
   public_ip_address_allocation = "${var.public_ip_address_allocation}"
-  sku						   = "Standard"
+  sku						               = "Standard"
   
   tags {
      displayname = "${join("", list("PublicNetworkinterfaces", ""))}"

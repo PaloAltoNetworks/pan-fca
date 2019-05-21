@@ -1,10 +1,4 @@
 
-# resource "azurerm_resource_group" "vm" {
-#   name     = "${var.resource_group_name}"
-#   location = "${var.location}"
-#   tags     = "${var.tags}"
-# }
-
 # ********** STORAGE ACCOUNT Firewall **********
 
 # Generate a random id for the storage account due to the need to be unique across azure.
@@ -38,14 +32,14 @@ resource "azurerm_storage_container" "storagecon" {
 # ********** AVAILABILITY SET **********
 
 # Create the availability set
-resource "azurerm_availability_set" "avset" {
-    name                                = "${var.avsetname}"
-    location                            = "${var.location}"
-    # resource_group_name                 = "${azurerm_resource_group.vm.name}"
-    resource_group_name                 = "${var.resource_group_name}"
-    platform_update_domain_count        = 5
-    platform_fault_domain_count         = 3
-}
+# resource "azurerm_availability_set" "avset" {
+#     name                                = "${var.avsetname}"
+#     location                            = "${var.location}"
+#     # resource_group_name                 = "${azurerm_resource_group.vm.name}"
+#     resource_group_name                 = "${var.resource_group_name}"
+#     platform_update_domain_count        = 5
+#     platform_fault_domain_count         = 3
+# }
 
 # ********** VM PUBLIC IP ADDRESSES FOR MANAGEMENT **********
 
@@ -194,7 +188,10 @@ resource "azurerm_virtual_machine" "firewall" {
 
     primary_network_interface_id  = "${element(azurerm_network_interface.Management.*.id, count.index)}"
     vm_size                       = "${var.fw_size}"
-    availability_set_id           = "${azurerm_availability_set.avset.id}"
+    # availability_set_id           = "${azurerm_availability_set.avset.id}"
+    availability_set_id           = "${var.av_set_id}"
+    # zones                         = "${list("${element("${list("1","2")}", count.index)}")}"
+
   
   storage_image_reference {
     publisher   = "${var.vm_publisher}"

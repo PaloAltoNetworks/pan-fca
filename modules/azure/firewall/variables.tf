@@ -59,10 +59,6 @@ variable "fw_hostname" {
   description = "local name of the VM"
   default     = "FW"
 }
-# variable "fw_dnshostname" {
-#   description = "local name of the VM"
-#   default = "panfw"
-# }
 
 variable "vm_os_simple" {
   description = "Specify UbuntuServer, WindowsServer, RHEL, openSUSE-Leap, CentOS, Debian, CoreOS and SLES to get the latest image version of the specified os.  Do not provide this value if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku."
@@ -194,10 +190,6 @@ variable "lbtype" {
   default = "public"
 }
 
-variable "avsetname" {
-  default = "av-set"
-}
-
 variable "lbnamepooluntrust" {
   default = ""
 }
@@ -205,3 +197,16 @@ variable "lbnamepooluntrust" {
 variable "lbnamepooltrust" {
   default = ""
 }
+
+variable "av_set_id" {
+  default = ""
+}
+
+# variable "av_type" {
+#   default = "zones"
+# }
+
+# variable "az_list" {
+#   type = "list"
+#   default = ["1","2"]
+# }

@@ -1,3 +1,19 @@
+#Create Resource Groups
+resource_group:
+  - resource_group_name: test_rg1
+
+#Create Panorama
+panorama:
+  - name: Test-Panorama
+    panname: Test-Panorama
+    panvmsize: Standard_DS3_v2
+    Username: Bastard
+    Password: PaloAlto1234! 
+
+# Create Availibity Sets
+availabilty_set:
+  - avsetname: AzureAV1
+
 #Define Firewalls
 firewalls:
   - name: Firewall-Set-1
@@ -5,7 +21,7 @@ firewalls:
     fwname: TSVMPAN-
     fwvmsize: Standard_D3_v2
     # https://knowledgebase.paloaltonetworks.com/KCSArticleDetail?id=kA10g000000ClD7CAK
-    avsetname: "AzureAV"
+    avsetname: "AzureAV1"
     fw_version: latest
     # 7.1.0 / 8.0.0 / 8.1.0 = latest
     fw_sku: byol

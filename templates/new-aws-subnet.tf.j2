@@ -1,21 +1,16 @@
 {% for name, vnet in vnets.items() %}
 {% if vnet['vpcs'] is defined %}
 {% for vpc in vnet['vpcs'] %}
-{% if vpc['subnets'] is defined %}
-{% for subnet in vpc['subnets'] %}
 
-module "{{ name }}-{{ vpc.name }}-{{ subnet.name }}" {
+module "{{ name }}-{{ vpc.name }}-subnets" {
     source                              = "{{ module_dir }}/subnet"
     providers                           = {
                                             aws = "aws.{{ vpc['region'] }}"
     }
-    name                                = "{{ name }}-{{ vpc.name }}-{{ subnet.name }}"
-    subnets                             = "{{ subnet.cidr }}"
-    vpc_id                              = "${module.{{ name }}-{{vpc.name}}.vpc_id}"
+    subnets                             = [{% for subnet in vpc['subnets'] %},"{{ subnet['cidr'] }}",{% endfor %}]
+{#    name                                = [{% for subnet in vpc['subnets'] %},"{{ subnet['name'] }}",{% endfor %}] #}
+    vpc_id                              = "${module.{{ name }}-vpc-{{vpc.name}}.vpc_id}"
 }
-
-{% endfor %}
-{% endif %}
 
 {% endfor %}
 {% endif %}

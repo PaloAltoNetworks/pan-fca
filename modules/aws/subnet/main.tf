@@ -10,5 +10,7 @@ resource "aws_subnet" "this" {
   vpc_id            = "${var.vpc_id}"
   cidr_block        = "${var.subnets[count.index]}"
   availability_zone = "${data.aws_availability_zones.available.names[count.index]}"
-
+  tags {
+  "Name"            = "${var.subnet_names[count.index]}"
+  }
 }

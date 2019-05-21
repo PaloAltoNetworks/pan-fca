@@ -6,6 +6,11 @@ variable "vpc_id"  {
 }
 
 variable "subnets" {
-  description = "A list of private subnets inside the VPC"
+  description = "A list of subnets to create inside the VPC"
+  default     = []
+}
+
+variable "subnet_names" {
+  description = "A list of names for subnets inside the VPC"
   default     = []
 }

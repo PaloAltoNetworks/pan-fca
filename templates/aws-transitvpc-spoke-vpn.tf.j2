@@ -1,15 +1,15 @@
 {# AWS VPN module template from https://github.com/terraform-aws-modules/terraform-aws-vpn-gateway #}
 {% for name, vnet in vnets.items() %}
-{% if vnet['spoke_vpcs'] is defined %}
-{% for vpc in vnet['spoke_vpcs'] %}
+{% if vnet['vnet_network'] is defined %}
+{% for vpc in vnet['vnet_network'] %}
 {% if vpc['fw_tunnels'] is defined %}
+
 {% for fw in vpc['fw_tunnels'] %}
 module "{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}" {
   source                        = "{{ module_dir }}/vpn"
   providers                     = { aws = "aws.{{ vpc['region'] }}"}
   name                          = "{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}"
   vpc_id                        = "${module.{{ name }}-vpc-{{ vpc.name }}.vpc_id}"
-  vpn_gateway_id                = "${module.{{ name }}-vpc-{{ vpc.name }}.vgw_id}"
 {# Trying to provide options for supporting AWS generated PSKs / CIDRs if not defined in YAML
 {% if vpc['fw_tunnels.tunnel_1_cidr'] not defined %}
   cidr_type                       = "dynamic"

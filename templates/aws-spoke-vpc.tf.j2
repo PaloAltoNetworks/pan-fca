@@ -3,7 +3,7 @@
 
 {% for vpc in vnet['vnet_network'] %}
 
-module "{{ name }}-vpc-{{ vpc.name }}" {
+module "{{ name }}-{{ vpc.name }}-vpc" {
     create_vpc                          = true
     source                              = "{{ module_dir }}/vpc"
     providers                           = {

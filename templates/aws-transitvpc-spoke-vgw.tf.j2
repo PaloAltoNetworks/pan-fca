@@ -1,0 +1,18 @@
+{# AWS VPN module template from https://github.com/terraform-aws-modules/terraform-aws-vpn-gateway #}
+{% for name, vnet in vnets.items() %}
+{% if vnet['vnet_network'] is defined %}
+{% for vpc in vnet['vnet_network'] %}
+{% if vpc['asn'] is defined %}
+
+module "{{ name }}-{{ vpc.name }}-vgw" {
+  source                        = "{{ module_dir }}/vgw"
+  providers                     = { aws = "aws.{{ vpc['region'] }}"}
+  name                          = "{{ name }}-{{ vpc.name }}-vgw"
+  vpc_id                        = "${module.{{ name }}-{{vpc.name}}-vpc.vpc_id}"
+  amazon_side_asn               = "{{ vpc['asn'] }}"
+}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+

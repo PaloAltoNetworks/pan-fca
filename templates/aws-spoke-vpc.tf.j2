@@ -1,7 +1,7 @@
 {% for name, vnet in vnets.items() %}
-{% if vnet['vpcs'] is defined %}
+{% if vnet['vnet_network'] is defined %}
 
-{% for vpc in vnet['vpcs'] %}
+{% for vpc in vnet['vnet_network'] %}
 
 module "{{ name }}-vpc-{{ vpc.name }}" {
     create_vpc                          = true

@@ -15,8 +15,8 @@ provider "aws" {
 {% endfor %}
 
 
-{% include 'aws-transitvpc-spoke-vpc.tf.j2' %}
-{% include 'aws-transitvpc-spoke-subnet.tf.j2' %}
+{% include 'aws-spoke-vpc.tf.j2' %}
+{% include 'aws-spoke-subnet.tf.j2' %}
 
 #Todo create templates for sandbox modules and test be able to test against the data model more includes will be needed per new module#
 #Todo clean up AWS working modules to reflect their prospective jinja template#

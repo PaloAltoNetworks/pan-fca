@@ -4,8 +4,8 @@ provider "aws" {
 }
 
 {% for name, vnet in vnets.items() %}
-{% if vnet['vpcs'] is defined %}
-{% for vpc in vnet['vpcs'] %}
+{% if vnet['spoke_vpcs'] is defined %}
+{% for vpc in vnet['spoke_vpcs'] %}
 provider "aws" {
   alias  = "{{ vpc['region'] }}"
   region = "{{ vpc['region'] }}"
@@ -15,8 +15,12 @@ provider "aws" {
 {% endfor %}
 
 
-{% include 'aws-transitvpc-spoke-vpc.tf.j2' %}
-{% include 'aws-transitvpc-spoke-subnet.tf.j2' %}
+{% include 'aws-vpc.tf.j2' %}
+{% include 'aws-firewall.tf.j2' %}
+{% include 'aws-sg.tf.j2' %}
+{% include 'aws-transit_gateway.tf.j2'
+{% include 'aws-vpc-spoke.tf.j2' %}
+{% include 'aws-vpn-spoke.tf.j2' %}
 
 #Todo create templates for sandbox modules and test be able to test against the data model more includes will be needed per new module#
 #Todo clean up AWS working modules to reflect their prospective jinja template#

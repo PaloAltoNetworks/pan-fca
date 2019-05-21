@@ -1,0 +1,22 @@
+{# Transit Gateway Module #}
+{% for name, vnet in vnets.items() %}
+{% if vnet['transit_gateway'] is defined %}
+{% for tgw in vnet['transit_gateway'] %}
+
+module "{{ name }}-transit_gateway" {
+source           = "{{ module_dir }}/transit_gateway"
+{% if tgw['default_route_table_association'] is defined %}
+{% if tgw.default_route_table_association == 'enable' %}
+{% endif %}
+{% endif %}
+{% if tgw['default_route_table_propagation'] is defined %}
+{% if tgw.default_route_table_propagation == 'enable' %}
+{% endif %}
+{% endif %}
+{% if tgw['auto_accept_shared_attachments'] is defined %}
+{% if tgw.auto_accept_shared_attachments == 'disable' %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
+}

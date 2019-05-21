@@ -1,16 +1,14 @@
 {% for name, vnet in vnets.items() %}
 {% if vnet['vnet_network'] is defined %}
 {% for vpc in vnet['vnet_network'] %}
-{% if vpc['subnets'] is defined %}
+{% if vpc['asn'] is defined %}
 
-module "{{ name }}-{{ vpc.name }}-subnets" {
-    source                              = "{{ module_dir }}/subnet"
-    providers                           = {
-                                            aws = "aws.{{ vpc['region'] }}"
-    }
-    subnets                             = [{% for subnet in vpc['subnets'] %},"{{ subnet['cidr'] }}",{% endfor %}]
-    subnet_names                        = [{% for subnet in vpc['subnets'] %},"{{vpc.name}}-{{ subnet['name'] }}",{% endfor %}]
+module "{{ name }}-{{ vpc.name }}-rt" {
+    source                              = "{{ module_dir }}/route_table"
+    providers                           = { aws = "aws.{{ vpc['region'] }}"}
     vpc_id                              = "${module.{{ name }}-{{vpc.name}}-vpc.vpc_id}"
+    name                                = "{{ name }}-{{ vpc.name }}-rt"
+    default_vgw                         = "${module.{{ name }}-{{vpc.name}}-vgw.vgw_id}" 
 }
 
 {% endif %}

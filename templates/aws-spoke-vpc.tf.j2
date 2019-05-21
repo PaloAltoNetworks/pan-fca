@@ -4,11 +4,9 @@
 {% for vpc in vnet['vnet_network'] %}
 
 module "{{ name }}-{{ vpc.name }}-vpc" {
-    create_vpc                          = true
     source                              = "{{ module_dir }}/vpc"
-    providers                           = {
-                                            aws = "aws.{{ vpc['region'] }}"
-    }
+    providers                           = { aws = "aws.{{ vpc['region'] }}"} 
+    create_vpc                          = true   
     name                                = "{{ name }}-vpc-{{ vpc.name }}"
     cidr                                = "{{ vpc['cidr'] }}"
     assign_generated_ipv6_cidr_block    = false

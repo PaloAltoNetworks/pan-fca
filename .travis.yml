@@ -1,0 +1,21 @@
+# whitelist
+branches:
+  only:
+    - ci-test
+
+
+# Test both Python 2.7 and 3.6 versions.
+language: "python"
+python:
+  - "2.7"
+  - "3.6"
+
+# Install python packages for ansible and linters.
+install:
+  - "make setup"
+
+# Execute linting and unit tests before running the main playbook.
+# If any of these tasks fail, the entire build fails immediately.
+before_script:
+  - "make lint"
+  - "make unit"

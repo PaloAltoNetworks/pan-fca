@@ -1,7 +1,6 @@
 # whitelist
 branches:
   only:
-    - ci-test
     - master
 
 

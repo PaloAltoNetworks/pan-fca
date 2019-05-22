@@ -5,11 +5,11 @@ branches:
   only:
     - master
 
-env:
+#env:
   # This environment variable tells Terraform not to prompt for input. This is
   # not required, but if we make a mistake, the Travis builder will hang waiting
   # for user input, tieing up unnecessary resources.
-  - TF_INPUT=false
+#  - TF_INPUT=false
 
 # Install terraform
 before_install:

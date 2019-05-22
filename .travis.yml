@@ -1,5 +1,5 @@
-dist: bionic
-sudo: false
+#dist: bionic
+#sudo: false
 
 branches:
   only:

@@ -1,0 +1,7 @@
+---
+- name: "SETUP VSPHERE ENV VARS"
+  set_fact:
+    cloud_env:
+      vsphere_username: "{{ vsphere_username }}"
+      vsphere_server: "{{ vsphere_server }}"
+      vsphere_password: "{{ vsphere_password }}"

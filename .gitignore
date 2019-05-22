@@ -30,6 +30,8 @@ crash.log
 **/.tfvars
 /main.tf
 
+account.json
+
 # Ansible Specific Files
 *.retry
 **/*.retry

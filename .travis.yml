@@ -36,7 +36,9 @@ install:
 #  - "make lint"
 #  - "make unit"
   
-script: terraform plan ./terraform
+script: 
+  - terraform init
+  - terraform plan
 
 deploy:
 - provider: script

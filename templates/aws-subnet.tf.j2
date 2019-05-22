@@ -1,20 +1,16 @@
 {% for name, vnet in vnets.items() %}
-{% if vnet['vnet_network'] is defined %}
-{% for vpc in vnet['vnet_network'] %}
-{% if vpc['subnets'] is defined %}
-{% for subnet in vpc['subnets'] %}
+{% if vnet['vnet_network']['subnet'] is defined %}
+{% for net in vnet['vnet_network']['subnet'] %}
 
-module "{{ name }}-{{ vpc.name }}-{{subnet.name}}-subnets" {
+module "{{ name }}-{{net.name}}-subnets" {
     source                              = "{{ module_dir }}/subnet"
-    providers                           = { aws = "aws.{{ vpc['region'] }}"}  
-    subnets                             = [{% for cidr in subnet['cidrs'] %},"{{ cidr }}",{% endfor %}]
-    subnet_names                        = [{% for cidr in subnet['cidrs'] %},"{{vpc.name}}-{{ subnet['name'] }}-az-{{loop.index}}",{% endfor %}]
-    vpc_id                              = "${module.{{ name }}-{{vpc.name}}-vpc.vpc_id}"
-    route_table_id                      = "${module.{{ name }}-{{vpc.name}}-{{subnet.route_table}}-rt.route_table_id}"
+    providers                           = { aws = "aws.{{ vnet['vnet_network']['region'] }}"}  
+    subnets                             = [{% for cidr in net['cidrs'] %},"{{ cidr }}",{% endfor %}]
+    subnet_names                        = [{% for cidr in net['cidrs'] %},"{{ name }}-{{ net['name'] }}-az-{{loop.index}}",{% endfor %}]
+    vpc_id                              = "${module.{{ name }}-vpc.vpc_id}"
+    route_table_id                      = "${module.{{ name }}-{{net.route_table}}-rt.route_table_id}"
 }
 
-{% endfor %}
-{% endif %}
 {% endfor %}
 {% endif %}
 {% endfor %}

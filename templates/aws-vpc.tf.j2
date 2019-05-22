@@ -1,18 +1,14 @@
 {% for name, vnet in vnets.items() %}
 {% if vnet['vnet_network'] is defined %}
 
-{% for vpc in vnet['vnet_network'] %}
-
-module "{{ name }}-{{ vpc.name }}-vpc" {
+module "{{ name }}-vpc" {
     source                              = "{{ module_dir }}/vpc"
-    providers                           = { aws = "aws.{{ vpc['region'] }}"} 
+    providers                           = { aws = "aws.{{ vnet['vnet_network']['region'] }}"}
     create_vpc                          = true   
-    name                                = "{{ name }}-vpc-{{ vpc.name }}"
-    cidr                                = "{{ vpc['cidr'] }}"
+    name                                = "{{ name }}-vpc"   
+    cidr                                = "{{ vnet['vnet_network']['network'] }}"
     assign_generated_ipv6_cidr_block    = false
 }
-
-{% endfor %}
 
 {% endif %}
 {% endfor %}

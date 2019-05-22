@@ -1,28 +1,26 @@
 ---
 vnet_network:   
-  - AwsTransitVpcHub:
-    name: AwsTransitVpcHub
-    cidr: 10.22.0.0/16
-    region: us-east-1
-    route_tables:
-      - name: Public
-        routes: 
-          - prefix: 0.0.0.0/0
-            next_hop_type: IGW    
-    subnets:
-      - name: Management
-        cidrs:
-          # Each will be created in unique AZ
-          - 10.22.0.0/24
-          - 10.22.1.0/24
-        route_table: Public
-      - name: Untrust
-        cidrs: 
-          # Each will be created in unique AZ          
-          - 10.22.10.0/24
-          - 10.22.11.0/24
-        route_table: Public
-
+  name: FW
+  network: 10.22.0.0/16  
+  region: us-east-1
+  route_tables:
+    - name: Public
+      routes: 
+        - prefix: 0.0.0.0/0
+          next_hop_type: IGW           
+  subnet:
+  - name: Management
+    cidrs:
+      # Each will be created in unique AZ
+      - 10.22.0.0/24
+      - 10.22.1.0/24
+    route_table: Public 
+  - name: Untrust
+    cidrs: 
+      # Each will be created in unique AZ          
+      - 10.22.10.0/24
+      - 10.22.11.0/24
+    route_table: Public
 
 firewalls:
   mgmt_sleep: "600"
@@ -30,13 +28,19 @@ firewalls:
   #Options: 6.1.18, 7.0.17, 7.1.11, 7.1.14, 7.1.17, 7.1.18, 7.1.20, 8.0.3, 8.0.6, 8.0.8, 8.0.9, 8.0.13, 8.1.0
   fw_license_type: byol
   #Options: byol | payg1 | payg2
-  firewall:
-  - name: fca-transit
-    networks:
-      - subnet: Management
-        eip: yes
-      - subnet: Untrust
-        eip: yes
+  fw_instances:
+    - name: fca-fw01
+      networks:
+        - subnet: Management
+          eip: yes
+        - subnet: Untrust
+          eip: yes
+    - name: fca-fw02
+      networks:
+        - subnet: Management
+          eip: yes
+        - subnet: Untrust
+          eip: yes        
 
 global_tags:
   - name: "environment"

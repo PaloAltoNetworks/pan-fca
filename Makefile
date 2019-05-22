@@ -14,7 +14,6 @@ test:	lint unit integ
 setup:
 	@echo "Starting  setup"
 	pip install -r requirements.txt
-	echo "brkrst3310" > ~/vault_pass_file.txt
 	@echo "Completed setup"
 
 

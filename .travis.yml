@@ -20,3 +20,5 @@ install:
 before_script:
   - "make lint"
   - "make unit"
+  
+script: ./run_build.sh

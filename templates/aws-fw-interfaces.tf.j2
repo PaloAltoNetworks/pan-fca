@@ -1,0 +1,21 @@
+{% for name, vnet in vnets.items() %}
+{% if vnet['firewalls'] is defined %}
+{% if vnet['firewalls']['fw_instances'] is defined %}
+{% for fw in vnet['firewalls']['fw_instances'] %}
+{% set outer_loop = loop %}
+{% if fw['networks'] is defined %}
+{% for network in fw['networks'] %}
+
+module "{{ name }}-{{ fw.name }}-{{ network.name}}-eni" {
+    source                              = "{{ module_dir }}/eni"
+    providers                           = { aws = "aws.{{ vnet['vnet_network']['region'] }}"}  
+    subnet_id                           = "${module.{{ name }}-{{ vnet['vnet_network']['name'] }}-{{network.subnet}}-subnets.subnet_id[{{outer_loop.index0}}]}"
+    name                                = "{{ name }}-{{ fw.name }}-{{ network.name}}-eni"
+}
+
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endfor %}

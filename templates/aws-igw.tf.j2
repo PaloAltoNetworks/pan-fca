@@ -1,0 +1,23 @@
+{% for name, vnet in vnets.items() %}
+{% if vnet['vnet_network'] is defined %}
+{% for vpc in vnet['vnet_network'] %}
+{% if vpc['route_tables'] is defined %}
+{% for route_table in vpc['route_tables'] %}
+{% if route_table['routes'] is defined %}
+{% for route in route_table['routes'] %}
+{% if route['next_hop_type'] == 'IGW' %}
+
+module "{{ name }}-{{ vpc.name }}-igw" {
+    source                              = "{{ module_dir }}/internet_gw"
+    providers                           = { aws = "aws.{{ vpc['region'] }}"}  
+    name                                = "{{ name }}-{{ vpc.name }}-igw"    
+    vpc_id                              = "${module.{{ name }}-{{vpc.name}}-vpc.vpc_id}"
+}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}

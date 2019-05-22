@@ -17,4 +17,6 @@ provider "aws" {
 {% include 'aws-vpc.tf.j2' %}
 {% include 'aws-subnet.tf.j2' %}
 {% include 'aws-routetable.tf.j2' %}
+{% include 'aws-igw.tf.j2' %}
+{% include 'aws-fw-interfaces.tf.j2' %}
 {% include 'aws-transitvpc-spoke-vgw.tf.j2' %}

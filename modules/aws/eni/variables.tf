@@ -12,3 +12,8 @@ variable "tags" {
   description = "A map of tags to add to all resources"
   default     = {}
 }
+
+variable "source_dest_check"  {
+    description = "Enable source/destination check on this ENI"
+    default = "true"
+}

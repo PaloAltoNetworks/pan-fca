@@ -2,6 +2,7 @@
 branches:
   only:
     - ci-test
+    - master
 
 
 # Test both Python 2.7 and 3.6 versions.

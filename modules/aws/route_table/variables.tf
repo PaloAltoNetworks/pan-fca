@@ -8,22 +8,47 @@ variable "name" {
   default     = ""
 }
 
-variable "default_igw" {
-  description = "Option for adding default route to IGW"
+variable "prefix"  {
+    description = "Prefix for route to add to table"
+    default = ""
+}
+
+variable "vgw_next_hop" {
+  description = "VGW ID to be used as next-hop for route"
   default     = ""
 }
 
-variable "default_vgw" {
-  description = "Option for adding default route to VGW"
+variable "igw_next_hop" {
+  description = "IGW ID to be used as next-hop for route"
   default     = ""
 }
 
-variable "default_tgw" {
-  description = "Option for adding default route to TGW"
+variable "tgw_next_hop" {
+  description = "TGW ID to be used as next-hop for route"
   default     = ""
 }
 
-variable "default_eni" {
-  description = "Option for adding default route to ENI"
+variable "eni_next_hop" {
+  description = "ENI ID to be used as next-hop for route"
+  default     = ""
+}
+
+variable "create_route_to_vgw" {
+  description = "Used for count to determine which resource to used based on next-hop type"
+  default     = ""
+}
+
+variable "create_route_to_igw" {
+  description = "Used for count to determine which resource to used based on next-hop type"
+  default     = ""
+}
+
+variable "create_route_to_tgw" {
+  description = "Used for count to determine which resource to used based on next-hop type"
+  default     = ""
+}
+
+variable "create_route_to_eni" {
+  description = "Used for count to determine which resource to used based on next-hop type"
   default     = ""
 }

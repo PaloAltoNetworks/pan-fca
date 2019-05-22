@@ -10,46 +10,46 @@ resource "aws_route_table" "this" {
 
 
 ################
-# Default Routes
+# Routes
 ################
 
-# Create default route conditional on gateway type variable (igw, tgw, vgw, eni)
+# Create route conditional on gateway type variable (igw, tgw, vgw, eni)
 
 resource "aws_route" "default_igw" {
-  count = "${var.default_igw != "" ? 1 : 0}"
+  count = "${var.create_route_to_igw != "" ? 1 : 0}"
   route_table_id         = "${aws_route_table.this.id}"
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = "${var.default_igw}"
+  destination_cidr_block = "${var.prefix}"
+  gateway_id             = "${var.igw_next_hop}"
   timeouts {
     create = "5m"
   }
 }
 
 resource "aws_route" "default_vgw" {
-  count = "${var.default_vgw != "" ? 1 : 0}"
+  count = "${var.create_route_to_vgw != "" ? 1 : 0}"
   route_table_id         = "${aws_route_table.this.id}"
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = "${var.default_vgw}"
+  destination_cidr_block = "${var.prefix}"
+  gateway_id             = "${var.vgw_next_hop}"
   timeouts {
     create = "5m"
   }
 }
 
 resource "aws_route" "default_eni" {
-  count = "${var.default_eni != "" ? 1 : 0}"
+  count = "${var.create_route_to_eni != "" ? 1 : 0}"
   route_table_id         = "${aws_route_table.this.id}"
-  destination_cidr_block = "0.0.0.0/0"
-  network_interface_id   = "${var.default_eni}"
+  destination_cidr_block = "${var.prefix}"
+  network_interface_id   = "${var.eni_next_hop}"
   timeouts {
     create = "5m"
   }
 }
 
 resource "aws_route" "default_tgw" {
-  count = "${var.default_tgw != "" ? 1 : 0}"
+  count = "${var.create_route_to_tgw != "" ? 1 : 0}"
   route_table_id         = "${aws_route_table.this.id}"
-  destination_cidr_block = "0.0.0.0/0"
-  transit_gateway_id     = "${default_tgw}"
+  destination_cidr_block = "${var.prefix}"
+  transit_gateway_id     = "${var.tgw_next_hop}"
   timeouts {
     create = "5m"
   }

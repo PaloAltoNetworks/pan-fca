@@ -14,8 +14,7 @@ provider "aws" {
 {% endif %}
 {% endfor %}
 
-
-{% include 'aws-spoke-vpc.tf.j2' %}
-{% include 'aws-spoke-subnet.tf.j2' %}
+{% include 'aws-vpc.tf.j2' %}
+{% include 'aws-subnet.tf.j2' %}
+{% include 'aws-routetable.tf.j2' %}
 {% include 'aws-transitvpc-spoke-vgw.tf.j2' %}
-{% include 'aws-transitvpc-spoke-routetable.tf.j2' %}

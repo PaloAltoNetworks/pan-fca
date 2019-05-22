@@ -19,8 +19,6 @@ before_install:
   - mv /tmp/terraform ~/tf
   - export PATH="~/tf:$PATH"
 
-script: terraform plan ./terraform
-
 # Test both Python 2.7 and 3.6 versions.
 language: "python"
 python:

@@ -1,6 +1,9 @@
-ansible
+ansible==2.6.2
 pandevice
 pan-python
 xmltodict
 awscli
 jsonschema
+pylint
+yamllint
+bandit

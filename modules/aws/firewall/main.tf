@@ -47,17 +47,16 @@ resource "aws_instance" "FWInstance" {
   key_name   = "${aws_key_pair.generated_key.key_name}"
   monitoring = false
 
-}
+  network_interface {
+    device_index         = "0"
+    network_interface_id = "${element(var.eni_attachment_ids, 0)}"
+  }
 
+  network_interface {
+    device_index         = "1"
+    network_interface_id = "${element(var.eni_attachment_ids, 1)}"
+  }
 
-#### Attache the ENIs ####
-
-
-resource "aws_network_interface_attachment" "this" {
-  count                = "${length(var.eni_attachment_ids) > 0 ? length(var.eni_attachment_ids) : 0}"   
-  instance_id          = "${element(aws_instance.FWInstance.*.id, count.index)}"
-  network_interface_id = "${element(var.eni_attachment_ids, count.index)}"
-  device_index         = "${length(var.eni_attachment_ids) > 0 ? length(var.eni_attachment_ids) : 0}"  
 }
 
 //resource "null_resource" "wait_for_https" {

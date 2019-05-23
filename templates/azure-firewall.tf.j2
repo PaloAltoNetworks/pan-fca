@@ -1,8 +1,6 @@
 {% for name, vnet in vnets.items() %}
 {% if vnet['firewalls'] is defined %}
 {% for fw in vnet['firewalls'] %}
-
-
 # Creating the Palo Alto Firewalls
 
 
@@ -40,9 +38,15 @@
     {% if fw['lbnamepooluntrust'] is defined %}
     lbnamepooluntrust                 = "{{ fw['lbnamepooluntrust'] }}"
     {% endif %}
+    {% if vnet['deployment'] is defined %}
+    vnet_subnet_id_trust        = "${data.azurerm_subnet.{{ vnet.deployment.vnet_subnet.subnet[1].name }}.id}"
+    vnet_subnet_id_untrust      = "${data.azurerm_subnet.{{ vnet.deployment.vnet_subnet.subnet[2].name }}.id}"
+    vnet_subnet_id_mgmt         = "${data.azurerm_subnet.{{ vnet.deployment.vnet_subnet.subnet[0].name }}.id}"
+    {% else %}
     vnet_subnet_id_trust        = "${module.{{ name }}.vnet_subnets[1]}"
     vnet_subnet_id_untrust      = "${module.{{ name }}.vnet_subnets[2]}"
     vnet_subnet_id_mgmt         = "${module.{{ name }}.vnet_subnets[0]}"
+    {% endif %}
     {% if vnet['load_balancers'] is defined %}
     {% for lb in vnet['load_balancers']%}
     {% if fw['attachtrustpool'] is defined %}

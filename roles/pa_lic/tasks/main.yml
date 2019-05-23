@@ -5,7 +5,7 @@
     version: "{{ cm_panos_lic | default([]) }}"
 
   - name: License the Firewall with Auth_Code
-    panos_software:
+    panos_lic:
       ip_address: '{{ ansible_host }}'
       username: '{{ username }}'
       password: '{{ password }}'

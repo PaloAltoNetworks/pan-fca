@@ -1,0 +1,25 @@
+{% for name, vnet in vnets.items() %}
+{% if vnet['deployment'] is defined %}
+
+
+{% if vnet['deployment']['vnet_networks'] is defined %}
+data "azurerm_virtual_network" "{{ vnet }}" {
+  name                = "{{ vnet }}"
+  resource_group_name = "{{ subnet.resource_group_name }}"
+}
+{% endif %}
+
+{% for subnet in vnet['deployment']['vnet_subnet']['subnet'] %}
+{% if vnet['deployment']['vnet_subnet'] is defined %}
+data "azurerm_subnet" "{{ subnet.name }}" {
+  name                  = "{{ subnet.name }}"
+  resource_group_name   = "{{ subnet.resource_group_name }}"
+  virtual_network_name  = "{{ subnet.virtual_network_name }}"
+
+}
+{% endif %}
+{% endfor %}
+
+{% endif %}
+{% endfor %}
+

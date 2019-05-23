@@ -1,0 +1,45 @@
+#This File is an example file to create the Network topology how is discribed here
+#https://github.com/PaloAltoNetworks/Azure-Transit-VNet/tree/master/Azure-Transit-VNET-1.0 
+# SPOKE 1 File
+
+#Create Resource Groups
+resource_group:
+  - resource_group_name: AzureSpoke
+
+testhost:
+- name: Testhost
+  hostname: Test-VM
+  username: creator
+  password: Paloalto123456789
+  dnsname: ubuntutestvm2
+
+vnet_network:
+  name: SpokeVNET
+  network: "192.168.0.0/21"
+  subnet:
+  - name: Web
+    network: "192.168.1.0/24"
+  - name: Host
+    network: "192.168.2.0/24"
+
+route_tables:
+  - name: web-test
+    routes:
+      - cidr: 0.0.0.0/0
+        name: VirtualAppliance
+        # gateway: 10.217.130.61
+        gateway: 1.1.1.1
+
+
+security_groups:
+  - name: allow any
+    priority: 100
+    direction: inbound
+    action: allow
+    src_ip: 0.0.0.0
+    src_port: any
+    dst_port: any
+    dst_network: 0.0.0.0
+    protocol: any
+
+

@@ -1,5 +1,6 @@
 {# peering for Azure #}
 {% for name, vnet in vnets.items() %}
+{% if vnet['vnet_network'] is defined %}
 {% if vnet['vnet_network']['peers'] is defined %}
 {% for peer in vnet['vnet_network']['peers'] %}
 #Creating VNet Peering
@@ -15,6 +16,7 @@ module "{{ name }}_peer_{{ loop.index }}" {
 
 }
 {% endfor %}
+{% endif %}
 {% endif %}
 {% endfor %}
 

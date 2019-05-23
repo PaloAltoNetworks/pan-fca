@@ -8,7 +8,11 @@
   module "{{ pan.panname }}" {
     source                      = "{{ module_dir }}/panorama"
     location                    = "{{ location }}"
+    {% if vnet['deployment'] is defined %}
+    vnet_subnet_id_mgmt         = "${data.azurerm_subnet.{{ vnet.deployment.vnet_subnet.subnet[0].name }}.id}"
+    {% else %}
     vnet_subnet_id_mgmt         = "${module.{{ name }}.vnet_subnets[0]}"
+    {% endif %}
     {% if pan['resource_group_name'] is defined %}
     resource_group_name     = "{{ pan['resource_group_name'] }}"
     {% else %}

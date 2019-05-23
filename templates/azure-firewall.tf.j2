@@ -32,11 +32,11 @@
     {% if fw['dnshostname'] is defined %}
     fw_dnshostname                 = "{{ fw['dnshostname'] }}"
     {% endif %}
-    {% if fw['lbnamepooltrust'] is defined %}
-    lbnamepooltrust                 = "{{ fw.lbnamepooltrust }}"
+    {% if fw['lbnametrust'] is defined %}
+    lbnamepooltrust                 = "{{ fw.lbnametrust }}"
     {% endif %}
-    {% if fw['lbnamepooluntrust'] is defined %}
-    lbnamepooluntrust                 = "{{ fw['lbnamepooluntrust'] }}"
+    {% if fw['lbnameuntrust'] is defined %}
+    lbnamepooluntrust                 = "{{ fw['lbnameuntrust'] }}"
     {% endif %}
     {% if vnet['deployment'] is defined %}
     vnet_subnet_id_trust        = "${data.azurerm_subnet.{{ vnet.deployment.vnet_subnet.subnet[1].name }}.id}"
@@ -52,14 +52,14 @@
     {% if fw['attachtrustpool'] is defined %}
     {% if fw.attachtrustpool == 'yes' %}
     {% if lb.type == 'private' %}
-    lb_backend_pool_trust       = ["${module.{{ fw['lbnamepooltrust'] }}.azurerm_lb_backend_address_pool_id}"]
+    lb_backend_pool_trust       = ["${module.{{ fw['lbnametrust'] }}.azurerm_lb_backend_address_pool_id}"]
     {% endif %}
     {% endif %}
     {% endif %}
     {% if fw['attachuntrustpool'] is defined %}
     {% if fw.attachuntrustpool == 'yes' %}
     {% if lb.type == 'public' %}
-    lb_backend_pool_untrust     = ["${module.{{ fw['lbnamepooluntrust'] }}.azurerm_lb_backend_address_pool_id}"]
+    lb_backend_pool_untrust     = ["${module.{{ fw['lbnameuntrust'] }}.azurerm_lb_backend_address_pool_id}"]
     {% endif %}
     {% endif %}
     {% endif %}

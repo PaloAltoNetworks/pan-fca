@@ -22,12 +22,16 @@ firewalls:
     fwvmsize: Standard_D3_v2
     # https://knowledgebase.paloaltonetworks.com/KCSArticleDetail?id=kA10g000000ClD7CAK
     avsetname: "AzureAV1"
-    fw_version: latest
+    fw_version: 8.1.0
     # 7.1.0 / 8.0.0 / 8.1.0 = latest
     fw_sku: byol
     # byol / bundl1 / bundle2 
     Username: tstern
     Password: PaloAlto1234!
+    attachtrustpool: "yes"
+    attachuntrustpool: "yes"
+    lbnameuntrust: External-LB
+    lbnametrust: Internal-LB
 
 #Define Load Balancers  
 load_balancers:

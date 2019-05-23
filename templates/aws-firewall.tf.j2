@@ -3,22 +3,22 @@
 {% for fw in vnet['firewalls']['fw_instances'] %}
 {% set outer_loop = loop %}
 
-module "{{ name }}-firewall" {
+module "{{ name }}-{{ fw.name }}-firewall" {
     source                  = "{{ module_dir }}/firewall"
     providers               = { aws = "aws.{{ vnet['vnet_network']['region'] }}"}     
     fw_version              = "{{ vnet['firewalls']['fw_version'] }}"
     fw_license_type         = "{{ vnet['firewalls']['fw_license_type'] }}"
-    untrust_subnets         = "${module.{{ name }}.untrust_subnets}"
-    trust_subnets           = "${module.{{ name }}.trust_subnets}"
     fw_key_name             = "${var.fw_key_name}"
-    fw_key                  = "${var.fw_key}"
-    eni_attachment_ids      = [{% for network in fw['networks'] %},"${module.{{ name }}.{{ fw.name }}.{{network.subnet}}.eni_id",{% endfor %}]
-
+    fw_key                  = "${var.fw_key}"    
+    name                    = "{{ name }}-{{ fw.name }}"
+    eni_attachment_ids      = [{% for network in fw['networks'] %},"${module.{{ name }}-{{ fw.name }}-{{network.subnet}}-eni.eni_id}",{% endfor %}]
 } 
 
+{#}
 output "firewalls_created" {
-  value = "${module.{{ name }}-firewall.firewalls_created}"
+  value = "${module.{{ name }}-{{ fw.name }}-firewall.firewalls_created}"
 }
+#}
 {% endfor %}
 {% endif %}
 {% endfor %}

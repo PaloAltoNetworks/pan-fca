@@ -38,15 +38,13 @@ firewalls:
           eip: yes
         - subnet: Untrust
           source_dest_check: false
-          eip: yes
-    - name: fca-fw02
-      networks:
-        - subnet: Management
-          source_dest_check: true
-          eip: yes
-        - subnet: Untrust
-          source_dest_check: false
-          eip: yes        
+          eip: yes    
+
+transit_gw:
+  route_tables:
+    - spoke_inbound
+    - fw_inbound
+  
 
 global_tags:
   - name: "environment"

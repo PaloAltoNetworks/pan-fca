@@ -1,61 +1,13 @@
 # Firewall Deployment Variables
-variable "region" {
-  default = "us-east-1"
-}
-variable "trust_subnets" {
-  description = "list of trusted subnet ids"
+variable "eni_attachment_ids" {
+  description = "list of enis to attach"
   type = "list"
   default = []
 }
 
-variable "untrust_subnets" {
-  description = "list of untrusted subnet ids"
-  type = "list"
-  default = []
-}
-
-variable "management_subnets" {
-  description = "list of management subnet ids"
-  type = "list"
-  default = []
-}
-
-variable "mgmt_security_group" {
-  description = "ID of security Group to use with mgmt interface"
-  default = ""
-}
-
-variable "untrust_security_group" {
-  description = "ID of SG to use with public interface"
-  default = ""
-}
-
-variable "trust_security_group" {
-  description = "ID of SG to use w/private interface"
-  default = ""
-}
-
-variable "untrust_elastic_ips" {
-  description = "List of untrusted elastic ip ids"
-  type = "list"
-  default = []
-}
-
-variable "management_elastic_ips" {
-  description = "list of mgmt elastic ip ids"
-  type = "list"
-  default = []
-}
-
-variable "management_elastic_ip_addresses" {
-  description = "list of mgmt elastic ip addresses"
-  type = "list"
-  default = []
-}
-
-variable "fw_instance_count" {
-  description = "number of instances to create"
-  default = 1
+variable "name" {
+  description = "Name to be used on all the resources as identifier"
+  default     = ""
 }
 
 variable "fw_key_name" {
@@ -67,35 +19,6 @@ variable "fw_key" {
   description = "SSH Public Key"
   default = ""
 }
-
-#AZ zones
-variable "availability_zones" {
-  type = "list"
-  default = []
-}
-#AZ zone1
-variable "az1" {
-  default = ""
-}
-
-#Application Stackname
-variable "stack_name" {
-  default = ""
-  description = "Generic name for application stack"
-}
-
-# select the key for auth
-variable "serverkey" {
-  default = ""
-}
-/*
-# s3 bucket for bootstrapping the firewall1
-variable "MasterS3Bucket" {}
-variable "bootstrap1" {}
-variable "bootstrap2" {}
-variable "bootstrap3" {}
-variable "bootstrap4" {}
-*/
 
 # Firewall version for AMI lookup
 
@@ -164,6 +87,18 @@ variable "go_path" {
   description = "Path to execute GO Initalization binary"
   default = ""
 }
+
+
+
+/*
+# s3 bucket for bootstrapping the firewall1
+variable "MasterS3Bucket" {}
+variable "bootstrap1" {}
+variable "bootstrap2" {}
+variable "bootstrap3" {}
+variable "bootstrap4" {}
+*/
+
 
 /*
 ##Variables for autoscaling##

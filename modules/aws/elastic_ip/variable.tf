@@ -3,7 +3,7 @@ variable "availability_zones" {
   default = [""]
 }
 
-variable "vpc_exist" {
+variable "vpc_id" {
   type    = "string"
   default = false
 }
@@ -14,5 +14,9 @@ variable "tags" {
 }
 
 variable "eip_type" {
+  default = ""
+}
+
+variable "eip_names" {
   default = ""
 }

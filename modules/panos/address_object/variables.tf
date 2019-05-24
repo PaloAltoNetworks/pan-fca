@@ -16,3 +16,8 @@ variable "tags" {
   type    = "list"
   default = ["terraform"]
 }
+
+variable "device_group" {
+  type    = "string"
+  default = "shared"
+}

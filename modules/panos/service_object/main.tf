@@ -11,7 +11,6 @@ resource "panos_panorama_service_object" "pano_service_object" {
 
 resource "panos_service_object" "fw_service_object" {
   count = "${var.device_group == "" ? 1 : 0}"
-  device_group     = "${var.device_group}"
   name             = "${var.name}"
   protocol         = "${var.protocol}"
   description      = "${var.description}"

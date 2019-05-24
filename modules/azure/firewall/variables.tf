@@ -1,10 +1,11 @@
 variable "resource_group_name" {
-  description = "The name of the resource group in which the resources will be created"
-  default     = "terraform_compute"
+  # description = "The name of the resource group in which the resources will be created"
+  # default     = "terraform_compute"
 }
 
 variable "location" {
   description = "The location/region where the virtual network is created. Changing this forces a new resource to be created."
+  default = "north europe"
 }
 
 variable "vnet_subnet_id_trust" {
@@ -58,10 +59,6 @@ variable "fw_hostname" {
   description = "local name of the VM"
   default     = "FW"
 }
-# variable "fw_dnshostname" {
-#   description = "local name of the VM"
-#   default = "panfw"
-# }
 
 variable "vm_os_simple" {
   description = "Specify UbuntuServer, WindowsServer, RHEL, openSUSE-Leap, CentOS, Debian, CoreOS and SLES to get the latest image version of the specified os.  Do not provide this value if a custom value is used for vm_os_publisher, vm_os_offer, and vm_os_sku."
@@ -193,10 +190,6 @@ variable "lbtype" {
   default = "public"
 }
 
-variable "avsetname" {
-  default = "av-set"
-}
-
 variable "lbnamepooluntrust" {
   default = ""
 }
@@ -204,3 +197,16 @@ variable "lbnamepooluntrust" {
 variable "lbnamepooltrust" {
   default = ""
 }
+
+variable "av_set_id" {
+  default = ""
+}
+
+# variable "av_type" {
+#   default = "zones"
+# }
+
+# variable "az_list" {
+#   type = "list"
+#   default = ["1","2"]
+# }

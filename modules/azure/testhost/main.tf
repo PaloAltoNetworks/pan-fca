@@ -1,8 +1,8 @@
-resource "azurerm_resource_group" "vm" {
-  name     = "${var.resource_group_name}"
-  location = "${var.location}"
-  tags     = "${var.tags}"
-}
+# resource "azurerm_resource_group" "vm" {
+#   name     = "${var.resource_group_name}"
+#   location = "${var.location}"
+#   tags     = "${var.tags}"
+# }
 
 # ********** VM PUBLIC IP ADDRESSES FOR MANAGEMENT **********
 
@@ -10,7 +10,8 @@ resource "azurerm_resource_group" "vm" {
 resource "azurerm_public_ip" "pip" {
   name                         = "${var.hostname}-PIP"
   location                     = "${var.location}"
-  resource_group_name          = "${azurerm_resource_group.vm.name}"
+  # resource_group_name          = "${azurerm_resource_group.vm.name}"
+  resource_group_name          = "${var.resource_group_name}"
   public_ip_address_allocation = "Dynamic"
   #domain_name_label            = "${var.dns_name}"
 }
@@ -22,7 +23,8 @@ resource "azurerm_public_ip" "pip" {
 resource "azurerm_network_interface" "nic" {
   name                = "${var.hostname}-NIC"
   location            = "${var.location}"
-  resource_group_name = "${azurerm_resource_group.vm.name}"
+  # resource_group_name = "${azurerm_resource_group.vm.name}"
+  resource_group_name = "${var.resource_group_name}"
 
   ip_configuration {
     name                          = "${var.hostname}-NIC-IP"
@@ -45,7 +47,8 @@ resource "random_id" "storage_account" {
 resource "azurerm_storage_account" "stor" {
   name                     = "${lower(random_id.storage_account.hex)}"
   location                 = "${var.location}"
-  resource_group_name      = "${azurerm_resource_group.vm.name}"
+  # resource_group_name      = "${azurerm_resource_group.vm.name}"
+  resource_group_name      = "${var.resource_group_name}"
   account_tier             = "${var.storage_account_tier}"
   account_replication_type = "${var.storage_replication_type}"
 }
@@ -53,7 +56,8 @@ resource "azurerm_storage_account" "stor" {
 # Create the storage account container
 resource "azurerm_storage_container" "storagecon" {
     name                            = "vhds"
-    resource_group_name             = "${azurerm_resource_group.vm.name}"
+    # resource_group_name             = "${azurerm_resource_group.vm.name}"
+    resource_group_name             = "${var.resource_group_name}"
     storage_account_name            = "${azurerm_storage_account.stor.name}"
     container_access_type           = "private"
 }
@@ -64,7 +68,8 @@ resource "azurerm_storage_container" "storagecon" {
 resource "azurerm_managed_disk" "datadisk" {
   name                 = "${var.hostname}-datadisk"
   location             = "${var.location}"
-  resource_group_name  = "${azurerm_resource_group.vm.name}"
+  # resource_group_name  = "${azurerm_resource_group.vm.name}"
+  resource_group_name = "${var.resource_group_name}"
   storage_account_type = "Standard_LRS"
   create_option        = "Empty"
   disk_size_gb         = "1023"
@@ -77,7 +82,8 @@ resource "azurerm_managed_disk" "datadisk" {
 resource "azurerm_virtual_machine" "vm" {
   name                  = "${var.hostname}"
   location              = "${var.location}"
-  resource_group_name   = "${azurerm_resource_group.vm.name}"
+  # resource_group_name   = "${azurerm_resource_group.vm.name}"
+  resource_group_name   = "${var.resource_group_name}"
   vm_size               = "${var.vm_size}"
   network_interface_ids = ["${azurerm_network_interface.nic.id}"]
 

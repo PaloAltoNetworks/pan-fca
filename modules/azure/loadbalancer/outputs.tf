@@ -1,12 +1,12 @@
-output "azurerm_resource_group_tags" {
-  description = "the tags provided for the resource group"
-  value       = "${azurerm_resource_group.azlb.tags}"
-}
+# output "azurerm_resource_group_tags" {
+#   description = "the tags provided for the resource group"
+#   value       = "${azurerm_resource_group.azlb.tags}"
+# }
 
-output "azurerm_resource_group_name" {
-  description = "name of the resource group provisioned"
-  value       = "${azurerm_resource_group.azlb.name}"
-}
+# output "azurerm_resource_group_name" {
+#   description = "name of the resource group provisioned"
+#   value       = "${azurerm_resource_group.azlb.name}"
+# }
 
 output "azurerm_lb_id" {
   description = "the id for the azurerm_lb resource"

@@ -262,9 +262,15 @@
     #   panos_commit:
     #     ip_address: '{{ ansible_host }}'
     #     username: '{{ username }}'
-    #     password: '{{ password }}'
+        # password: '{{ password }}'
     #   tags:
     #     - 'ansible'
+
+    - name: "License the Firewall with Auth_Code"
+      include_role:
+        name: "pa_lic"
+      # tags:
+      #   - 'ansible'
 
     - name: "Update PANOS Software"
       panos_software:
@@ -277,15 +283,3 @@
       when: "cm_panos_software is defined"
       tags:
         - 'ansible'
-
-    - name: "License the Firewall with Auth_Code"
-      panos_lic:
-        ip_address: '{{ ansible_host }}'
-        username: '{{ username }}'
-        password: '{{ password }}'
-        auth_code: "{{ item.value.auth_code}}"
-      with_dict: "{{ cm_panos_lic }}"
-      when: "cm_panos_lic is defined"
-      tags:
-        - 'ansible'
-

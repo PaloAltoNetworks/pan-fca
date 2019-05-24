@@ -4,13 +4,17 @@
 # Creating the Palo Alto Firewalls
 
 
-  module "{{ fw.avsetname }}" {
+  module "{{ fw.fwname }}" {
     source                      = "{{ module_dir }}/firewall"
     location                    = "{{ location }}"
+    fw_hostname                 = "{{ fw.fwname }}"
+    fw_size                     = "{{ fw.fwvmsize }}"
     {% if fw['resource_group_name'] is defined %}
     resource_group_name     = "{{ fw['resource_group_name'] }}"
     {% else %}
-    resource_group_name     = "{{ name }}"
+    {% for rg in vnet['resource_group'] %}
+    resource_group_name     = "${module.{{ rg.resource_group_name }}.name}"
+    {% endfor %}
     {% endif %}
     nb_instances                = "{{ fw.vmcount }}"
     {% if fw['fw_version'] is defined %}
@@ -28,48 +32,49 @@
     {% if fw['dnshostname'] is defined %}
     fw_dnshostname                 = "{{ fw['dnshostname'] }}"
     {% endif %}
-    {% if fw['lbnamepooltrust'] is defined %}
-    lbnamepooltrust                 = "{{ fw.lbnamepooltrust }}"
+    {% if fw['lbnametrust'] is defined %}
+    lbnamepooltrust                 = "{{ fw.lbnametrust }}"
     {% endif %}
-    {% if fw['lbnamepooluntrust'] is defined %}
-    lbnamepooluntrust                 = "{{ fw['lbnamepooluntrust'] }}"
+    {% if fw['lbnameuntrust'] is defined %}
+    lbnamepooluntrust                 = "{{ fw['lbnameuntrust'] }}"
     {% endif %}
+    {% if vnet['deployment'] is defined %}
+    vnet_subnet_id_trust        = "${data.azurerm_subnet.{{ vnet.deployment.vnet_subnet.subnet[1].name }}.id}"
+    vnet_subnet_id_untrust      = "${data.azurerm_subnet.{{ vnet.deployment.vnet_subnet.subnet[2].name }}.id}"
+    vnet_subnet_id_mgmt         = "${data.azurerm_subnet.{{ vnet.deployment.vnet_subnet.subnet[0].name }}.id}"
+    {% else %}
     vnet_subnet_id_trust        = "${module.{{ name }}.vnet_subnets[1]}"
     vnet_subnet_id_untrust      = "${module.{{ name }}.vnet_subnets[2]}"
     vnet_subnet_id_mgmt         = "${module.{{ name }}.vnet_subnets[0]}"
+    {% endif %}
     {% if vnet['load_balancers'] is defined %}
     {% for lb in vnet['load_balancers']%}
     {% if fw['attachtrustpool'] is defined %}
     {% if fw.attachtrustpool == 'yes' %}
     {% if lb.type == 'private' %}
-    lb_backend_pool_trust       = ["${module.{{ fw.lbnamepooltrust }}.azurerm_lb_backend_address_pool_id}"]
+    lb_backend_pool_trust       = ["${module.{{ fw['lbnametrust'] }}.azurerm_lb_backend_address_pool_id}"]
     {% endif %}
     {% endif %}
     {% endif %}
     {% if fw['attachuntrustpool'] is defined %}
     {% if fw.attachuntrustpool == 'yes' %}
     {% if lb.type == 'public' %}
-    lb_backend_pool_untrust     = ["${module.{{ fw['lbnamepooluntrust'] }}.azurerm_lb_backend_address_pool_id}"]
+    lb_backend_pool_untrust     = ["${module.{{ fw['lbnameuntrust'] }}.azurerm_lb_backend_address_pool_id}"]
     {% endif %}
     {% endif %}
     {% endif %}
     {% endfor %}
     {% endif %}
-
-    
-
-    fw_hostname                 = "{{ fw.fwname }}"
-    fw_size                     = "{{ fw.fwvmsize }}"
-    avsetname                   = "{{ fw.avsetname }}"
+   
+    av_set_id                   = "${module.{{ fw['avsetname'] }}.availability_set_id}"
   }
 
 
 {% endfor %}
 
-
 output "firewalls_created" {
   
-  value = [{% for fw in vnet['firewalls'] %}"${module.{{ fw.avsetname }}.firewalls_created}",{% endfor %}]
+  value = [{% for fw in vnet['firewalls'] %}"${module.{{ fw.fwname }}.firewalls_created}",{% endfor %}]
 }
 {% endif %}
 {% endfor %}

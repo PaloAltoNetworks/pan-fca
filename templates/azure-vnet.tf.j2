@@ -1,11 +1,15 @@
 {% for name, vnet in vnets.items() %}
-module "{{ name }}" {
+{% if vnet['vnet_network'] is defined %}
+# Creating VNets
 
+module "{{ name }}" {
 source                  = "{{ module_dir }}/vnet"
 {% if vnet['vnet_network']['resource_group_name'] is defined %}
 resource_group_name     = "{{ vnet['vnet_network']['resource_group_name'] }}"
 {% else %}
-resource_group_name     = "{{ name }}"
+{% for rg in vnet['resource_group'] %}
+resource_group_name     = "${module.{{ rg.resource_group_name }}.name}"
+{% endfor %}
 {% endif %}
 location                = "{{ location }}"
 vnet_name               = "{{ vnet['vnet_network']['name'] }}"
@@ -21,4 +25,5 @@ tags = {
 }
 {% endif %}
 }
+{% endif %}
 {% endfor %}

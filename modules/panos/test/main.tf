@@ -1,6 +1,6 @@
 provider "panos" {
-  hostname = "18.213.57.94"
-  api_key  = "LUFRPT1nSDVuT0ppdURrMmcreGlpdmV2YzkvSzBGWmM9cTZMTGFKbU5wSGFJMjJ5T3ArT1JmMWFzeHRjNVdaL2tySndYcFM0VVl4bz0="
+  hostname = "IP ADDRESS"
+  api_key  = "APIKEY"
 }
 
 module "sec_rule1" {

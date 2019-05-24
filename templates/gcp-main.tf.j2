@@ -1,0 +1,15 @@
+provider "google" {
+  region      = "${{ location }}"
+  project     = "${{ project }}"
+  credentials = "${{ gcp_account_file }}"
+  zone        = "{{ location }}"
+  version     = "{{ cloud_provider_tf_version }}"
+}
+
+
+{% include "gpc-vpc.tf.j2" %}
+{% include "gcp-loadbalancer.tf.j2" %}
+{% include "gcp-firewall.tf.j2" %}
+{% include "gcp-router.tf.j2" %}
+{% include "gcp-testhost.tf.j2" %}
+

@@ -1,6 +1,6 @@
 variable "resource_group_name" {
   description = "The name of the resource group in which the resources will be created"
-  default     = "terraform_compute"
+  default     = "mainrg"
 }
 
 variable "location" {
@@ -12,7 +12,7 @@ variable "vnet_subnet_id_mgmt" {
 }
 
 
-variable "vm_hostname" {
+variable "pan_hostname" {
   description = "local name of the VM"
   default     = "Panorama"
 }
@@ -25,27 +25,27 @@ variable "adminPassword" {
   default = "Paloalto123"
 }
 
-variable "vm_publisher" {
+variable "pan_publisher" {
   default = "paloaltonetworks"
 }
 
-variable "fw_sku"{
+variable "pan_sku"{
   default = "byol"
 }
 
-variable "vm_series" {
+variable "pan_series" {
   default = "panorama"
 }
 
-variable "fw_version" {
+variable "pan_version" {
   default = "latest"
 }
 
-variable "fw_size" {
+variable "pan_size" {
   default = "Standard_DS3_v2"
 }
 
 variable "generel_int_name" {
   description = "Generell name for your interfaces"
-  default = "PANORAMA-VM-"
+  default = "panorama"
 }

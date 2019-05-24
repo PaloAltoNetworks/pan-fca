@@ -3,7 +3,7 @@
 
 resource "azurerm_virtual_network_peering" "peer" {
   name                         = "${var.peer_name}"
-  resource_group_name          = "${var.peer_resource_group_name}"
+  resource_group_name          = "${var.resource_group_name}"
   virtual_network_name         = "${var.peer_virtual_network_name}"
   remote_virtual_network_id    = "${var.peer_remote_virtual_network_id}"
   allow_virtual_network_access = "${var.allow_virtual_network_access}"

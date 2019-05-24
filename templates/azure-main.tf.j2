@@ -1,13 +1,12 @@
-// Locking down version to get around lb_port issue
-//provider "azurerm" {
-//  version = "1.12"
-//}
 
+{% include "azure-resource-group.tf.j2" %}
 {% include "azure-vnet.tf.j2" %}
 {% include "azure-loadbalancer.tf.j2" %}
-{% include "azure-appgateway.tf.j2" %}
+{% include "azure-av_set.tf.j2" %}
 {% include "azure-firewall.tf.j2" %}
-{% include "azure-peering.tf.j2" %}
 {% include "azure-router.tf.j2" %}
+{% include "azure-appgateway.tf.j2" %}
 {% include "azure-testhost.tf.j2" %}
-
+{% include "azure-panorama.tf.j2" %}
+{% include "azure-brownfield.tf.j2" %}
+{% include "azure-peering.tf.j2" %}

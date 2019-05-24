@@ -2,6 +2,9 @@
 #https://github.com/PaloAltoNetworks/Azure-Transit-VNet/tree/master/Azure-Transit-VNET-1.0 
 # SPOKE 1 File
 
+#Create Resource Groups
+resource_group:
+  - resource_group_name: AzureSpoke
 
 testhost:
 - name: Testhost
@@ -11,7 +14,7 @@ testhost:
   dnsname: ubuntutestvm2
 
 vnet_network:
-  name: Spoke1VNET
+  name: SpokeVNET
   network: "192.168.0.0/21"
   subnet:
   - name: Web

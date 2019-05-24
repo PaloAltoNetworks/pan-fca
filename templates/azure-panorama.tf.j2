@@ -1,0 +1,48 @@
+{% for name, vnet in vnets.items() %}
+{% if vnet['panorama'] is defined %}
+{% for pan in vnet['panorama'] %}
+
+# Creating the Palo Alto Panorama
+
+
+  module "{{ pan.panname }}" {
+    source                      = "{{ module_dir }}/panorama"
+    location                    = "{{ location }}"
+    {% if vnet['deployment'] is defined %}
+    vnet_subnet_id_mgmt         = "${data.azurerm_subnet.{{ vnet.deployment.vnet_subnet.subnet[0].name }}.id}"
+    {% else %}
+    vnet_subnet_id_mgmt         = "${module.{{ name }}.vnet_subnets[0]}"
+    {% endif %}
+    {% if pan['resource_group_name'] is defined %}
+    resource_group_name     = "{{ pan['resource_group_name'] }}"
+    {% else %}
+    {% for rg in vnet['resource_group'] %}
+    resource_group_name     = "${module.{{ rg.resource_group_name }}.name}"
+    {% endfor %}
+    {% endif %}
+    {% if pan['pan_version'] is defined %}
+    pan_version                  = "{{ fw['pan_version'] }}"
+    {% endif %}
+    {% if pan['pan_sku'] is defined %}
+    pan_sku                  = "{{ fw['pan_sku'] }}"
+    {% endif %}
+    {% if pan['Username'] is defined %}
+    adminUsername                 = "{{ pan['Username'] }}"
+    {% endif %}
+    {% if pan['Password'] is defined %}
+    adminPassword                 = "{{ pan['Password'] }}"
+    {% endif %}
+    pan_hostname                 = "{{ pan.panname }}"
+    pan_size                     = "{{ pan.panvmsize }}"
+  }
+
+
+{% endfor %}
+
+
+output "panorama_created" {
+  
+  value = [{% for pan in vnet['panorama'] %}"${module.{{ pan.name}}.panorama_created}",{% endfor %}]
+}
+{% endif %}
+{% endfor %}

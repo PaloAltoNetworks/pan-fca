@@ -1,0 +1,130 @@
+#This File is an example file to create the Network topology how is discribed here
+#https://github.com/PaloAltoNetworks/Azure-Transit-VNet/tree/master/Azure-Transit-VNET-1.0 
+#HUB File
+
+#Create Resource Groups
+resource_group:
+  - resource_group_name: AzureHub
+
+#Create Panorama
+panorama:
+  - name: Test-Panorama
+    panname: Test-Panorama
+    panvmsize: Standard_DS3_v2
+    Username: Panorama
+    Password: PaloAlto1234! 
+
+# Create Availibity Sets
+availabilty_set:
+  - avsetname: AzureAV1
+  - avsetname: AzureAV2
+    resource_group_name: AzureSpoke
+
+#Define Firewalls
+firewalls:
+  - name: Hub-Firewalls
+    vmcount: 1
+    fwname: HubFW
+    fwvmsize: Standard_D3_v2
+    # https://knowledgebase.paloaltonetworks.com/KCSArticleDetail?id=kA10g000000ClD7CAK
+    avsetname: "AzureAV1"
+    fw_version: 8.1.0
+    # 7.1.0 / 8.0.0 / 8.1.0 = latest
+    fw_sku: byol
+    # byol / bundl1 / bundle2
+    attachtrustpool: "yes"
+    lbnamepooltrust: Hub-Internal-LB
+    Username: tstern
+    Password: PaloAlto12345!
+
+  - name: Spoke1-Firewalls
+    vmcount: 1
+    resource_group_name: AzureSpoke
+    lbnamepooluntrust: Spoke1-External-LB
+    lbnamepooltrust: Spoke1-Internal-LB
+    fwname: Spoke1FW
+    fwvmsize: Standard_D3_v2
+    # https://knowledgebase.paloaltonetworks.com/KCSArticleDetail?id=kA10g000000ClD7CAK
+    avsetname: "AzureAV2"
+    fw_version: 8.1.0
+    # 7.1.0 / 8.0.0 / 8.1.0 = latest
+    fw_sku: byol
+    # byol / bundl1 / bundle2
+    attachtrustpool: "yes"
+    attachuntrustpool: "yes"
+    Username: tstern
+    Password: PaloAlto12345!
+
+#Define Load Balancers  
+load_balancers:
+
+  - name: Hub-Internal-LB
+    fename: Trust
+    bename: Trust
+    floating_ip: true
+    type: private
+    lbrulename: HA
+    lbrulefrontport: 0
+    lbruleprotocol: All
+    lbrulebackport: 0
+    lbprobename: ssh
+    lbruleprobeport: 22
+
+  - name: Spoke1-External-LB
+    resource_group_name: AzureSpoke
+    fename: Spoke1-Untrust
+    bename: Spoke1-Untrust
+    floating_ip: false
+    type: public
+    lbrulename: HTTP-80
+    lbrulefrontport: 80
+    lbruleprotocol: tcp
+    lbrulebackport: 80
+    lbprobename: TCP-22
+    lbruleprobeport: 22
+
+  - name: Spoke1-Internal-LB
+    resource_group_name: AzureSpoke
+    fename: Spoke1-Trust
+    bename: Spoke1-Trust
+    floating_ip: true
+    type: private
+    frontend_private_ip_address_allocation: "Static"
+    lbrulename: HA
+    lbrulefrontport: 0
+    lbruleprotocol: All
+    lbrulebackport: 0
+    lbprobename: ssh
+    lbruleprobeport: 22
+
+# Define Virtual Networks
+# IMPORTANT the first Network has to be the Firewall Network
+# 1 Subnet = Management; 2 Subnet = Trust; 3 Subnet = Untrust; 4 Subnet = Application Gateway 
+vnet_network:
+  name: HubVnet
+  # resource_group_name: TransitAzureFCA
+  network: "10.0.0.0/16"
+  subnet:
+  - name: Management
+    network: "10.0.0.0/24"
+  - name: Trust
+    network: "10.0.2.0/24"
+  - name: Untrust
+    network: "10.0.1.0/24"
+
+#Define Security Groups
+security_groups:
+  - name: allow any
+    priority: 100
+    direction: inbound
+    action: allow
+    src_ip: 0.0.0.0
+    src_port: any
+    dst_port: any
+    dst_network: 0.0.0.0
+    protocol: any
+
+# app_gateway:
+#   - name: Application_Gateway
+#     Backend_Name: Backendpool12
+

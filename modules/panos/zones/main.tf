@@ -1,5 +1,5 @@
 resource "panos_panorama_zone" "new_zone_nouserid" {
-  count      = "${var.enable_user_id == 0 ? 1 : 0}"
+  count      = "${var.template != "" && var.enable_user_id == 0 ? 1 : 0}"
   name       = "${var.name}"
   template   = "${var.template}"
   mode       = "${var.mode}"
@@ -7,7 +7,7 @@ resource "panos_panorama_zone" "new_zone_nouserid" {
 }
 
 resource "panos_panorama_zone" "new_zone_userid" {
-  count    = "${var.enable_user_id == 1 ? 1 : 0}"
+  count      = "${var.template != "" && var.enable_user_id == 1 ? 1 : 0}"
   name     = "${var.name}"
   template = "${var.template}"
   mode     = "${var.mode}"
@@ -19,14 +19,14 @@ resource "panos_panorama_zone" "new_zone_userid" {
 }
 
 resource "panos_zone" "fw_new_zone_nouserid" {
-  count      = "${var.enable_user_id == 0 ? 1 : 0}"
+  count      = "${var.template == "" && var.enable_user_id == 0 ? 1 : 0}"
   name       = "${var.name}"
   mode       = "${var.mode}"
   interfaces = ["${var.interfaces}"]
 }
 
 resource "panos_zone" "fw_new_zone_userid" {
-  count = "${var.enable_user_id == 1 ? 1 : 0}"
+  count = "${var.template == "" && var.enable_user_id == 1 ? 1 : 0}"
   name  = "${var.name}"
   mode  = "${var.mode}"
 

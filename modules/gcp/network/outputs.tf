@@ -13,3 +13,7 @@ output "gcp_net_project" {
 output "gcp_gateway_ipv4" {
   value = "${google_compute_network.network.gateway_ipv4}"
 }
+
+output "gcp_net_selflink" {
+  value = "${google_compute_network.network.self_link}"
+}

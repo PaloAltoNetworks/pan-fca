@@ -1,0 +1,9 @@
+---
+- name: "SET GCP ENVIRONMENT"
+  set_fact:
+    cloud_env:
+      gcp_account_file: "{{ gcp_account_file }}"
+
+- name: "SETUP GCP SSH CONFIGURATION"
+  include_role:
+    name: "ssh_setup"

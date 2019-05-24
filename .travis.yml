@@ -1,0 +1,46 @@
+#dist: bionic
+#sudo: false
+
+branches:
+  only:
+    - master
+
+#env:
+  # This environment variable tells Terraform not to prompt for input. This is
+  # not required, but if we make a mistake, the Travis builder will hang waiting
+  # for user input, tieing up unnecessary resources.
+#  - TF_INPUT=false
+
+# Install terraform
+before_install:
+  - curl -sLo /tmp/terraform.zip https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip
+  - unzip /tmp/terraform.zip -d /tmp
+  - mkdir ~/tf
+  - mv /tmp/terraform ~/tf
+  - export PATH="~/tf:$PATH"
+
+# Test both Python 2.7 and 3.6 versions.
+language: "python"
+python:
+  - "2.7"
+
+# Install python packages for ansible and linters.
+install:
+  - "make setup"
+
+# Execute linting and unit tests before running the main playbook.
+# If any of these tasks fail, the entire build fails immediately.
+#before_script:
+#  - "make lint"
+#  - "make unit"
+  
+script: 
+  - terraform init
+  - terraform plan
+
+deploy:
+- provider: script
+  skip_cleanup: true
+  script: terraform apply ./terraform
+  on:
+    branch: master

@@ -7,7 +7,7 @@ panorama:
   - name: Test-Panorama
     panname: Test-Panorama
     panvmsize: Standard_DS3_v2
-    Username: Bastard
+    Username: Panorama
     Password: PaloAlto1234! 
 
 # Create Availibity Sets

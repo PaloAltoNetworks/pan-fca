@@ -20,8 +20,6 @@ resource "panos_panorama_security_policy_group" "policy_pano_no_target" {
 
 resource "panos_security_policy_group" "policy_no_target" {
   count        = "${var.device_group == "" ? 1 : 0}"
-  device_group = "${var.device_group}"
-  rulebase     = "${var.rulebase_type}"
 
   rule {
     name                  = "${var.rule_name}"

@@ -3,8 +3,9 @@ vnet_network:
   name: spoke1
   network: 10.122.0.0/16  
   spoke_attachment: vgw
+  hub_virtual_network: AwsTransitVpcHub
   region: us-west-1
-  asn: 65222
+  asn: 65122
   route_tables:
     - name: Private-To-VGW
       routes: 
@@ -19,12 +20,12 @@ vnet_network:
     route_table: Private-To-VGW 
 
   fw_tunnels:
-    - name: fw1
+    - name: fca-fw01
       tunnel_1_cidr: 169.254.122.12/30
       tunnel_1_psk: blahblah
       tunnel_2_cidr: 169.254.122.16/30
       tunnel_2_psk: blahblah
-    - name: fw2
+    - name: fca-fw02
       tunnel_1_cidr: 169.254.122.20/30
       tunnel_1_psk: blahblah
       tunnel_2_cidr: 169.254.122.24/30

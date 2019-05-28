@@ -32,13 +32,61 @@ firewalls:
   #Options: byol | payg1 | payg2
   fw_instances:
     - name: fca-fw01
+      fw_bgp_asn: 65001
       networks:
         - subnet: Management
           source_dest_check: true
           eip: yes
+          security_group: 
+            - fw_management
         - subnet: Untrust
           source_dest_check: false
-          eip: yes    
+          security_group: 
+            - fw_untrust
+          eip: yes   
+    - name: fca-fw02
+      fw_bgp_asn: 65001
+      networks:
+        - subnet: Management
+          source_dest_check: true
+          security_group: 
+            - fw_management
+          eip: yes
+        - subnet: Untrust
+          source_dest_check: false
+          security_group: 
+            - fw_untrust
+          eip: yes              
+
+#Define Security Groups
+security_groups:
+  - name: fw_management 
+    rules:
+      - name: management rule1
+        direction: ingress
+        src_ip: 108.221.182.192/32
+        src_port: 443
+        dst_port: 443
+        dst_network: 0.0.0.0/0
+        protocol: tcp        
+      - name: management rule2
+        direction: ingress     
+        src_ip: 108.221.182.192/32 
+        src_port: 22
+        dst_port: 22
+        dst_network: 0.0.0.0/0
+        protocol: tcp     
+  - name: fw_untrust
+    rules:
+      - name: untrust rule1
+        direction: ingress      
+        src_ip: 108.221.182.192/32
+        src_port: 443
+        dst_port: 443
+        dst_network: 0.0.0.0
+        protocol: tcp           
+
+
 
 transit_gw:
   route_tables:
@@ -47,7 +95,7 @@ transit_gw:
   
 
 global_tags:
-  - name: "environment"
-    value: "dev"
-  - name: "costcenter"
-    value: "it"
+  - name: environment
+    value: dev
+  - name: costcenter
+    value: it

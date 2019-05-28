@@ -4,7 +4,6 @@ variable "vnet_name" {
 }
 
 variable "resource_group_name" {
-  description = "Default resource group name that the network will be created in."
   default     = "mainrg"
 }
 
@@ -21,17 +20,6 @@ variable "address_space" {
 variable "subnet_prefixes" {
   description = "The address prefix to use for the subnet."
   default     = ["10.217.127.64/27", "10.217.127.32/27", "10.217.127.0/27", "10.217.127.96/27"]
-  /*
-  type  = "map"
-
-    default = {
-      Management = "10.217.127.64/27"
-      Trust = "10.217.127.32/27"
-      Untrust = "10.217.127.0/27"
-      EgressLB = "10.217.127.96/27"
-    
-    }
-    */
 }
 
 variable "subnet_names" {

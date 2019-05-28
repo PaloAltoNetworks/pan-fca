@@ -1,0 +1,17 @@
+{% for name, vnet in vnets.items() %}
+{% if vnet['firewalls'] is defined %}
+{% for d in vnet['deployment'] %}
+
+module "{{ d.name }}" {
+  source                     = "../../modules/vsphere/data"
+  vsphere_datacenter         = "{{ }}"
+  vsphere_datastore          = "{{ }}"
+  vsphere_cluster            = "{{ }}"
+  vsphere_network_management = "{{ }}"
+  vsphere_network_trust      = "{{ }}"
+  vsphere_network_untrust    = "{{ }}"
+}
+
+{% endfor %}
+{% endif %}
+{% endfor %}

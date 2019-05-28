@@ -13,3 +13,16 @@
 
 #Operating System used to select go binary type
 go_os: "ubuntu"
+
+
+## GCP EXAMPLE
+#cloud_provider: gcp
+#cloud_provider_location: "eastus"
+#gcp_account_file: account.json
+
+
+## vSPHERE EXAMPLE
+#cloud_provider: vsphere
+#vsphere_username: administrator@vsphere.local
+#vsphere_password: VMware01!
+#vsphere_server: vsca.domain.com

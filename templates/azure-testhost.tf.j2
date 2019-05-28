@@ -7,8 +7,14 @@
   module "{{ name }}-{{ vm.hostname }}" {
     source                      = "{{ module_dir }}/testhost"
     location                    = "{{ location }}"
-    resource_group_name         = "{{ name }}"
+    {% for rg in vnet['resource_group'] %}
+    resource_group_name     = "${module.{{ rg.resource_group_name }}.name}"
+    {% endfor %}
+    {% if vnet['deployment'] is defined %}
+    vnet_subnet_id_mgmt         = "${data.azurerm_subnet.{{ vnet.deployment.vnet_subnet.subnet[0].name }}.id}"
+    {% else %}
     vnet_subnet_id_vm           = "${module.{{ name }}.vnet_subnets[0]}"
+    {% endif %}
     hostname                    = "{{ vm.hostname }}"
     admin_password              = "{{ vm.password }}"
     admin_username              = "{{ vm.username }}"

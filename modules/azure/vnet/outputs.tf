@@ -28,7 +28,7 @@ output "vnet_subnet_prefixes" {
   value      = "${azurerm_subnet.subnet.*.address_prefix}"
 }
 
-output "resource_group_name" {
-  description = "Resource Group for created VNET"
-  value = "${azurerm_resource_group.vnet.name}"
-}
+# output "resource_group_name" {
+#   description = "Resource Group for created VNET"
+#   value = "${azurerm_resource_group.vnet.name}"
+# }

@@ -1,6 +1,6 @@
-variable "peer_resource_group_name" {
+variable "resource_group_name" {
   description = "Resource name for peer"
-  default     = ""
+  default     = "my-rg"
 }
 
 variable "peer_virtual_network_name" {

@@ -23,3 +23,8 @@ output "public_ip_address" {
   description = "The actual ip address allocated for the resource."
   value       = "${azurerm_public_ip.pip.*.ip_address}"
 }
+
+output "panorama_created" {
+  value = "${zipmap(
+    azurerm_virtual_machine.panorama.*.name, azurerm_public_ip.pip.*.ip_address)}"
+}

@@ -1,8 +1,0 @@
-module "hub_peer" {
-  source = "./modules/peering"
-spoke_peer_name = "VNetB"
-peer_resource_group_name = "Security"
-peer_virtual_network_name = "VNetB"
-peer_remote_virtual_network_id = "VNetB"
-}
-

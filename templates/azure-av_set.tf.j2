@@ -1,0 +1,23 @@
+{% for name, vnet in vnets.items() %}
+{% if vnet['availabilty_set'] is defined %}
+{% for av in vnet['availabilty_set'] %}
+# Creating the Availability Set
+
+  module "{{ av.avsetname }}" {
+    source                      = "{{ module_dir }}/av_set"
+    location                    = "{{ location }}"
+    {% if av['resource_group_name'] is defined %}
+    resource_group_name     = "{{ av['resource_group_name'] }}"
+    {% else %}
+    {% for rg in vnet['resource_group'] %}
+    resource_group_name     = "${module.{{ rg.resource_group_name }}.name}"
+    {% endfor %}
+    {% endif %}
+    avsetname                   = "{{ av.avsetname }}"
+  }
+
+
+{% endfor %}
+{% endif %}
+{% endfor %}
+

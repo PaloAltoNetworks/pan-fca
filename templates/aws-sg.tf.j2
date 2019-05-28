@@ -4,14 +4,22 @@
 
 {% for sg in vnet['security_groups'] %}
 
-module "{{ name }}-sg-{{ sg.type }}" {
-    source                  = "terraform-aws-modules/security-group/aws"
-    name                    = "{{ name }}_sg_{{ sg.type}}"
-    vpc_id                  = "${module.{{ name }}.vpc_id}"
-    ingress_cidr_blocks     = [{% for rule in sg['rules'] %},"{{ rule['source_cidr'] }}",{% endfor %}] 
-    ingress_rules           = ["https-443-tcp", "ssh-tcp"]
-    egress_rules            = [ "all-all" ]
+module "{{ name }}-{{ sg.name }}-sg" {
+    source                  = "{{ module_dir }}/security_groups"
+    providers               = { aws = "aws.{{ vnet['vnet_network']['region'] }}"}
+    name                    = "{{ name }}-{{ sg.name }}-sg"
+    vpc_id                  = "${module.{{ name }}-vpc.vpc_id}"    
+    cidr_blocks             = [{% for rule in sg['rules'] %},"{{ rule['src_ip'] }}",{% endfor %}] 
+    from_port               = [{% for rule in sg['rules'] %},"{{ rule['src_port'] }}",{% endfor %}] 
+    to_port                 = [{% for rule in sg['rules'] %},"{{ rule['dst_port'] }}",{% endfor %}] 
+    protocol                = [{% for rule in sg['rules'] %},"{{ rule['protocol'] }}",{% endfor %}] 
+    rule_name               = [{% for rule in sg['rules'] %},"{{ rule['name'] }}",{% endfor %}] 
+    type                    = [{% for rule in sg['rules'] %},"{{ rule['direction'] }}",{% endfor %}]
+    {% if vnet['global_tags'] is defined %}
+    tags = { {% for tag in vnet['global_tags'] %}{{ tag.name }} = "{{ tag.value }}"{% endfor %} }
+    {% endif %}
 }
+
 {% endfor %}
 
 {% endif %}

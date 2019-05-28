@@ -5,9 +5,27 @@ variable "eni_attachment_ids" {
   default = []
 }
 
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  default     = {}
+}
+
+variable "eni_subnet1_ids" {
+  description = "list of enis to attach"
+  type = "list"
+  default = []
+}
+
+variable "eni_subnet2_ids" {
+  description = "list of enis to attach"
+  type = "list"
+  default = []
+}
+
 variable "name" {
   description = "Name to be used on all the resources as identifier"
-  default     = ""
+  type = "list"
+  default = []
 }
 
 variable "fw_key_name" {
@@ -88,6 +106,23 @@ variable "go_path" {
   default = ""
 }
 
+variable "management_elastic_ip_addresses" {
+  description = "list of mgmt elastic ip addresses to be passed through for reference by CM"
+  type = "list"
+  default = []
+}
+
+variable "untrust_elastic_ip_addresses" {
+  description = "list of untrust elastic ip addresses to be passed through for reference by other modules"
+  type = "list"
+  default = []
+}
+
+variable "customer_gw_asn" {
+  description = "Firewall BGP ASNs to be used for customer gw"
+  type = "list"
+  default = []
+}
 
 
 /*

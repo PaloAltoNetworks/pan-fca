@@ -14,8 +14,13 @@ module "{{ name }}-{{ fw.name }}-{{ network.subnet }}-eni" {
     {% else %}
     source_dest_check                   = "false" 
     {% endif %}   
+    {% if network['security_group'] is defined %}
+    security_groups                      = [{% for sg in network['security_group'] %},"${module.{{ name }}-{{ sg}}-sg.sg_id}",{% endfor %}]     
+    {% endif %}
+    {% if vnet['global_tags'] is defined %}
+    tags                       = { {% for tag in vnet['global_tags'] %}{{ tag.name }} = "{{ tag.value }}"{% endfor %} }
+    {% endif %}    
 }
-
 
 {% endfor %}
 {% endfor %}

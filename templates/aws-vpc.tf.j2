@@ -8,6 +8,9 @@ module "{{ name }}-vpc" {
     name                                = "{{ name }}-vpc"   
     cidr                                = "{{ vnet['vnet_network']['network'] }}"
     assign_generated_ipv6_cidr_block    = false
+    {% if vnet['global_tags'] is defined %}
+    tags                                = { {% for tag in vnet['global_tags'] %}{{ tag.name }} = "{{ tag.value }}"{% endfor %} }
+    {% endif %}    
 }
 
 {% endif %}

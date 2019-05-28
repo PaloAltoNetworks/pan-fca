@@ -1,6 +1,6 @@
-variable "availability_zones" {
-  type    = "list"
-  default = [""]
+variable "network_interface_id" {
+  type    = "string"
+  default = ""
 }
 
 variable "vpc_id" {
@@ -9,14 +9,10 @@ variable "vpc_id" {
 }
 
 variable "tags" {
-  type    = "string"
-  default = ""
+  description = "A map of tags to add to all resources"
+  default     = {}
 }
 
-variable "eip_type" {
-  default = ""
-}
-
-variable "eip_names" {
+variable "name" {
   default = ""
 }

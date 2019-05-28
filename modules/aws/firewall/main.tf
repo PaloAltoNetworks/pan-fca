@@ -31,14 +31,15 @@ data "aws_ami" "pa-vm" {
 #### Create the Firewall Instances ####
 
 resource "aws_instance" "FWInstance" {
+  count = "${length(var.name) > 0 ? length(var.name) : 0}" 
   disable_api_termination = false
-
   #iam_instance_profile = "${aws_iam_instance_profile.FirewallBootstrapInstanceProfileServices.name}"
   instance_initiated_shutdown_behavior = "stop"
   ebs_optimized                        = true
   ami                                  = "${data.aws_ami.pa-vm.id}"
   instance_type                        = "m4.xlarge"
-  tags                                 = "${merge(map("Name", format("%s", var.name)))}"
+  # tags                                 = "${merge(map("Name", format("%s", var.name[count.index])))}"
+  tags                                 = "${merge(map("Name", format("%s", var.name[count.index])), var.tags)}"
 
   root_block_device {
     delete_on_termination = true
@@ -48,16 +49,17 @@ resource "aws_instance" "FWInstance" {
   monitoring = false
 
   network_interface {
-    device_index         = "0"
-    network_interface_id = "${element(var.eni_attachment_ids, 0)}"
+    device_index              = "0"
+    network_interface_id      = "${var.eni_subnet1_ids[count.index]}"
   }
 
   network_interface {
-    device_index         = "1"
-    network_interface_id = "${element(var.eni_attachment_ids, 1)}"
+    device_index              = "1"
+    network_interface_id      = "${var.eni_subnet2_ids[count.index]}"
   }
 
 }
+
 
 //resource "null_resource" "wait_for_https" {
 //  depends_on = ["aws_instance.FWInstance"]

@@ -9,6 +9,9 @@ module "{{ name }}-igw" {
     providers                           = { aws = "aws.{{ vnet['vnet_network']['region'] }}"}  
     name                                = "{{ name }}-igw"    
     vpc_id                              = "${module.{{ name }}-vpc.vpc_id}"
+    {% if vnet['global_tags'] is defined %}
+    tags                       = { {% for tag in vnet['global_tags'] %}{{ tag.name }} = "{{ tag.value }}"{% endfor %} }
+    {% endif %}    
 }
 
 {% endif %}

@@ -3,6 +3,11 @@ variable "create_vpc" {
   default     = true
 }
 
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  default     = {}
+}
+
 variable "name" {
   description = "Name to be used on all the resources as identifier"
   default     = ""
@@ -26,11 +31,6 @@ variable "secondary_cidr_blocks" {
 variable "instance_tenancy" {
   description = "A tenancy option for instances launched into the VPC"
   default     = "default"
-}
-
-variable "tags" {
-  description = "A map of tags to add to all resources"
-  default     = {}
 }
 
 variable "enable_dns_hostnames" {

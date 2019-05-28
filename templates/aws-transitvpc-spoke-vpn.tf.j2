@@ -1,15 +1,14 @@
 {# AWS VPN module template from https://github.com/terraform-aws-modules/terraform-aws-vpn-gateway #}
 {% for name, vnet in vnets.items() %}
-{% if vnet['vnet_network'] is defined %}
-{% for vpc in vnet['vnet_network'] %}
-{% if vpc['fw_tunnels'] is defined %}
+{% if vnet['vnet_network']['hub_virtual_network'] is defined %}
 
-{% for fw in vpc['fw_tunnels'] %}
-module "{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}" {
+{% for fw in vnet['vnet_network']['fw_tunnels'] %}
+module "{{ name }}-{{ fw.name }}-vpn" {
   source                        = "{{ module_dir }}/vpn"
-  providers                     = { aws = "aws.{{ vpc['region'] }}"}
-  name                          = "{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}"
-  vpc_id                        = "${module.{{ name }}-vpc-{{ vpc.name }}.vpc_id}"
+  providers                     = { aws = "aws.{{ vnet['vnet_network']['region'] }}"}
+  name                          = "{{ name }}-{{ fw.name }}-vpn"
+  vpc_id                        = "${module.{{ name }}-vpc.vpc_id}"
+  vpn_gateway_id                = "${module.{{ name }}-vgw.vgw_id}"  
 {# Trying to provide options for supporting AWS generated PSKs / CIDRs if not defined in YAML
 {% if vpc['fw_tunnels.tunnel_1_cidr'] not defined %}
   cidr_type                       = "dynamic"
@@ -19,17 +18,19 @@ module "{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}" {
   tunnel2_inside_cidr             = "{{ fw['tunnel_2_cidr'] }}"
   tunnel1_preshared_key           = "{{ fw['tunnel_1_psk'] }}"
   tunnel2_preshared_key           = "{{ fw['tunnel_2_psk'] }}"
-  customer_gw_asn                 = ["{{ vnet['vnet_network']['bgp_asn'] }}"]
-  customer_gw_ip                  = ["${module.{{ name }}.untrust_elastic_ip_addresses{{[loop.index0]}} }"]
-  management_ips                  = "${module.{{ name }}.management_elastic_ip_addresses{{[loop.index0]}} }"
-  firewall_instance_ids           = "${module.{{ name }}-firewall.firewalls_ids{{[loop.index0]}} }"
-
+  customer_gw_asn                 = "${module.{{ vnet['vnet_network']['hub_virtual_network'] }}-firewall.customer_gw_asn{{[loop.index0]}} }"
+  customer_gw_ip                  = "${module.{{ vnet['vnet_network']['hub_virtual_network'] }}-firewall.untrust_elastic_ip_addresses{{[loop.index0]}} }"
+  management_ips                  = "${module.{{ vnet['vnet_network']['hub_virtual_network'] }}-firewall.management_elastic_ip_addresses{{[loop.index0]}} }"
+  firewall_instance_ids           = "${module.{{ vnet['vnet_network']['hub_virtual_network'] }}-firewall.firewall_ids{{[loop.index0]}} }"
+  {% if vnet['global_tags'] is defined %}
+  tags                            = { {% for tag in vnet['global_tags'] %}{{ tag.name }} = "{{ tag.value }}"{% endfor %} }
+  {% endif %}    
 }
 {% endfor %}
 {% endif %}
-
 {% endfor %}
-{% endif %}
+
+{#
 output "spoke_asns" {
  value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.spoke_asn}",{% endfor %}{% endfor %}]
 }
@@ -57,4 +58,4 @@ output "tunnel_psks" {
 output "firewall_tunnel_ips" {
  value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.fw_tunnel_ips}",{% endfor %}{% endfor %}]
 }
-{% endfor %}
+#}

@@ -5,7 +5,7 @@
 ################
 resource "aws_route_table" "this" {
   vpc_id            = "${var.vpc_id}"
-  tags              = "${merge(map("Name", format("%s", var.name)))}"
+  tags              = "${merge(map("Name", format("%s", var.name)), var.tags)}"
 }
 
 

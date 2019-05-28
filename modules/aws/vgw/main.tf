@@ -4,8 +4,7 @@
 resource "aws_vpn_gateway" "this" {
   vpc_id            = "${var.vpc_id}"
   amazon_side_asn   = "${var.amazon_side_asn}"
-
-  tags = "${merge(map("Name", format("%s", var.name)))}"
+  tags              = "${merge(map("Name", format("%s", var.name)), var.tags)}"
 }
 
 resource "aws_vpn_gateway_attachment" "this" {

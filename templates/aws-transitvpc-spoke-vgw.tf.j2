@@ -7,6 +7,9 @@ module "{{ name }}-vgw" {
   name                          = "{{ name }}-vgw"
   vpc_id                        = "${module.{{ name }}-vpc.vpc_id}"
   amazon_side_asn               = "{{ vnet['vnet_network']['asn'] }}"
+  {% if vnet['global_tags'] is defined %}
+  tags                          = { {% for tag in vnet['global_tags'] %}{{ tag.name }} = "{{ tag.value }}"{% endfor %} }
+  {% endif %}  
 }
 
 {% endif %}

@@ -8,7 +8,7 @@ variable "lbsku" {
 }
 
 variable "resource_group_name" {
-  description = "(Required) The name of the resource group where the load balancer resources will be placed."
+  # description = "(Required) The name of the resource group where the load balancer resources will be placed."
   default     = "azure_lb-rg"
 }
 
@@ -89,7 +89,7 @@ variable "frontend_private_ip_address" {
 
 variable "frontend_private_ip_address_allocation" {
   description = "(Optional) Frontend ip allocation type (Static or Dynamic)"
-  default     = "Static"
+  default     = "Dynamic"
 }
 
 variable "load_distribution" {

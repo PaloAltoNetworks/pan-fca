@@ -17,9 +17,7 @@ variable "subnet_prefixes" {
 }
 
 variable "resource_group_name" {
-  description = "Name of Resource group to deploy subnets into"
-  type        = "string"
-  default     = ""
+  default     = "mainrg"
 }
 
 variable "nsg_id" {

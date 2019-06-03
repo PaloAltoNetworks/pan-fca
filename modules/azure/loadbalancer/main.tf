@@ -1,9 +1,10 @@
 # Azure load balancer module
-resource "azurerm_resource_group" "azlb" {
-  name     = "${var.resource_group_name}"
-  location = "${var.location}"
-  tags     = "${var.tags}"
-}
+# resource "azurerm_resource_group" "azlb" {
+#   name     = "${var.resource_group_name_lb}"
+#   location = "${var.location}"
+#   tags     = "${var.tags}"
+# }
+
 # ********** VM PUBLIC IP ADDRESSES FOR MANAGEMENT **********
 
 # Create the public IP address
@@ -11,9 +12,10 @@ resource "azurerm_public_ip" "azlb" {
   count                        = "${var.type == "public" ? 1 : 0}"
   name                         = "${var.name}-publicIP"
   location                     = "${var.location}"
-  resource_group_name          = "${azurerm_resource_group.azlb.name}"
+  # resource_group_name          = "${azurerm_resource_group.azlb.name}"
+  resource_group_name          = "${var.resource_group_name}"
   public_ip_address_allocation = "${var.public_ip_address_allocation}"
-  sku						   = "Standard"
+  sku						               = "Standard"
   
   tags {
      displayname = "${join("", list("PublicNetworkinterfaces", ""))}"
@@ -22,7 +24,8 @@ resource "azurerm_public_ip" "azlb" {
 
 resource "azurerm_lb" "azlb" {
   name                = "${var.name}"
-  resource_group_name = "${azurerm_resource_group.azlb.name}"
+  # resource_group_name = "${azurerm_resource_group.azlb.name}"
+  resource_group_name = "${var.resource_group_name}"
   location            = "${var.location}"
   tags                = "${var.tags}"
   sku                 = "${var.lbsku}"
@@ -37,14 +40,16 @@ resource "azurerm_lb" "azlb" {
 }
 
 resource "azurerm_lb_backend_address_pool" "lbback" {
-  resource_group_name = "${azurerm_resource_group.azlb.name}"
+  # resource_group_name = "${azurerm_resource_group.azlb.name}"
+  resource_group_name = "${var.resource_group_name}"
   loadbalancer_id     = "${azurerm_lb.azlb.id}"
   name                = "${var.backendpoolname}"
 }
 
 resource "azurerm_lb_probe" "azlb" {
   count               = "${length(var.lb_port)}"
-  resource_group_name = "${azurerm_resource_group.azlb.name}"
+  # resource_group_name = "${azurerm_resource_group.azlb.name}"
+  resource_group_name = "${var.resource_group_name}"
   loadbalancer_id     = "${azurerm_lb.azlb.id}"
    name                = "${var.lb_probename}"
     port                = "${element(var.lb_probe_port["${element(keys(var.lb_probe_port), count.index)}"], 0)}"
@@ -54,7 +59,8 @@ resource "azurerm_lb_probe" "azlb" {
 
 resource "azurerm_lb_rule" "azlb" {
   count                          = "${length(var.lb_port)}"
-  resource_group_name            = "${azurerm_resource_group.azlb.name}"
+  # resource_group_name            = "${azurerm_resource_group.azlb.name}"
+  resource_group_name            = "${var.resource_group_name}"
   loadbalancer_id                = "${azurerm_lb.azlb.id}"
   name                           = "${element(keys(var.lb_port), count.index)}"
   protocol                       = "${element(var.lb_port["${element(keys(var.lb_port), count.index)}"], 1)}"

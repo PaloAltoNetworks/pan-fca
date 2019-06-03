@@ -8,7 +8,6 @@ virtual_networks/*
 !virtual_networks/VPCTransit.yml.aws.example
 !virtual_networks/AzureSpoke.yml.example
 !virtual_networks/AzureHUB.yml.example
-sandbox_modules
 
 TO-DO
 
@@ -31,6 +30,8 @@ crash.log
 **/.tfvars
 /main.tf
 
+account.json
+
 # Ansible Specific Files
 *.retry
 **/*.retry
@@ -42,3 +43,6 @@ credentials.yml
 state_backup_*
 .terraform.d/
 .terraform.d/*
+
+# Sandbox folder
+sandbox_modules

@@ -1,0 +1,63 @@
+{% for name, vnet in vnets.items() %}
+{% if vnet['firewalls'] is defined %}
+{% for fw in vnet['firewalls'] %}
+# Creating the Palo Alto Firewalls
+
+
+  module "{{ fw.name}}" {
+    source             = "{{ module_dir }}/virtual_machine"
+    name               = "{{ fw.name}}"
+    resource_pool_id   = "${module.data.resource_pool_id}"
+    datastore_id       = "${module.data.datastore_id}"
+    num_cpus           = "{{ fw.vmcount }}"
+    template_uuid      = "${module.data.template_uuid}"
+    {% if fw['fw_version'] is defined %}
+    fw_version                  = "{{ fw['fw_version'] }}"
+    {% endif %}
+    {% if fw['fw_sku'] is defined %}
+    fw_sku                  = "{{ fw['fw_sku'] }}"
+    {% endif %}
+    {% if fw['Username'] is defined %}
+    adminUsername                 = "{{ fw['Username'] }}"
+    {% endif %}
+    {% if fw['Password'] is defined %}
+    adminPassword                 = "{{ fw['Password'] }}"
+    {% endif %}
+    {% if fw['dnshostname'] is defined %}
+    fw_dnshostname                 = "{{ fw['dnshostname'] }}"
+    {% endif %}
+    management_id               = "${module.data.network_mgmt_id}"
+    network_untrust_id          = "${module.data.network_untrust_id}"
+    network_trust_id            = "${module.data.network_trust_id}"
+    vnet_subnet_id_trust        = "${module.{{ name }}.vnet_subnets[1]}"
+    vnet_subnet_id_untrust      = "${module.{{ name }}.vnet_subnets[2]}"
+    vnet_subnet_id_mgmt         = "${module.{{ name }}.vnet_subnets[0]}"
+    {% endfor %}
+    {% endif %}
+    fw_hostname                 = "{{ fw.fwname }}"
+    fw_size                     = "{{ fw.fwvmsize }}"
+  }
+
+
+{% endfor %}
+
+
+module "disable_drs" {
+  source = "../../modules/vsphere/drs_override"
+  {% if fw['drs_enabled'] is defined %}
+  drs_enabled = "{{  }}"
+  {% endif %}
+  compute_cluster_id = "${module.{{ }}.cluster_id"
+  virtual_machine_id = "${module.{{ }}.vm_id"
+}
+
+
+
+
+output "firewalls_created" {
+  
+  value = [{% for fw in vnet['firewalls'] %}"${module.{{ fw.name }}.firewalls_created}",{% endfor %}]
+}
+{% endif %}
+{% endfor %}
+

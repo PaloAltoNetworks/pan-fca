@@ -5,9 +5,9 @@ variable "location" {
 }
 
 variable "resource_group_name" {
-  description = "location of the nsg and associated resource group"
-  type        = "string"
-  default     = ""
+  # description = "location of the nsg and associated resource group"
+  # type        = "string"
+  default     = "my-rg"
 }
 
 variable "nsg_name" {

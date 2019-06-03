@@ -49,10 +49,10 @@ output "public_ip_address" {
   value       = "${azurerm_public_ip.pip.*.ip_address}"
 }
 
-output "availability_set_id" {
-  description = "id of the availability set where the vms are provisioned."
-  value       = "${azurerm_availability_set.avset.id}"
-}
+# output "availability_set_id" {
+#   description = "id of the availability set where the vms are provisioned."
+#   value       = "${azurerm_availability_set.avset.id}"
+# }
 
 output "firewalls_created" {
   description = "List of Firewalls created"

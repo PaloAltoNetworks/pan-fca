@@ -1,5 +1,6 @@
 {# peering for Azure #}
 {% for name, vnet in vnets.items() %}
+{% if vnet['vnet_network'] is defined %}
 {% if vnet['vnet_network']['peers'] is defined %}
 {% for peer in vnet['vnet_network']['peers'] %}
 #Creating VNet Peering
@@ -7,12 +8,15 @@
 module "{{ name }}_peer_{{ loop.index }}" {
   source                               = "{{ module_dir }}/peering"
   peer_name                            = "${module.{{ peer }}.vnet_name}"
-  peer_resource_group_name             = "${module.{{ name }}.resource_group_name}"
+  {% for rg in vnet['resource_group'] %}
+  resource_group_name     = "${module.{{ rg.resource_group_name }}.name}"
+  {% endfor %}
   peer_virtual_network_name            = "${module.{{ name }}.vnet_name}"
   peer_remote_virtual_network_id       = "${module.{{ peer }}.vnet_id}"
 
 }
 {% endfor %}
+{% endif %}
 {% endif %}
 {% endfor %}
 

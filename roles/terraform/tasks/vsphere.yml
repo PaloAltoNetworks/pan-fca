@@ -1,0 +1,9 @@
+---
+
+- name: "EXECUTE TERRAFORM PLAN"
+  terraform:
+    project_path: "{{ provider_dir }}"
+    force_init: "yes"
+    state: "present"
+  environment:
+    "{{ cloud_env }}"

@@ -17,7 +17,9 @@ fw_key_name:
 virtual_networks:
 #  - Web-Azure
 #  - Transit-Azure
-   - VPCTransit
+   - AwsTransitVpcHub
+   - AwsTransitVpcSpoke1
+   - AwsTransitVpcSpoke2
 
 
 # removed "external" for testing
@@ -26,7 +28,7 @@ cm_virtual_router:
 #  - 'trust'
 #  - 'untrust'
 #  - 'anton_test'
-   - 'default'
+#   - 'default'
 
 cm_mgmt_profile:
    - name: 'AWS-MGT'

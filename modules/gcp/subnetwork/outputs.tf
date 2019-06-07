@@ -9,7 +9,3 @@ output "subnetwork_id" {
 output "subnetwork_gateway" {
   value = ["${google_compute_subnetwork.subnetwork.*.gateway_address}"]
 }
-
-output "subnetwork_project" {
-  value = "${google_compute_subnetwork.subnetwork.project}"
-}

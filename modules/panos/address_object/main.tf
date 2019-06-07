@@ -4,6 +4,7 @@ resource "panos_panorama_address_object" "pano_address_object" {
   value        = "${var.value}"
   description  = "${var.description}"
   device_group = "${var.device_group}"
+  type         = "${var.type}"
 
   //    tags = ["${var.tags}"]
 }
@@ -13,6 +14,7 @@ resource "panos_address_object" "fw_address_object" {
   name        = "${var.name}"
   value       = "${var.value}"
   description = "${var.description}"
+  type        = "${var.type}"
 
   //    tags = ["${var.tags}"]
 }

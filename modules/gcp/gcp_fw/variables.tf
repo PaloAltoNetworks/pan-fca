@@ -52,3 +52,8 @@ variable "allow_all" {
   description = "Allow All ports and Protocols"
   default     = false
 }
+
+variable "type" {
+  description = "Trust, Untrust, Mgmt"
+  default = "mgmt"
+}

@@ -1,13 +1,16 @@
 variable "subnetwork_name" {
   description = "GCP Subnetwork Name"
+  type = "list"
 }
 
 variable "subnetwork_cidr" {
   description = "GCP Subnetwork CIDR"
+  type = "list"
 }
 
 variable "network_self_link" {
   description = "GCP Network Self Link"
+  type = "list"
 }
 
 variable "region" {

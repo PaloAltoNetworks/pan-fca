@@ -5,13 +5,10 @@
 resource "aws_customer_gateway" "cgw" {
 # Count from calculated var length is not working, need to fix
   count         = "1"
-  bgp_asn       = "${element(var.customer_gw_asn, count.index)}"
-  ip_address    = "${element(var.customer_gw_ip, count.index)}"
+  bgp_asn       = "${var.customer_gw_asn}"
+  ip_address    = "${var.customer_gw_ip}"
   type          = "ipsec.1"
-
-  tags {
-    Name = "${var.name}-cgw"
-  }
+  tags          = "${merge(map("Name", format("%s", var.name)), var.tags)}"
 }
 
 
@@ -26,8 +23,5 @@ resource "aws_vpn_connection" "vpn" {
   tunnel1_preshared_key = "${var.tunnel1_preshared_key}"
   tunnel2_preshared_key = "${var.tunnel2_preshared_key}"
   static_routes_only  = false
-
-    tags {
-    Name = "${var.name}-vpn"
-  }
+  tags          = "${merge(map("Name", format("%s", var.name)), var.tags)}"
 }

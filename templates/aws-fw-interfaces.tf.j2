@@ -1,0 +1,28 @@
+{% for name, vnet in vnets.items() %}
+{% if vnet['firewalls'] is defined %}
+{% for fw in vnet['firewalls']['fw_instances'] %}
+{% set outer_loop = loop %}
+{% for network in fw['networks'] %}
+
+module "{{ name }}-{{ fw.name }}-{{ network.subnet }}-eni" {
+    source                              = "{{ module_dir }}/eni"
+    providers                           = { aws = "aws.{{ vnet['vnet_network']['region'] }}"}  
+    subnet_id                           = "${module.{{ name }}-{{ network.subnet }}-subnets.subnets_id[{{outer_loop.index0}}]}"
+    name                                = "{{ name }}-{{ fw.name }}-{{ network.subnet }}-eni"
+    {% if network['source_dest_check'] == 'true' %}
+    source_dest_check                   = "true"
+    {% else %}
+    source_dest_check                   = "false" 
+    {% endif %}   
+    {% if network['security_group'] is defined %}
+    security_groups                      = [{% for sg in network['security_group'] %},"${module.{{ name }}-{{ sg}}-sg.sg_id}",{% endfor %}]     
+    {% endif %}
+    {% if vnet['global_tags'] is defined %}
+    tags                       = { {% for tag in vnet['global_tags'] %}{{ tag.name }} = "{{ tag.value }}"{% endfor %} }
+    {% endif %}    
+}
+
+{% endfor %}
+{% endfor %}
+{% endif %}  
+{% endfor %}

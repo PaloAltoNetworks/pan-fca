@@ -10,7 +10,9 @@ module "{{ lb.name }}" {
   {% if lb['resource_group_name'] is defined %}
   resource_group_name                    = "{{ lb['resource_group_name'] }}"
   {% else %}
-  resource_group_name                    = "{{ name }}"
+  {% for rg in vnet['resource_group'] %}
+  resource_group_name                    = "${module.{{ rg.resource_group_name }}.name}"
+  {% endfor %}
   {% endif %}
   type                                   = "{{ lb.type }}"
   {% if lb['floating_ip'] is defined %}
@@ -18,14 +20,22 @@ module "{{ lb.name }}" {
   {% endif %}
   {% if lb.type == 'private' %}
   frontend_name                          = "{{ lb.fename }}"
+  {% if vnet['deployment'] is defined %}
+  frontend_subnet_id                     = "${data.azurerm_subnet.{{ vnet.deployment.vnet_subnet.subnet[1].name }}.id}"
+  {% else %}
   frontend_subnet_id                     = "${module.{{ name }}.vnet_subnets[1]}"
+  {% endif %}
   {% if lb['frontend_private_ip_address_allocation'] is defined %}
   frontend_private_ip_address_allocation = "{{ lb.frontend_private_ip_address_allocation }}"
-  {% if lb.frontend_private_ip_address_allocation == 'Static'%}
+  {% if lb.frontend_private_ip_address_allocation == 'Static' %}
   {% if lb['frontend_private_ip_address'] is defined %}
-  frontend_private_ip_address            = "{{ lb.static_IP }}"
+  frontend_private_ip_address            = "{{ lb['frontend_private_ip_address'] }}"
+  {% else %}
+  {% if vnet['deployment'] is defined %}
+  frontend_private_ip_address            = "${data.azurerm_subnet.{{ vnet.deployment.vnet_subnet.subnet[1].name }}.address_prefix}"
   {% else %}
   frontend_private_ip_address            = "${cidrhost(module.{{ name }}.vnet_subnet_prefixes[1], -3)}"
+  {% endif %}
   {% endif %}
   {% endif %}
   {% endif %}

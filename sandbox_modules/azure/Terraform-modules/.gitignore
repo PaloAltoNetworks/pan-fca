@@ -1,4 +1,0 @@
-main.tf
-.terraform*/*
-review
-!/modules/*/main.tf

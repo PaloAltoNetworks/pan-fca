@@ -1,0 +1,38 @@
+---
+vnet_network:   
+  name: spoke2
+  network: 10.222.0.0/16  
+  spoke_attachment: vgw
+  hub_virtual_network: AwsTransitVpcHub
+  region: us-west-2
+  asn: 65222
+  route_tables:
+    - name: Private-To-VGW
+      routes: 
+        - prefix: 0.0.0.0/0
+          next_hop_type: VGW 
+  subnet:
+  - name: FCA-Private
+    cidrs:
+      # Each will be created in unique AZ
+      - 10.222.0.0/24
+      - 10.222.1.0/24
+    route_table: Private-To-VGW 
+
+  fw_tunnels:
+    - name: fca-fw01
+      tunnel_1_cidr: 169.254.222.12/30
+      tunnel_1_psk: blahblah
+      tunnel_2_cidr: 169.254.222.16/30
+      tunnel_2_psk: blahblah
+    - name: fca-fw02
+      tunnel_1_cidr: 169.254.222.20/30
+      tunnel_1_psk: blahblah
+      tunnel_2_cidr: 169.254.222.24/30
+      tunnel_2_psk: blahblah
+
+global_tags:
+  - name: "environment"
+    value: "dev"
+  - name: "costcenter"
+    value: "it"

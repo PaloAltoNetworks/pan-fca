@@ -6,7 +6,9 @@
 module "{{ name }}-{{ rt['name'] }}" {
   source                = "{{ module_dir }}/router"
   location              = "{{ location }}"
-  resource_group_name   = "${module.{{ name }}.resource_group_name}"
+  {% for rg in vnet['resource_group'] %}
+  resource_group_name     = "${module.{{ rg.resource_group_name }}.name}"
+  {% endfor %}
   route_table_name      = "{{ rt['name'] }}"
   routes = [
   {% for route in rt['routes'] %}
@@ -14,7 +16,6 @@ module "{{ name }}-{{ rt['name'] }}" {
     name                = "{{ route['name'] }}"
     cidr                = "{{ route['cidr'] }}"
     gateway             = "{{ route['gateway'] }}"
-    #gateway             = "${cidrhost(module.{{ name }}.vnet_subnet_prefixes[1], -3)}"
     {% if route['next_hop_type'] is defined %}
     next_hop_type       = "{{ route['next_hop_type'] }}"
     {% endif %}

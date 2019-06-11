@@ -1,7 +1,3 @@
-variable "resource_group_name" {
-  description = "Resource Group Name"
-}
-
 variable "location" {
   description = "Location/Region"
 }
@@ -29,4 +25,8 @@ variable "cidr" {
 variable "next_hop_type" {
   description = "type of next hop"
   default = ""
+}
+
+variable "resource_group_name" {
+  default     = "mainrg"
 }

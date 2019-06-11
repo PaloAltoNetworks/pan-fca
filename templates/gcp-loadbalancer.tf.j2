@@ -1,0 +1,70 @@
+{% for name, vnet in vnets.items() %}
+{% if vnet['load_balancers'] is defined %}
+{% for lb in vnet['load_balancers'] %}
+# Creating Load Balancer
+
+module "{{ lb.name }}" {
+  source                                 = "{{ module_dir }}/loadbalancer"
+  name                                   = "{{ lb.name }}"
+  location                               = "{{ location }}"
+  {% if lb['resource_group_name'] is defined %}
+  resource_group_name                    = "{{ lb['resource_group_name'] }}"
+  {% else %}
+  resource_group_name                    = "{{ name }}"
+  {% endif %}
+  type                                   = "{{ lb.type }}"
+  {% if lb['floating_ip'] is defined %}
+  floating_ip                 = "{{ lb['floating_ip'] }}"
+  {% endif %}
+  {% if lb.type == 'private' %}
+  frontend_name                          = "{{ lb.fename }}"
+  frontend_subnet_id                     = "${module.{{ name }}.vnet_subnets[1]}"
+  {% if lb['frontend_private_ip_address_allocation'] is defined %}
+  frontend_private_ip_address_allocation = "{{ lb.frontend_private_ip_address_allocation }}"
+  {% if lb.frontend_private_ip_address_allocation == 'Static'%}
+  {% if lb['frontend_private_ip_address'] is defined %}
+  frontend_private_ip_address            = "{{ lb.static_IP }}"
+  {% else %}
+  frontend_private_ip_address            = "${cidrhost(module.{{ name }}.vnet_subnet_prefixes[1], -3)}"
+  {% endif %}
+  {% endif %}
+  {% endif %}
+  backendpoolname                        = "{{ lb.bename }}"
+  lb_probename                           = "{{ lb.lbprobename }}"
+ 
+
+
+ "remote_port" {
+    ssh = ["Tcp", "22"]
+  }
+
+  "lb_port" {
+    {{ lb.lbrulename }}  = ["{{ lb.lbrulefrontport }}", "{{ lb.lbruleprotocol }}", "{{ lb.lbrulebackport }}"]
+  }
+
+  "lb_probe_port" {
+      {{ lb.lbprobename }} = ["{{ lb.lbruleprobeport }}"]
+}
+{% endif %}
+{% if lb.type == 'public' %}
+  frontend_name       = "{{ lb.fename }}"
+  backendpoolname     = "{{ lb.bename }}"
+  lb_probename        = "{{ lb.lbprobename }}"
+
+ "remote_port" {
+    ssh = ["Tcp", "22"]
+  }
+
+  "lb_port" {
+    {{ lb.lbrulename }}  = ["{{ lb.lbrulefrontport }}", "{{ lb.lbruleprotocol }}", "{{ lb.lbrulebackport }}"]
+  }
+
+  "lb_probe_port" {
+      {{ lb.lbprobename }} = ["{{ lb.lbruleprobeport }}"]
+}
+
+{% endif %}
+}
+{% endfor %}
+{% endif %}
+{% endfor %}

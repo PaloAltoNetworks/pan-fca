@@ -1,10 +1,4 @@
 
-resource "azurerm_resource_group" "vm" {
-  name     = "${var.resource_group_name}"
-  location = "${var.location}"
-  tags     = "${var.tags}"
-}
-
 # ********** STORAGE ACCOUNT Firewall **********
 
 # Generate a random id for the storage account due to the need to be unique across azure.
@@ -18,7 +12,8 @@ resource "random_id" "storage_account" {
 # Create the storage account
 resource "azurerm_storage_account" "storrageaccfw" {
     name                     = "${lower(random_id.storage_account.hex)}"
-    resource_group_name      = "${azurerm_resource_group.vm.name}"
+    # resource_group_name      = "${azurerm_resource_group.vm.name}"
+    resource_group_name      = "${var.resource_group_name}"
     location                 = "${var.location}"
     account_replication_type = "${element(split("_", var.boot_diagnostics_sa_type),1)}"
     account_tier             = "${element(split("_", var.boot_diagnostics_sa_type),0)}"
@@ -28,21 +23,23 @@ resource "azurerm_storage_account" "storrageaccfw" {
 # Create the storage account container
 resource "azurerm_storage_container" "storagecon" {
     name                            = "vhds"
-    resource_group_name                = "${azurerm_resource_group.vm.name}"
+    # resource_group_name                = "${azurerm_resource_group.vm.name}"
+    resource_group_name             = "${var.resource_group_name}"
     storage_account_name            = "${azurerm_storage_account.storrageaccfw.name}"
-    container_access_type            = "private"
+    container_access_type           = "private"
 }
 
 # ********** AVAILABILITY SET **********
 
 # Create the availability set
-resource "azurerm_availability_set" "avset" {
-    name                                = "${var.avsetname}"
-    location                            = "${azurerm_resource_group.vm.location}"
-    resource_group_name                 = "${azurerm_resource_group.vm.name}"
-    platform_update_domain_count        = 5
-    platform_fault_domain_count         = 3
-}
+# resource "azurerm_availability_set" "avset" {
+#     name                                = "${var.avsetname}"
+#     location                            = "${var.location}"
+#     # resource_group_name                 = "${azurerm_resource_group.vm.name}"
+#     resource_group_name                 = "${var.resource_group_name}"
+#     platform_update_domain_count        = 5
+#     platform_fault_domain_count         = 3
+# }
 
 # ********** VM PUBLIC IP ADDRESSES FOR MANAGEMENT **********
 
@@ -50,8 +47,9 @@ resource "azurerm_availability_set" "avset" {
 resource "azurerm_public_ip" "pip" {
     count                           = "${var.nb_instances}"
     name                            = "${var.fw_hostname}${count.index+1}-publicIP"
-    location                        = "${azurerm_resource_group.vm.location}"
-    resource_group_name             = "${azurerm_resource_group.vm.name}"
+    location                        = "${var.location}"
+    # resource_group_name             = "${azurerm_resource_group.vm.name}"
+    resource_group_name             = "${var.resource_group_name}"
     public_ip_address_allocation    = "static"
     sku								= "Standard"
 
@@ -66,7 +64,8 @@ resource "azurerm_public_ip" "pip" {
 resource "azurerm_network_security_group" "open" {
   name                	= "open"
   location            	= "${var.location}"
-  resource_group_name 	= "${azurerm_resource_group.vm.name}"
+  # resource_group_name 	= "${azurerm_resource_group.vm.name}"
+  resource_group_name   = "${var.resource_group_name}"
 
 # Create Security Rules
 
@@ -86,7 +85,8 @@ resource "azurerm_network_security_group" "open" {
 resource "azurerm_network_security_group" "ssh" {
   name                  = "mgmt"
   location              = "${var.location}"
-  resource_group_name   ="${azurerm_resource_group.vm.name}"
+  # resource_group_name   ="${azurerm_resource_group.vm.name}"
+  resource_group_name   = "${var.resource_group_name}"
 
   security_rule {
     name                       = "ssh"
@@ -118,8 +118,9 @@ resource "azurerm_network_security_group" "ssh" {
 resource "azurerm_network_interface" "Management" {
     count                               = "${var.nb_instances}"
     name                                = "${var.fw_hostname}${count.index+1}-mgmt"
-    location                            = "${azurerm_resource_group.vm.location}"
-    resource_group_name                 = "${azurerm_resource_group.vm.name}"
+    location                            = "${var.location}"
+    # resource_group_name                 = "${azurerm_resource_group.vm.name}"
+    resource_group_name                 = "${var.resource_group_name}"
     
     ip_configuration {
         name                            = "${var.fw_hostname}${count.index+1}-ip-0"
@@ -134,8 +135,9 @@ resource "azurerm_network_interface" "Management" {
 resource "azurerm_network_interface" "Trust" {
     count                               = "${var.nb_instances}"
     name                                = "${var.fw_hostname}${count.index+1}-trust"
-    location                            = "${azurerm_resource_group.vm.location}"
-    resource_group_name                 = "${azurerm_resource_group.vm.name}"
+    location                            = "${var.location}"
+    # resource_group_name                 = "${azurerm_resource_group.vm.name}"
+    resource_group_name                 = "${var.resource_group_name}"
     enable_ip_forwarding                = "${var.enable_ip_forwarding}"
 
     ip_configuration {
@@ -151,8 +153,9 @@ resource "azurerm_network_interface" "Trust" {
 resource "azurerm_network_interface" "Untrust" {
     count                               = "${var.nb_instances}"
     name                                = "${var.fw_hostname}${count.index+1}-untrust"
-    location                            = "${azurerm_resource_group.vm.location}"
-    resource_group_name                 = "${azurerm_resource_group.vm.name}"
+    location                            = "${var.location}"
+    # resource_group_name                 = "${azurerm_resource_group.vm.name}"
+    resource_group_name                 = "${var.resource_group_name}"
     enable_ip_forwarding                = "${var.enable_ip_forwarding}"
 
     ip_configuration {
@@ -173,7 +176,8 @@ resource "azurerm_virtual_machine" "firewall" {
     count                         = "${var.nb_instances}" 
     name                          = "${var.fw_hostname}${count.index+1}"
     location                      = "${var.location}"
-    resource_group_name           = "${azurerm_resource_group.vm.name}"
+    # resource_group_name           = "${azurerm_resource_group.vm.name}"
+    resource_group_name           = "${var.resource_group_name}"
     network_interface_ids         = 
     [
     
@@ -184,7 +188,10 @@ resource "azurerm_virtual_machine" "firewall" {
 
     primary_network_interface_id  = "${element(azurerm_network_interface.Management.*.id, count.index)}"
     vm_size                       = "${var.fw_size}"
-    availability_set_id           = "${azurerm_availability_set.avset.id}"
+    # availability_set_id           = "${azurerm_availability_set.avset.id}"
+    availability_set_id           = "${var.av_set_id}"
+    # zones                         = "${list("${element("${list("1","2")}", count.index)}")}"
+
   
   storage_image_reference {
     publisher   = "${var.vm_publisher}"

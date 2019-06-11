@@ -1,1 +1,0 @@
-variable "gcp-project" {}

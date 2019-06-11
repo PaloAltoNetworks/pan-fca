@@ -5,9 +5,7 @@ group_vars/all/all.yml
 host_vars/*
 !host_vars/fw.yml.example
 virtual_networks/*
-!virtual_networks/VPCTransit.yml.aws.example
-!virtual_networks/AzureSpoke.yml.example
-!virtual_networks/AzureHUB.yml.example
+!virtual_networks/*.example
 
 TO-DO
 
@@ -29,6 +27,8 @@ crash.log
 **/.tfplan
 **/.tfvars
 /main.tf
+
+account.json
 
 # Ansible Specific Files
 *.retry

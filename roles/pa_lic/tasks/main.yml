@@ -1,14 +1,16 @@
 ---
 
-- name: "SET FACT FOR License"
-  set_fact:
-    version: "{{ cm_panos_lic | default([]) }}"
+# - name: "SET FACT FOR License"
+#   set_fact:
+#     version: "{{ cm_panos_lic | default([]) }}"
 
-  - name: License the Firewall with Auth_Code
-    panos_software:
-      ip_address: '{{ ansible_host }}'
-      username: '{{ username }}'
-      password: '{{ password }}'
-      auth_code: "{{ item['auth_code'] }}"
-    with_items: "{{ cm_panos_lic }}"
-    when: "cm_panos_lic is defined"
+- name: License the Firewall with Auth_Code
+  panos_lic:
+    ip_address: '{{ ansible_host }}'
+    username: '{{ username }}'
+    password: '{{ password }}'
+    auth_code: "{{ item['auth_code'] }}"
+  with_items: "{{ cm_panos_lic }}"
+  when: "cm_panos_lic is defined"
+
+

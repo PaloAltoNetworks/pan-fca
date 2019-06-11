@@ -1,46 +1,17 @@
-group_vars/all/all.yml
-!group_vars/constants.yml
-!group_vars/all.yml.example
-!group_vars/all.yml.azure.example
-host_vars/*
-!host_vars/fw.yml.example
-virtual_networks/*
-!virtual_networks/*.example
+# See https://help.github.com/ignore-files/ for more about ignoring files.
 
-TO-DO
+# dependencies
+/node_modules
+/fca-ui/node_modules
 
-*.pyc
+# production
+/fca-ui/build
+
+# misc
 .DS_Store
-**/.DS_Store
-inventory
 
-**/.terraform/*
+/fca-ui/npm-debug.log*
 
-# Adding this later, after testing
-*.tfstate
-*.tfstate.*
-
-*.pem
-**/*.pem
-crash.log
-.idea
-**/.tfplan
-**/.tfvars
-/main.tf
-
-account.json
-
-# Ansible Specific Files
-*.retry
-**/*.retry
-
-provider.*
-!provider.yml.example
-secrets.yml
-credentials.yml
-state_backup_*
-.terraform.d/
-.terraform.d/*
-
-# Sandbox folder
-sandbox_modules
+# terraform
+.terraform/
+!*.gitkeep/

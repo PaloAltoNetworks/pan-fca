@@ -1,0 +1,136 @@
+/*
+const vnets = {
+  "AzureHUB": {
+      "firewalls": [
+          {
+              "password": "Paloalto123",
+              "username": "fwadmin",
+              "avsetname": "AzureAV",
+              "fwsku": "byol",
+              "fwversion": "latest",
+              "fwname": "TSVMPAN-",
+              "fwvmsize": "Standard_D3_v2",
+              "name": "Firewall-Set-1",
+              "vmcount": 2
+          }
+      ],
+      "load_balancers": [
+          {
+              "backendname": "Untrust",
+              "frontendname": "Untrust",
+              "lbprobename": "TCP-22",
+              "lbrulebackendport": 22,
+              "lbrulefrontendport": 22,
+              "lbrulename": "TCP-22",
+              "lbrulehealthprobeport": 22,
+              "lbruleprotocol": "tcp",
+              "name": "External-LB",
+              "type": "public"
+          },
+          {
+              "backendname": "Trust",
+              "frontendname": "Trust",
+              "lbprobename": "ssh",
+              "lbrulebackendport": 0,
+              "lbrulefrontendport": 0,
+              "lbrulename": "HA",
+              "lbrulehealthprobeport": 22,
+              "lbruleprotocol": "All",
+              "name": "Internal-LB",
+              "type": "private"
+          }
+      ],
+      "security_groups": [
+          {
+              "action": "allow",
+              "direction": "inbound",
+              "dstnetwork": "0.0.0.0",
+              "dstport": "any",
+              "name": "Outbound allow",
+              "priority": 100,
+              "protocol": "any",
+              "srcip": "0.0.0.0",
+              "srcport": "any"
+          }
+      ],
+      "vnet_network": {
+          "name": "SternTransitVNet",
+          "network": "10.217.130.0/24",
+          "peers": [
+              "AzureSpoke"
+          ],
+          "subnet": [
+              {
+                  "name": "Management",
+                  "network": "10.217.130.64/27"
+              },
+              {
+                  "name": "Trust",
+                  "network": "10.217.130.32/27"
+              },
+              {
+                  "name": "Untrust",
+                  "network": "10.217.130.0/27"
+              }
+          ]
+      }
+  },
+  "AzureSpoke": {
+      "route_tables": [
+          {
+              "name": "web-test",
+              "routes": [
+                  {
+                      "cidr": "0.0.0.0/0",
+                      "gateway": "10.217.130.61",
+                      "name": "VirtualAppliance"
+                  }
+              ]
+          }
+      ],
+      "security_groups": [
+          {
+              "action": "allow",
+              "direction": "inbound",
+              "dstnetwork": "0.0.0.0",
+              "dstport": "any",
+              "name": "allow any",
+              "priority": 100,
+              "protocol": "any",
+              "srcip": "0.0.0.0",
+              "srcport": "any"
+          }
+      ],
+      "testhost": [
+          {
+              "dnsname": "ubuntutestvm2",
+              "hostname": "Test-VM",
+              "name": "Testhost",
+              "password": "Paloalto123456789",
+              "username": "creator"
+          }
+      ],
+      "vnet_network": {
+          "name": "TorstenWebVNet",
+          "network": "172.16.130.0/24",
+          "peers": [
+              "AzureHUB"
+          ],
+          "subnet": [
+              {
+                  "name": "Webserver",
+                  "network": "172.16.130.0/26"
+              },
+              {
+                  "name": "DB",
+                  "network": "172.16.130.64/26"
+              },
+              {
+                  "name": "Test",
+                  "network": "172.16.130.128/26"
+              }
+          ]
+      }
+  }
+}
+*/

@@ -1,0 +1,10 @@
+- Run TF init
+- update the table
+- Run TF plan
+- update the table
+- Send the response back
+
+
+- Send the TF id back
+- Run TF apply
+- update the TF table with result

@@ -1,7 +1,0 @@
-*.tfstate*
-.terraform*
-.tfstate*
-*.tfstate.backup
-.*
-.git
-docker-compose.yml

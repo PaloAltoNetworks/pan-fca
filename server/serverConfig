@@ -1,0 +1,10 @@
+module.exports = {
+  mongoURL: process.env.MONGO_URL || 'mongodb://fca:epqMBN5qLHT9CtC6@mongo:27017/fca',
+  mongoOptions: {
+                //useMongoClient: true,
+                socketTimeoutMS: 0,
+                keepAlive: true,
+                reconnectTries: 30,
+                useNewUrlParser: true
+  }
+};

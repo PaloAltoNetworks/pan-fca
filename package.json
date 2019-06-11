@@ -1,0 +1,34 @@
+{
+  "name": "fca",
+  "version": "1.0.0",
+  "description": "FCA",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./bin/www",
+    "server": "nodemon ./bin/www",
+    "ui": "npm run start --prefix fca-ui",
+    "dev": "concurrently \"npm run server\" \"npm run ui\"",
+    "build": "npm install --prefix fca-ui && npm run build --prefix fca-ui"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.16.0",
+    "nodemon": "^1.19.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.0",
+    "lodash": "^4.17.11",
+    "mkdirp": "^0.5.1",
+    "mongoose": "^5.5.10",
+    "morgan": "^1.9.1",
+    "require": "^2.4.20",
+    "stringify": "^5.2.0",
+    "stringify-object": "^3.3.0"
+  }
+}

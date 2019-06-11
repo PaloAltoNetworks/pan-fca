@@ -1,0 +1,257 @@
+const _ = require('lodash');
+// const VNET = require("./vnet")
+//const LB = require("./loadbalancer")
+// const APPGW = require("./appgateway")
+// const FW = require("./firewall")
+// const PEERING = require("./peering")
+// const ROUTER = require("./router")
+// const TESTHOST = require("../general/testHost")
+const location = 'West US'
+const fs = require('fs');
+
+//const { TERRAFORM_MODULE_DIR } = require('../../../fca-ui/src/config').TERRAFORM_MODULE_DIR;
+//const { TERRAFORM_MODULE_DIR } = config
+const TERRAFORM_MODULE_DIR = '../../../core/modules/azure'
+// module.exports = (vnets, location, TERRAFORM_MODULE_DIR) => {
+//   vnet(vnets, location, TERRAFORM_MODULE_DIR)
+// }
+
+const vnets = {
+  "AzureHUB": {
+      "firewalls": [
+          {
+              "Password": "Paloalto123",
+              "Username": "fwadmin",
+              "avsetname": "AzureAV",
+              "fw_sku": "byol",
+              "fw_version": "latest",
+              "fwname": "TSVMPAN-",
+              "fwvmsize": "Standard_D3_v2",
+              "name": "Firewall-Set-1",
+              "vmcount": 2
+          }
+      ],
+      "load_balancers": [
+          {
+              "bename": "Untrust",
+              "fename": "Untrust",
+              "lbprobename": "TCP-22",
+              "lbrulebackport": 22,
+              "lbrulefrontport": 22,
+              "lbrulename": "TCP-22",
+              "lbruleprobeport": 22,
+              "lbruleprotocol": "tcp",
+              "name": "External-LB",
+              "type": "public"
+          },
+          {
+              "bename": "Trust",
+              "fename": "Trust",
+              "lbprobename": "ssh",
+              "lbrulebackport": 0,
+              "lbrulefrontport": 0,
+              "lbrulename": "HA",
+              "lbruleprobeport": 22,
+              "lbruleprotocol": "All",
+              "name": "Internal-LB",
+              "type": "private"
+          }
+      ],
+      "security_groups": [
+          {
+              "action": "allow",
+              "direction": "inbound",
+              "dst_network": "0.0.0.0",
+              "dst_port": "any",
+              "name": "Outbound allow",
+              "priority": 100,
+              "protocol": "any",
+              "src_ip": "0.0.0.0",
+              "src_port": "any"
+          }
+      ],
+      "vnet_network": {
+          "name": "SternTransitVNet",
+          "network": "10.217.130.0/24",
+          "peers": [
+              "WebAzureFCA"
+          ],
+          "subnet": [
+              {
+                  "name": "Management",
+                  "network": "10.217.130.64/27"
+              },
+              {
+                  "name": "Trust",
+                  "network": "10.217.130.32/27"
+              },
+              {
+                  "name": "Untrust",
+                  "network": "10.217.130.0/27"
+              }
+          ]
+      }
+  },
+  "AzureSpoke": {
+      "route_tables": [
+          {
+              "name": "web-test",
+              "routes": [
+                  {
+                      "cidr": "0.0.0.0/0",
+                      "gateway": "10.217.130.61",
+                      "name": "VirtualAppliance"
+                  }
+              ]
+          }
+      ],
+      "security_groups": [
+          {
+              "action": "allow",
+              "direction": "inbound",
+              "dst_network": "0.0.0.0",
+              "dst_port": "any",
+              "name": "allow any",
+              "priority": 100,
+              "protocol": "any",
+              "src_ip": "0.0.0.0",
+              "src_port": "any"
+          }
+      ],
+      "testhost": [
+          {
+              "dnsname": "ubuntutestvm2",
+              "hostname": "Test-VM",
+              "name": "Testhost",
+              "password": "Paloalto123456789",
+              "username": "creator"
+          }
+      ],
+      "vnet_network": {
+          "name": "TorstenWebVNet",
+          "network": "172.16.130.0/24",
+          "peers": [
+              "TransitAzureFCA"
+          ],
+          "subnet": [
+              {
+                  "name": "Webserver",
+                  "network": "172.16.130.0/26"
+              },
+              {
+                  "name": "DB",
+                  "network": "172.16.130.64/26"
+              },
+              {
+                  "name": "Test",
+                  "network": "172.16.130.128/26"
+              }
+          ]
+      }
+  }
+}
+
+const vnet = (vnets, location, modules_dir) => {
+
+  return _.map(vnets, (vnet, name) => {
+    const rg_name = vnet['vnet_network']['resource_group_name']? vnet['vnet_network']['resource_group_name']: name;
+
+    return {
+      [name] : {
+        "source": `${modules_dir}/vnet`,
+        "resource_group_name": rg_name,
+        "location": location,
+        "vnet_name": vnet['vnet_network']['name'],
+        "address_space": vnet['vnet_network']['network'],
+        "subnet_prefixes": vnet['vnet_network'].subnet.map(a => `"${a.network}"`),
+        "subnet_names": vnet['vnet_network'].subnet.map(a => `"${a.name}"`)
+      }
+    }
+  })
+}
+
+const lb = (vnets, location, modules_dir) => {
+  return _.map(vnets, (vnet, name) => {
+    const rg_name = vnet['vnet_network']['resource_group_name']? vnet['vnet_network']['resource_group_name']: name;
+    return _.map(vnet.load_balancers, lb => {
+      const floating_ip = lb['floating_ip'] ? lb['floating_ip'] : null
+      const frontend_subnet_id = (lb.type == 'private')? `\${module.${name}.vnet_subnets[1]}`: null
+      return {
+        [lb.name] : {
+          "source": `${modules_dir}/loadbalancer`,
+          "resource_group_name": rg_name,
+          "location": location,
+          "name": lb.name,
+          "type": lb.type,
+          "floating_ip": lb.floating_ip,
+          "frontend_name": lb.frontendname,
+          "backendpoolname": lb.backendname,
+          "lb_probename": lb.lbprobename,
+          "frontend_subnet_id": frontend_subnet_id,
+          "frontend_private_ip_address_allocation": (lb.frontend_private_ip_address_allocation)? lb.frontend_private_ip_address_allocation: '',
+          "frontend_private_ip_address": (lb.frontend_private_ip_address_allocation == 'Static')?lb.static_IP : `\${cidrhost(module.${name}.vnet_subnet_prefixes[1], -3)}`,
+          "lb_port": {
+              [lb.lbrulename]: [lb.lbrulefrontport, lb.lbruleprotocol, lb.lbrulebackport]
+          },
+          "lb_probe_port": {
+            [lb.lbprobename]: [lb.lbruleprobeport]
+          }
+
+        }
+      
+      }
+    })
+  }) 
+}
+
+
+//"tags": [_.map(vnet.tags, tag => [tag.name] = tag.value)]
+//console.log(vnet(vnets, location, TERRAFORM_MODULE_DIR))
+
+const v = vnet(vnets, location, TERRAFORM_MODULE_DIR)
+const l = lb(vnets, location, TERRAFORM_MODULE_DIR)[0]
+
+// console.log(v)
+// console.log(l)
+
+const r = v.concat(l)
+console.log(r)
+const A = {
+  "module": _.map(r, val => val)
+}
+/*
+[ 
+  { 
+    AzureHUB:
+      { source: '../../../core/modules/azure/vnet',
+        resource_group_name: 'AzureHUB',
+        location: 'West US',
+        vnet_name: 'SternTransitVNet',
+        address_space: '10.217.130.0/24',
+        subnet_prefixes: [Array],
+        subnet_names: [Array] 
+      } 
+  },
+  { 
+    AzureSpoke:
+    { source: '../../../core/modules/azure/vnet',
+      resource_group_name: 'AzureSpoke',
+      location: 'West US',
+      vnet_name: 'TorstenWebVNet',
+      address_space: '172.16.130.0/24',
+      subnet_prefixes: [Array],
+      subnet_names: [Array] 
+    } 
+  },
+[ { 'External-LB': [Object] }, { 'Internal-LB': [Object] } ],
+[] ]
+*/
+
+
+fs.writeFile("test.tf.json", JSON.stringify(A).replace(/\\"/g, ""), 'utf8', function(err) {
+    if(err) {
+        return console.log(err);
+    }
+
+    console.log("The file was saved!");
+}); 

@@ -1,9 +1,0 @@
-ansible==2.6.14
-pandevice
-pan-python
-xmltodict
-awscli
-jsonschema
-pylint
-yamllint
-bandit

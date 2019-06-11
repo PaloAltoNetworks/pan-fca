@@ -11,8 +11,8 @@ username: "{{ credentials[cloud_provider]['username'] }}"
 password: "{{ credentials[cloud_provider]['password'] }}"
 
 virtual_networks:
-  - TranistHub
-  - TransitSpoke
+  - TranistAzureFCA
+  - WebAzureFCA
 
 #Create Virtual Routers
 #By default will be the "default" deleted 

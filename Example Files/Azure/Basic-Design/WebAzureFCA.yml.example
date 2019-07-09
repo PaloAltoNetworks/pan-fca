@@ -1,4 +1,8 @@
-#Define Firewalls   
+#Create Resource Groups
+resource_group:
+  - resource_group_name: WebAzure
+
+#Define Testhost 
 testhost:
 - name: Testhost
   hostname: Test-VM

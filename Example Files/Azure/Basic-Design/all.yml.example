@@ -11,8 +11,8 @@ username: "{{ credentials[cloud_provider]['username'] }}"
 password: "{{ credentials[cloud_provider]['password'] }}"
 
 virtual_networks:
-  - TranistHub
-  - TransitSpoke
+  - TranistAzureFCA
+  - WebAzureFCA
 
 #Create Virtual Routers
 #By default will be the "default" deleted 
@@ -273,7 +273,7 @@ cm_panos_static_route:
 # Activate Firewall
 cm_panos_lic:
   values:
-    auth_code: 'I6474155'
+    auth_code: '<AUTH CODE>'
 
 # # Update Firewall
 # cm_panos_software:

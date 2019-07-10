@@ -1,0 +1,20 @@
+{% for name, vnet in vnets.items() %}
+{% if vnet['vnet_network']['subnet'] is defined %}
+{% for net in vnet['vnet_network']['subnet'] %}
+
+module "{{ name }}-{{net.name}}-subnet" {
+    source                = "{{ module_dir }}/subnet_az"
+    providers             = { aws = "aws.{{ vnet['vnet_network']['region'] }}"}  
+    cidr_block            = "{{ net.network }}"
+    name                  = "{{ net.name }}"
+    availability_zone     = "{{ net.availability_zone }}"
+    vpc_id                = "${module.{{ name }}-vpc.vpc_id}"
+    route_table_id        = "${module.{{ name }}-{{net.rte}}-rt.route_table_id}"
+    {% if vnet['global_tags'] is defined %}
+    tags                  = { {% for tag in vnet['global_tags'] %}{{ tag.name }} = "{{ tag.value }}"{% endfor %} }
+    {% endif %}
+}
+
+{% endfor %}
+{% endif %}
+{% endfor %}

@@ -1,25 +1,25 @@
 output "spoke_vpn_name" {
-    value = "${element(concat(aws_vpn_connection.vpn.*.tags.Name, list("")), 0)}"
+    value = "${element(concat(aws_vpn_connection.tgw_vpn.*.tags.Name, list("")), 0)}"
 }
 
 output "spoke_asn" {
-    #value = "${element(concat(aws_vpn_connection.vpn.*.tunnel1_bgp_asn, list("")), 0)}"
-    value = ["${aws_vpn_connection.vpn.*.tunnel1_bgp_asn}", "${aws_vpn_connection.vpn.*.tunnel2_bgp_asn}"]
+    #value = "${element(concat(aws_vpn_connection.tgw_vpn.*.tunnel1_bgp_asn, list("")), 0)}"
+    value = ["${aws_vpn_connection.tgw_vpn.*.tunnel1_bgp_asn}", "${aws_vpn_connection.tgw_vpn.*.tunnel2_bgp_asn}"]
 }
 
 output "fw_tunnel_ips" {
-    value = ["${aws_vpn_connection.vpn.*.tunnel1_cgw_inside_address}", "${aws_vpn_connection.vpn.tunnel2_cgw_inside_address}"]
+    value = ["${aws_vpn_connection.tgw_vpn.*.tunnel1_cgw_inside_address}", "${aws_vpn_connection.tgw_vpn.*.tunnel2_cgw_inside_address}"]
 }
 output "vgw_tunnel_ips" {
-    value = ["${aws_vpn_connection.vpn.*.tunnel1_vgw_inside_address}", "${aws_vpn_connection.vpn.tunnel2_vgw_inside_address}"]
+    value = ["${aws_vpn_connection.tgw_vpn.*.tunnel1_vgw_inside_address}", "${aws_vpn_connection.tgw_vpn.*.tunnel2_vgw_inside_address}"]
 }
 
 output "vgw_public_ips" {
-    value = ["${aws_vpn_connection.vpn.*.tunnel1_address}", "${aws_vpn_connection.vpn.tunnel2_address}"]
+    value = ["${aws_vpn_connection.tgw_vpn.*.tunnel1_address}", "${aws_vpn_connection.tgw_vpn.*.tunnel2_address}"]
 }
 
 output "tunnel_psks" {
-    value = ["${aws_vpn_connection.vpn.*.tunnel1_preshared_key}", "${aws_vpn_connection.vpn.tunnel2_preshared_key}"]
+    value = ["${aws_vpn_connection.tgw_vpn.*.tunnel1_preshared_key}", "${aws_vpn_connection.tgw_vpn.*.tunnel2_preshared_key}"]
 }
 
 output "spoke_firewalls" {
@@ -28,4 +28,8 @@ output "spoke_firewalls" {
 
 output "spoke_firewalls_ids" {
     value = "${var.firewall_instance_ids}"
+}
+
+output "transit_gateway_attachment_id" {
+    value = "${aws_vpn_connection.tgw_vpn.transit_gateway_attachment_id}"
 }

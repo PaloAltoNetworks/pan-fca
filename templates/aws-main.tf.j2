@@ -16,12 +16,16 @@ provider "aws" {
 {% endfor %}
 
 {% include 'aws-vpc.tf.j2' %}
-{% include 'aws-subnet.tf.j2' %}
+{% include 'aws-subnet-az.tf.j2' %}
 {% include 'aws-routetable.tf.j2' %}
 {% include 'aws-transitvpc-spoke-vgw.tf.j2' %}
 {% include 'aws-igw.tf.j2' %}
 {% include 'aws-fw-interfaces.tf.j2' %}
-{% include 'aws-firewall.tf.j2' %}
+{% include 'aws-firewall-new.tf.j2' %}
 {% include 'aws-elastic_ip.tf.j2' %}
 {% include 'aws-sg.tf.j2' %}
 {% include 'aws-transitvpc-spoke-vpn.tf.j2' %}
+{% include 'aws-transit_gateway.tf.j2' %}
+{% include 'aws-transit_gateway_attach.tf.j2' %}
+{% include 'aws-transit_gateway_rt.tf.j2' %}
+

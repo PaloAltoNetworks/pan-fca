@@ -28,34 +28,34 @@ module "{{ name }}-{{ fw.name }}-vpn" {
 }
 {% endfor %}
 {% endif %}
+
+{% if vnet['cloud_vpn']is defined %}
+{% for vpn in vnet['cloud_vpn']['tunnels'] %}
+module "{{ name }}-{{ vpn.name }}-vpn" {
+  source                        = "{{ module_dir }}/vpn"
+  providers                     = { aws = "aws.{{ vnet['vnet_network']['region'] }}"}
+  name                          = "{{ name }}-{{ vpn.name }}-vpn"
+  transit_gateway_id            = "${module.{{ name }}-aws_transit_gw.aws_ec2_transit_gateway_id}"
+  create_vpn_tgw                = "true"
+{# Trying to provide options for supporting AWS generated PSKs / CIDRs if not defined in YAML
+{% if vpc['fw_tunnels.tunnel_1_cidr'] not defined %}
+  cidr_type                       = "dynamic"
+{% endif %}
+#}
+  tunnel1_inside_cidr             = "{{ vpn['tunnel_1_cidr'] }}"
+  tunnel2_inside_cidr             = "{{ vpn['tunnel_2_cidr'] }}"
+  tunnel1_preshared_key           = "{{ vpn['tunnel_1_psk'] }}"
+  tunnel2_preshared_key           = "{{ vpn['tunnel_2_psk'] }}"
+  customer_gw_asn                 = "${module.{{ name }}-firewall.customer_gw_asn{{[loop.index0]}} }"
+  customer_gw_ip                  = "${module.{{ name }}-firewall.untrust_elastic_ip_addresses{{[loop.index0]}} }"
+  management_ips                  = "${module.{{ name }}-firewall.management_elastic_ip_addresses{{[loop.index0]}} }"
+  firewall_instance_ids           = "${module.{{ name }}-firewall.firewall_ids{{[loop.index0]}} }"
+  {% if vnet['global_tags'] is defined %}
+  tags                            = { {% for tag in vnet['global_tags'] %}{{ tag.name }} = "{{ tag.value }}"{% endfor %} }
+  {% endif %}    
+}
+{% endfor %}
+{% endif %}
+
 {% endfor %}
 
-{#
-output "spoke_asns" {
- value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.spoke_asn}",{% endfor %}{% endfor %}]
-}
-output "spoke_vpn_names" {
- value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.spoke_vpn_name}",{% endfor %}{% endfor %}]
-}
-output "fws_tunnels_ips" {
- value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.fw_tunnel_ips}",{% endfor %}{% endfor %}]
-}
-output "vgws_tunnels_ips" {
- value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.vgw_tunnel_ips}",{% endfor %}{% endfor %}]
-}
-output "vgw_public_ips" {
- value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.vgw_public_ips}",{% endfor %}{% endfor %}]
-}
-output "spoke_firewalls" {
- value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.spoke_firewalls}",{% endfor %}{% endfor %}]
-}
-output "firewalls_ids" {
- value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.spoke_firewalls_ids}",{% endfor %}{% endfor %}]
-}
-output "tunnel_psks" {
- value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.tunnel_psks}",{% endfor %}{% endfor %}]
-}
-output "firewall_tunnel_ips" {
- value = [{% for vpc in vnet['spoke_vpcs'] %}{% for fw in vpc['fw_tunnels'] %}"${module.{{ name }}-vpn-{{ vpc.name }}-{{ fw.name }}.fw_tunnel_ips}",{% endfor %}{% endfor %}]
-}
-#}

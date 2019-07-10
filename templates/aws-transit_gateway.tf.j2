@@ -1,22 +1,31 @@
 {# Transit Gateway Modules #}
 {% for name, vnet in vnets.items() %}
-{% if vnet['transit_gateway'] is defined %}
-{% for tgw in vnet['transit_gateway'] %}
+{% if vnet['aws_transit_gw'] is defined %}
+{#{% for tgw in vnet['aws_transit_gw'] %}#}
 
-module "{{ name }}-transit_gateway" {
-source           = "{{ module_dir }}/transit_gateway"
-{% if tgw['default_route_table_association'] is defined %}
-{% if tgw.default_route_table_association == 'enable' %}
+module "{{ name }}-aws_transit_gw" {
+    source                            = "{{ module_dir }}/transit_gateway"
+    providers                         = { aws = "aws.{{ vnet.aws_transit_gw.region }}"}  
+    name                              = "{{ vnet.aws_transit_gw.name }}"
+    amazon_side_asn                   = "{{ vnet.aws_transit_gw.amazon_side_asn }}"
+    tags                              = { {% for tag in vnet['global_tags'] %}{{ tag.name }} = "{{ tag.value }}"{% endfor %} }
+{# Check for optional Parameter #}
+{% if vnet['aws_transit_gw']['default_route_table_association'] %}
+    default_route_table_association   = "{{ vnet['aws_transit_gw']['default_route_table_association'] }}"
 {% endif %}
+{# Check for optional Parameter #}
+{% if vnet['aws_transit_gw']['default_route_table_propagation'] %}
+    default_route_table_propagation   = "{{ vnet['aws_transit_gw']['default_route_table_propagation'] }}"
 {% endif %}
-{% if tgw['default_route_table_propagation'] is defined %}
-{% if tgw.default_route_table_propagation == 'enable' %}
+{# Check for optional Parameter #}
+{% if vnet['aws_transit_gw']['auto_accept_shared_attachments'] %}
+    auto_accept_shared_attachments    = "{{ vnet['aws_transit_gw']['auto_accept_shared_attachments'] }}"
 {% endif %}
-{% endif %}
-{% if tgw['auto_accept_shared_attachments'] is defined %}
-{% if tgw.auto_accept_shared_attachments == 'disable' %}
-{% endif %}
-{% endif %}
-{% endfor %}
+{# Check for optional Parameter #}
+{% if vnet['aws_transit_gw']['vpn_ecmp_support'] %}
+    vpn_ecmp_support                  = "{{ vnet['aws_transit_gw']['vpn_ecmp_support'] }}"
 {% endif %}
 }
+
+{% endif %}
+{% endfor %}

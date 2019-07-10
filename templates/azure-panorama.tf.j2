@@ -40,6 +40,9 @@
 {% endfor %}
 
 
-
+output "panorama_created" {
+  
+  value = [{% for pan in vnet['panorama'] %}"${module.{{ pan.name}}.panorama_created}",{% endfor %}]
+}
 {% endif %}
 {% endfor %}

@@ -1,15 +1,21 @@
 {# AWS Security Group module template from https://github.com/terraform-aws-modules/terraform-aws-security-group #}
 {% for name, vnet in vnets.items() %}
 {% if vnet['security_groups'] is defined %}
-
 {% for sg in vnet['security_groups'] %}
+
 
 module "{{ name }}-{{ sg.name }}-sg" {
     source                  = "{{ module_dir }}/security_groups"
     providers               = { aws = "aws.{{ vnet['vnet_network']['region'] }}"}
     name                    = "{{ name }}-{{ sg.name }}-sg"
-    vpc_id                  = "${module.{{ name }}-vpc.vpc_id}"    
-    cidr_blocks             = [{% for rule in sg['rules'] %},"{{ rule['src_ip'] }}",{% endfor %}] 
+    vpc_id                  = "${module.{{ name }}-vpc.vpc_id}"   
+    cidr_blocks             = [{% for rule in sg['rules'] -%}
+                               {% if rule['direction'] == 'ingress' -%}
+                               "{{ rule['src_ip'] }}",
+                               {% elif rule['direction'] == 'egress' -%}
+                               "{{ rule['dst_network'] }}",
+                               {%- endif %}
+                               {%- endfor %}] 
     from_port               = [{% for rule in sg['rules'] %},"{{ rule['src_port'] }}",{% endfor %}] 
     to_port                 = [{% for rule in sg['rules'] %},"{{ rule['dst_port'] }}",{% endfor %}] 
     protocol                = [{% for rule in sg['rules'] %},"{{ rule['protocol'] }}",{% endfor %}] 
@@ -20,7 +26,7 @@ module "{{ name }}-{{ sg.name }}-sg" {
     {% endif %}
 }
 
-{% endfor %}
 
+{% endfor %}
 {% endif %}
 {% endfor %}

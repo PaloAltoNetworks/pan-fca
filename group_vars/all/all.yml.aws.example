@@ -17,9 +17,12 @@ fw_key_name:
 virtual_networks:
 #  - Web-Azure
 #  - Transit-Azure
-   - AwsTransitVpcHub
-   - AwsTransitVpcSpoke1
-   - AwsTransitVpcSpoke2
+  #  - AwsTransitVpcHub
+  #  - AwsTransitVpcSpoke1
+  #  - AwsTransitVpcSpoke2
+   - AwsTransitGwHub
+   - AwsTransitGwSpoke1
+   - AwsTransitGwSpoke2
 
 
 # removed "external" for testing

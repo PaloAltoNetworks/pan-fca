@@ -57,3 +57,21 @@ variable "firewall_instance_ids" {
   description = "Firewall management interface IDs to be used for CM"
   type = "string"
 }
+
+variable "create_vpn_vgw" {
+  description = "Flag to set for count if VPN will be attached to VGW"
+  type = "string"
+  default = ""
+}
+
+variable "create_vpn_tgw" {
+  description = "Flag to set for count if VPN will be attached to TGW"
+  type = "string"
+  default = ""
+}
+
+variable "transit_gateway_id" {
+  description = "ID of TGW to attach VPN to"
+  type = "string"
+  default = ""
+}

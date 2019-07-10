@@ -1,11 +1,11 @@
+variable "name" {
+  description = "Name tag for subnet"
+  default     = ""
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   default     = {}
-}
-
-variable "name" {
-  description = "Name to be used on all the resources as identifier"
-  default     = ""
 }
 
 variable "vpc_id"  {
@@ -18,12 +18,12 @@ variable "route_table_id"  {
     default = ""
 }
 
-variable "subnets" {
-  description = "A list of subnets to create inside the VPC"
-  default     = []
+variable "cidr_block" {
+  description = "CIDR of Subnet to create"
+  default     = ""
 }
 
-variable "subnet_names" {
-  description = "A list of names for subnets inside the VPC"
-  default     = []
+variable "availability_zone" {
+  description = "CIDR of Subnet to create"
+  default     = ""
 }

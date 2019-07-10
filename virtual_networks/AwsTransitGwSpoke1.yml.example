@@ -1,0 +1,26 @@
+---
+vnet_network:   
+  name: sy-fca-tgw-spoke1
+  network: 10.122.0.0/16  
+  region: ca-central-1
+  route_tables:
+    - name: Private-To-TGW
+      routes: 
+        - prefix: 0.0.0.0/0
+          next_hop_type: TGW
+          next_hop_id: vnet|AwsTransitGwHub
+  subnet:
+    - name: FCA-Private-AZ1
+      network: 10.122.0.0/24
+      rte: Private-To-TGW
+      availability_zone: ca-central-1a
+    - name: FCA-Private-AZ2
+      network: 10.122.1.0/24
+      rte: Private-To-TGW
+      availability_zone: ca-central-1b
+
+global_tags:
+  - name: "environment"
+    value: "dev"
+  - name: "costcenter"
+    value: "it"

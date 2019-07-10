@@ -18,10 +18,13 @@ module "{{ name }}-{{route_table.name}}-rt" {
     create_route_to_igw                 = "true" 
     {% endif %}
     {% if route['next_hop_type'] == 'TGW' %}
-    tgw_next_hop                        = "${module.{{ name }}-tgw.igw_id}"
+    {% set tgw = route['next_hop_id'].split('|') %}
+    {% if tgw[0] == 'vnet' %}
+    tgw_next_hop                        = "${module.{{ tgw[1] }}-aws_transit_gw.aws_ec2_transit_gateway_id}"
+    {% endif %}
     create_route_to_tgw                 = "true" 
     {% endif %}  
-    {% endfor %} 
+    {% endfor %}  
 }
 
 {% endfor %}

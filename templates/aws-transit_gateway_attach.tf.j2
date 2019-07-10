@@ -1,0 +1,30 @@
+{# Transit Gateway Modules #}
+{% for name, vnet in vnets.items() %}
+{% if vnet['aws_transit_gw'] is defined %}
+{% if vnet['aws_transit_gw']['vpc_attachments'] is defined %}
+{% for attach in vnet['aws_transit_gw']['vpc_attachments'] %}
+
+
+
+module "{{ name }}-aws_transit_gw-vpc_attachment-{{ attach.name }}" {
+    source                            = "{{ module_dir }}/transit_gateway_attach"
+    providers                         = { aws = "aws.{{ vnet.aws_transit_gw.region }}"}  
+    name                              = "{{ attach.name }}"
+    tags                              = { {% for tag in vnet['global_tags'] %}{{ tag.name }} = "{{ tag.value }}"{% endfor %} }
+    transit_gateway_id                = "${module.{{ name }}-aws_transit_gw.aws_ec2_transit_gateway_id}"
+    attach_subnet_ids                 = [{% for subnet in attach['subnets'] -%}
+                                        {% set net = subnet.split('|') -%}
+                                        {% if net[0] == 'vnet' -%}
+                                        "${module.{{ net[1] }}-{{ net[2]}}-subnet.subnet_id}",
+                                        {%- endif %}{%- endfor %}]
+{% set vpc = attach.vpc.split('|') %}
+{% if vpc[0] == 'vnet' %}
+    vpc_id = "${module.{{ vpc[1] }}-vpc.vpc_id}"
+{% endif %}
+
+}
+
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endfor %}

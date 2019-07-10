@@ -1,3 +1,13 @@
+variable "name"  {
+    description = "Name for tagging - Ingested from VPCTransit.yml"
+    default = ""
+}
+
+variable "tags" {
+  description = "A map of tags to add to all resources"
+  default     = {}
+}
+
 variable "route_count" {
   description = "Number of Route Table to create"
   type        = "string"
@@ -10,8 +20,14 @@ variable "destination_cidr_block" {
   default     = [""]
 }
 
-variable "transit_gateway_attachment_id" {
-  description = "Transit Gateway Attachment ID For VPC"
+variable "propagate_transit_gateway_attachment_id" {
+  description = "Transit Gateway Attachment IDs to propagate to route table"
+  type        = "list"
+  default     = [""]
+}
+
+variable "associate_transit_gateway_attachment_id" {
+  description = "Transit Gateway Attachment IDs to associate to route table"
   type        = "list"
   default     = [""]
 }
@@ -78,14 +94,9 @@ variable "tgw_rt_id" {
   default     = ""
 }
 
-variable "tgw_id" {
+variable "transit_gateway_id" {
   description = "Transit Gateway ID to Associate Route Table"
   type        = "string"
-  default     = ""
-}
-
-variable "tags" {
-  description = "AWS Tag for Transit Gateway Route Table"
   default     = ""
 }
 
@@ -93,4 +104,16 @@ variable "route_table_count" {
   description = "Number of route tables to create"
   type        = "string"
   default     = "1"
+}
+
+variable "propagate_count" {
+  description = "Number of Route Table to create"
+  type        = "string"
+  default     = "0"
+}
+
+variable "associate_count" {
+  description = "Number of Route Table to create"
+  type        = "string"
+  default     = "0"
 }

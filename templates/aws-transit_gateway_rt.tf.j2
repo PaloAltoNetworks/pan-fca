@@ -1,0 +1,45 @@
+{# Transit Gateway Modules #}
+{% for name, vnet in vnets.items() %}
+{% if vnet['aws_transit_gw'] is defined %}
+{% if vnet['aws_transit_gw']['route_tables'] is defined %}
+{% for rt in vnet['aws_transit_gw']['route_tables'] %}
+
+module "{{ name }}-aws_transit_gw-rt-{{rt.name }}" {
+    source                            = "{{ module_dir }}/transit_gateway_rt"
+    providers                         = { aws = "aws.{{ vnet.aws_transit_gw.region }}"}  
+    name                              = "{{ rt.name }}"
+    tags                              = { {% for tag in vnet['global_tags'] %}{{ tag.name }} = "{{ tag.value }}"{% endfor %} }
+    transit_gateway_id                = "${module.{{ name }}-aws_transit_gw.aws_ec2_transit_gateway_id}"
+{#}    {% for prop in rt['propagations'] -%}
+    {% set list = [ {{ prop }}, ] %}
+    propagate_count                   = "{{ list|length }}"
+    {% endfor %}
+    {% for assoc in rt['associations'] -%}
+    {% set list = [ {{ assoc }}, ] %}
+    associate_count                   = "{{ list|length }}"
+    {% endfor %} #}
+    propagate_transit_gateway_attachment_id    = [{% for prop in rt['propagations'] -%}
+                                                 {% set type = prop.split('|') -%}
+                                                 {% if type[0] == 'vpc' -%}
+                                                 "${module.{{ name }}-aws_transit_gw-vpc_attachment-{{ type[1] }}.aws_ec2_transit_gateway_attachment_id}",
+                                                 {% elif type[0] == 'vpn' -%}
+                                                 "${module.{{ name }}-{{ type[1] }}-vpn.transit_gateway_attachment_id}",
+                                                 {%- endif %}{%- endfor %}]
+    associate_transit_gateway_attachment_id    = [{% for assoc in rt['associations'] -%}
+                                                 {% set type = assoc.split('|') -%}
+                                                 {% if type[0] == 'vpc' -%}
+                                                 "${module.{{ name }}-aws_transit_gw-vpc_attachment-{{ type[1] }}.aws_ec2_transit_gateway_attachment_id}",
+                                                 {% elif type[0] == 'vpn' -%}
+                                                 "${module.{{ name }}-{{ type[1] }}-vpn.transit_gateway_attachment_id}",
+                                                 {%- endif %}{%- endfor %}]
+    propagate_count                   = "2"
+    associate_count                   = "2"
+
+
+}
+
+{% endfor %}
+{% endif %}
+{% endif %}
+{% endfor %}
+

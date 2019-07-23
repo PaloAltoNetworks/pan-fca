@@ -51,6 +51,9 @@ User and Developer Guide can be found [here.](./docs/overview.md)
 
 Here can the Lab Guide be found for the FCA Framework. This guide has a Lab in it for AWS and Azure [here.](./FCA_Lab/)
 
+## Rundeck
+The container runs a Rundeck instance for running projects/jobs and ansible playbooks.
+Read more [here.](./docs/rundeck.md)
 
 ## License and Support Policy
 This framework is licensed under the APACHE-2.0 license and is community supported. The license can be found [here](./LICENSE). The support policy can be found [here.](./SUPPORT_POLICY)

@@ -20,6 +20,12 @@ find /etc/rundeck /var/rundeck /var/log/rundeck \
   \! -user rundeck -exec chown -R rundeck:rundeck {} \;
 chmod -R 750 /tmp/rundeck
 
+#fca symlinks
+ln -s /fca/roles /tmp/rundeck/roles
+ln -s /fca/virtual_networks /tmp/rundeck/virtual_networks
+ln -s /fca/group_vars /tmp/rundeck/group_vars
+ln -s /fca/modules /tmp/rundeck/modules
+
 # Plugins
 if ls /opt/rundeck-plugins/* 1> /dev/null 2>&1; then
    echo "=>Installing plugins from /opt/rundeck-plugins"

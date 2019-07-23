@@ -2,11 +2,13 @@
 Rundeck is an operations management platform that helps you connect your people with the processes and tools they need to get their job done. The most common usage of Rundeck is to create standard operating procedures from any of your existing tools or scripts.
 
 ## Build the container ##
-The container currently does not have a docker hub ready image. You have to build it on your own. 
+The container currently does not have a docker-hub ready image and the feature is not merged int the master pan-fca branch. You have to build it on your own after checking-out the rundeck branch. 
 
-`git clone` 
+`git clone https://github.com/PaloAltoNetworks/pan-fca.git `
 
 `cd pan-fca`
+
+`git checkout rundeck`
 
 `docker build -t fca -f Dockerfile-Full .`
 

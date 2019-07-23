@@ -75,6 +75,9 @@ Make sure you are in the root fca folder of the cloned repository or specify ful
 `docker run -v ${PWD}:/fca -it <tag used in build step>` _for built image_
 
 
+- **Start rundeck docker container BETA** -
+`docker run -p 4440:4440 -e EXTERNAL_SERVER_URL=http://localhost:4440 -v ${PWD}:/fca -v ${PWD}/projects:/var/rundeck/projects --name pan-fca -h pan-fca -t fca:latest`
+
 This mounts the local `./fca` directory in the `fca` directory of the container, and launches container
 
 Verify once container launches with `ls` then `cd` to `./fca` mounted directory 

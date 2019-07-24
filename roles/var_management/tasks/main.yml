@@ -45,11 +45,11 @@
     - 'always'
     - 'tf'
 
-- name: 'VALIDATE THE SCHEMA'
-  json_schema:
-    schema: '{{ schema }}'
-    data: '{{ hostvars[inventory_hostname] }}'
-    scope: '{{ scope }}'
-  tags:
-    - 'always'
-    - 'tf'
+      #- name: 'VALIDATE THE SCHEMA'
+      #  json_schema:
+      #    schema: '{{ schema }}'
+      #    data: '{{ hostvars[inventory_hostname] }}'
+      #    scope: '{{ scope }}'
+      #  tags:
+      #    - 'always'
+      #    - 'tf'

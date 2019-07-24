@@ -19,7 +19,7 @@ Go to the pan-fca directory:
 
 And run the container
 ```
-docker run -p 4440:4440 -e EXTERNAL_SERVER_URL=http://localhost:4440 -v ${PWD}:/fca -v ${PWD}/projects:/var/rundeck/projects --name pan-fca -h pan-fca -t fca:latest &
+docker run -p 4440:4440 -e EXTERNAL_SERVER_URL=http://localhost:4440 -v ${PWD}:/fca -v ${PWD}/projects:/var/rundeck/projects --name pan-fca -h pan-fca -t fca:latest
 ```
 
 The docker commands creates a docker container and does a port-forwarding to the pan-fca container that runs rundeck.
@@ -30,11 +30,6 @@ docker ps
 CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS                                            NAMES
 58618ee76259        fca:latest          "/opt/run"          3 hours ago         Up 3 hours          0.0.0.0:4440->4440/tcp, 4443/tcp                 pan-fca
 ```
-
-Entering the container shell:
-
-`docker exec -it pan-fca bash`
-
 If you want to stop the docker container simply type:
 
 `docker stop pan-fca`

@@ -25,8 +25,6 @@ ln -s /fca/roles /tmp/rundeck/roles
 ln -s /fca/virtual_networks /tmp/rundeck/virtual_networks
 ln -s /fca/group_vars /tmp/rundeck/group_vars
 ln -s /fca/modules /tmp/rundeck/modules
-ln -s /fca/schema_files /tmp/rundeck/schema_files
-ln -s /fca/templates /tmp/rundeck/templates
 
 # Plugins
 if ls /opt/rundeck-plugins/* 1> /dev/null 2>&1; then

@@ -87,6 +87,12 @@ variable "destination_tp_static_ip_address" {
   default     = ""
 }
 
+variable "destination_tp_dynamic_address" {
+  description = ""
+  type        = "string"
+  default     = ""
+}
+
 variable "destination_tp_port" {
   description = ""
   default     = 0

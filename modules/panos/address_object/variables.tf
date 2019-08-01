@@ -21,3 +21,8 @@ variable "device_group" {
   type    = "string"
   default = "shared"
 }
+
+variable "type" {
+  description = "ip-netmask,ip-range,fqdn"
+  default = "ip-netmask"
+}

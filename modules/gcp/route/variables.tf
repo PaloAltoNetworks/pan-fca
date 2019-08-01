@@ -15,8 +15,8 @@ variable "network_self_link" {
 
 variable "instance_name" {
   description = "GCP Instance Name"
-  type        = "string"
-  default     = ""
+  type        = "list"
+  default     = [""]
 }
 
 variable "zone" {

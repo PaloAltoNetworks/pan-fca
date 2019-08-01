@@ -5,7 +5,7 @@ variable "project" {
 
 variable "gcp_net_name" {
   description = "GCP Network Name"
-  type        = "string"
+  type        = "list"
 }
 
 variable "routing_mode" {

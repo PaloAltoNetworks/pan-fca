@@ -11,7 +11,7 @@ username: "{{ credentials[cloud_provider]['username'] }}"
 password: "{{ credentials[cloud_provider]['password'] }}"
 
 virtual_networks:
-  - TranistHub
+  - TransitHub
   - TransitSpoke
 
 #Create Virtual Routers

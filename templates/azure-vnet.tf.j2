@@ -4,6 +4,11 @@
 
 module "{{ name }}" {
 source                  = "{{ module_dir }}/vnet"
+{% if vnet['vnet_network']['location'] is defined %}
+location                    = "{{ vnet['vnet_network']['location'] }}"
+{% else %}
+location                    = "{{ location }}"
+{% endif %}
 {% if vnet['vnet_network']['resource_group_name'] is defined %}
 resource_group_name     = "{{ vnet['vnet_network']['resource_group_name'] }}"
 {% else %}
@@ -11,7 +16,6 @@ resource_group_name     = "{{ vnet['vnet_network']['resource_group_name'] }}"
 resource_group_name     = "${module.{{ rg.resource_group_name }}.name}"
 {% endfor %}
 {% endif %}
-location                = "{{ location }}"
 vnet_name               = "{{ vnet['vnet_network']['name'] }}"
 address_space           = "{{ vnet['vnet_network']['network'] }}"
 subnet_prefixes         = [{% for prefix in vnet['vnet_network']['subnet'] -%}"{{ prefix.network }}",{% endfor %}]

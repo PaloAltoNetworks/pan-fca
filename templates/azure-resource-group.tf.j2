@@ -6,7 +6,11 @@
 module "{{ rg.resource_group_name }}" {
 source                  = "{{ module_dir }}/resource_group"
 resource_group_name     = "{{ rg['resource_group_name'] }}"
+{% if rg['location'] is defined %}
+location                = "{{ rg['location'] }}"
+{% else %}
 location                = "{{ location }}"
+{% endif %}
 
 
 {% if rg['tags'] is defined %}

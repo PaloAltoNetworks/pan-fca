@@ -2,14 +2,6 @@
 resource_group:
   - resource_group_name: test_rg1
 
-#Create Panorama
-panorama:
-  - name: Test-Panorama
-    panname: Test-Panorama
-    panvmsize: Standard_DS3_v2
-    Username: Panorama
-    Password: PaloAlto1234! 
-
 # Create Availibity Sets
 availabilty_set:
   - avsetname: AzureAV1
@@ -23,10 +15,10 @@ firewalls:
     # https://knowledgebase.paloaltonetworks.com/KCSArticleDetail?id=kA10g000000ClD7CAK
     avsetname: "AzureAV1"
     fw_version: 8.1.0
-    # 7.1.0 / 8.0.0 / 8.1.0 = latest
+    # 7.1.0 / 8.0.0 / 8.1.0 / 9.0.0 = latest
     fw_sku: byol
     # byol / bundl1 / bundle2 
-    Username: tstern
+    Username: panlab
     Password: PaloAlto1234!
     attachtrustpool: "yes"
     attachuntrustpool: "yes"

@@ -10,7 +10,7 @@ resource_group:
 panorama:
   - name: Test-Panorama
     panname: Test-Panorama
-    panvmsize: Standard_DS3_v2
+    panvmsize: Standard_DS5_v2
     Username: Panorama
     Password: PaloAlto1234! 
 

@@ -45,7 +45,7 @@
       tags:
         - 'tf'
 
-    - name: "EXECUTE TERRAFORM PLAN"
+    - name: "RUN TERRAFORM PLAN AND APPLY"
       include_role:
         name: "terraform"
       tags:

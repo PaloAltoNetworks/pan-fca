@@ -11,6 +11,7 @@ testhost:
   hostname: Test-VM
   username: creator
   password: Paloalto123456789
+  dnsname: ubuntutestvm2
 
 vnet_network:
   name: Spoke1VNET

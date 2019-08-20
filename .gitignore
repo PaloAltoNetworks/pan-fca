@@ -6,6 +6,9 @@ host_vars/*
 !host_vars/fw.yml.example
 virtual_networks/*
 !virtual_networks/*.example
+FCA_Lab/FCA-CloudAutomationlabguide-Azure-V1.3.docx
+FCA_Lab/FCA-CloudAutomationlabguide-Azure.docx
+
 
 TO-DO
 

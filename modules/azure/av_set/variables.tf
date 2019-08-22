@@ -11,5 +11,7 @@ variable "resource_group_name" {
     default = "mainrg"
 } 
 
-
+variable "managed" {
+    default = "true"
+} 
     

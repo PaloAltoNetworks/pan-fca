@@ -5,4 +5,5 @@ resource "azurerm_availability_set" "avset" {
     resource_group_name                 = "${var.resource_group_name}"
     platform_update_domain_count        = 5
     platform_fault_domain_count         = 3
+    managed                             = "${var.managed}"
 }

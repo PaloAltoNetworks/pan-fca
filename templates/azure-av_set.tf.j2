@@ -13,6 +13,9 @@
     resource_group_name     = "${module.{{ rg.resource_group_name }}.name}"
     {% endfor %}
     {% endif %}
+    {% if av['managed'] is defined %}
+    managed                  = "{{ av['managed'] }}"
+    {% endif %}
     avsetname                   = "{{ av.avsetname }}"
   }
 

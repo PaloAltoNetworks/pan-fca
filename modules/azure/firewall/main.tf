@@ -176,7 +176,6 @@ resource "azurerm_virtual_machine" "firewall" {
     count                         = "${var.nb_instances}" 
     name                          = "${var.fw_hostname}${count.index+1}"
     location                      = "${var.location}"
-    # resource_group_name           = "${azurerm_resource_group.vm.name}"
     resource_group_name           = "${var.resource_group_name}"
     network_interface_ids         = 
     [
@@ -188,9 +187,7 @@ resource "azurerm_virtual_machine" "firewall" {
 
     primary_network_interface_id  = "${element(azurerm_network_interface.Management.*.id, count.index)}"
     vm_size                       = "${var.fw_size}"
-    # availability_set_id           = "${azurerm_availability_set.avset.id}"
     availability_set_id           = "${var.av_set_id}"
-    # zones                         = "${list("${element("${list("1","2")}", count.index)}")}"
 
   
   storage_image_reference {
@@ -207,10 +204,12 @@ resource "azurerm_virtual_machine" "firewall" {
       }
 
     storage_os_disk {
-        name            = "pa-vm-os-disk-${count.index+1}"
-        vhd_uri            = "${azurerm_storage_account.storrageaccfw.primary_blob_endpoint}${element(azurerm_storage_container.storagecon.*.name, count.index)}/fwDisk${count.index+1}.vhd"
-        caching         = "ReadWrite"
-        create_option    = "FromImage"
+        name              = "${var.managed_disk_name}${count.index + 1}"
+        # vhd_uri           = "${var.os_disk_type == "" ? "${azurerm_storage_account.storrageaccfw.primary_blob_endpoint}${element(azurerm_storage_container.storagecon.*.name, count.index)}/fwDisk${count.index+1}.vhd" : ""}"
+        # vhd_uri         = "${azurerm_storage_account.storrageaccfw.primary_blob_endpoint}${element(azurerm_storage_container.storagecon.*.name, count.index)}/fwDisk${count.index+1}.vhd"
+        caching           = "ReadWrite"
+        create_option     = "FromImage"
+        managed_disk_type = "${var.os_disk_type}"
     }
 
     delete_os_disk_on_termination    = true

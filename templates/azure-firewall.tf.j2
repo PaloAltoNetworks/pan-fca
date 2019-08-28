@@ -23,6 +23,12 @@
     {% if fw['fw_sku'] is defined %}
     fw_sku                  = "{{ fw['fw_sku'] }}"
     {% endif %}
+    {% if fw['os_disk_type'] is defined %}
+    os_disk_type                  = "{{ fw['os_disk_type'] }}"
+    {% endif %}
+    {% if fw['managed_disk_name'] is defined %}
+    managed_disk_name                  = "{{ fw['managed_disk_name'] }}"
+    {% endif %}
     {% if fw['Username'] is defined %}
     adminUsername                 = "{{ fw['Username'] }}"
     {% endif %}

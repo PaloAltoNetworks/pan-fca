@@ -202,11 +202,12 @@ variable "av_set_id" {
   default = ""
 }
 
-# variable "av_type" {
-#   default = "zones"
-# }
+variable "os_disk_type" {
+  description = "Specify the disk type"
+  default     = "Standard_LRS"
+}
 
-# variable "az_list" {
-#   type = "list"
-#   default = ["1","2"]
-# }
+variable "managed_disk_name" {
+  description = "Prefix to be used for managed disks"
+  default     = "os-disk"
+}

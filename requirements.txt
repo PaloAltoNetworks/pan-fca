@@ -1,4 +1,4 @@
-ansible==2.6.18
+ansible==7.0.0
 pandevice
 pan-python
 xmltodict
